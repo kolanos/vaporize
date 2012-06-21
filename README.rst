@@ -3,7 +3,7 @@ Vaporize
 
 Vaporize is a clean and consistent library for accessing the Rackspace Cloud API_.
  
-.. _Rackspace Cloud API: http://docs.rackspace.com/api/
+.. _API: http://docs.rackspace.com/api/
 
 Another One?
 ------------
