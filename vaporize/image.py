@@ -10,7 +10,7 @@ class Image(DotDict):
         return '<Image %s>' % self.name
 
     def delete(self):
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self.id)])
+        url = '/'.join([get_url('cloudservers'), 'images', str(self.id)])
         session = get_session()
         response = session.delete(url)
         return handle_response(response)

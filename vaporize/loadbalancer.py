@@ -179,7 +179,8 @@ class LoadBalancer(DotDict):
                         str(self.id), 'connectionlogging'])
         session = get_session()
         response = session.get(munge_url(url))
-        return handle_response(response, ConnectionLogging, 'connectionLogging')
+        return handle_response(response, ConnectionLogging,
+                               'connectionLogging')
 
     def enable_connection_logging(self):
         data = json.dumps({'connectionLogging': {'enabled': True}})
@@ -284,7 +285,8 @@ class LoadBalancer(DotDict):
                         str(self.id), 'sessionpersistence'])
         session = get_session()
         response = session.get(munge_url(url))
-        return handle_response(response, SessionPersistence, 'sessionPersistence')
+        return handle_response(response, SessionPersistence,
+                               'sessionPersistence')
 
     def enable_session_persistence(self, type):
         data = json.dumps({'sessionPersistence': {'persistenceType': type}})
@@ -403,6 +405,10 @@ class SessionPersistence(DotDict):
         return '<SessionPersistence %s>' % self.persistenceType
 
 
+class UsageReport(DotDict):
+    pass
+
+
 class VirtualIP(DotDict):
     def __repr__(self):
         return '<VirtualIP %s>' % self.address
@@ -445,11 +451,16 @@ def create(name, protocol, port, virtual_ips, nodes, algorithm=None,
                              'nodes': [],
                              'metadata': metadata or {}}}
     for virtual_ip in virtual_ips:
-        data['loadBalancer']['virtualIps'].append({'type': virtual_ip})
+        data['loadBalancer']['virtualIps'].append({'ipVersion': virtual_ip.version,
+                                                   'type': virtual_ip.type})
     for node in nodes:
-        data['loadBalancer']['nodes'].append({'address': nodes.address,
+        data['loadBalancer']['nodes'].append({'address': node.address,
                                               'port': int(node.port),
                                               'condition': node.condition})
+    if connection_logging is not None:
+        data['loadBalancer']['connectionLogging'] = {
+                'enabled': bool(connection_logging)
+                }
     data = json.dumps(data)
     url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers'])
     session = get_session()
@@ -457,31 +468,31 @@ def create(name, protocol, port, virtual_ips, nodes, algorithm=None,
     return handle_response(response, LoadBalancer, 'loadBalancer')
 
 
-def algorithms(limit=None, marker=None):
+def algorithms(limit=None, offset=None, marker=None):
     url = [get_url('cloudloadbalancers'), 'loadbalancers', 'algorithms']
     url = '/'.join(url)
-    if limit is not None or marker is not None:
-        url = query(url, limit=limit, marker=marker)
+    if limit is not None or offset is not None or marker is not None:
+        url = query(url, limit=limit, offset=offset, marker=marker)
     session = get_session()
     response = session.get(munge_url(url))
     return handle_response(response, Algorithm, 'algorithms')
 
 
-def allowed_domains(limit=None, marker=None):
+def allowed_domains(limit=None, offset=None, marker=None):
     url = [get_url('cloudloadbalancers'), 'loadbalancers', 'alloweddomains']
     url = '/'.join(url)
-    if limit is not None or marker is not None:
-        url = query(url, limit=limit, marker=marker)
+    if limit is not None or offset is not None or marker is not None:
+        url = query(url, limit=limit, offset=offset, marker=marker)
     session = get_session()
     response = session.get(munge_url(url))
     return handle_response(response, AllowedDomain, 'allowedDomains')
 
 
-def protocols(limit=None, marker=None):
+def protocols(limit=None, offset=None, marker=None):
     url = [get_url('cloudloadbalancers'), 'loadbalancers', 'protocols']
     url = '/'.join(url)
-    if limit is not None or marker is not None:
-        url = query(url, limit=limit, marker=marker)
+    if limit is not None or offset is not None or marker is not None:
+        url = query(url, limit=limit, offset=offset, marker=marker)
     session = get_session()
     response = session.get(munge_url(url))
     return handle_response(response, Protocol, 'protocols')
