@@ -11,8 +11,8 @@ from vaporize.exception import ConnectionError, handle_exception
 US_AUTH_URL = "https://identity.api.rackspacecloud.com/v1.1/auth"
 UK_AUTH_URL = "https://lon.identity.api.rackspacecloud.com/v1.1/auth"
 
-settings = {}
-session = {}
+_settings = {}
+_session = {}
 
 
 class Auth(requests.auth.AuthBase):
@@ -25,7 +25,7 @@ class Auth(requests.auth.AuthBase):
 
 
 def connect(user, apikey, region='DFW'):
-    global settings, session
+    global _settings, _session
     if region in ['DFW', 'ORD']:
         auth_url = US_AUTH_URL
     elif region == 'LON':
@@ -39,19 +39,19 @@ def connect(user, apikey, region='DFW'):
     response = requests.post(auth_url, headers=headers, data=data)
     if response.status_code in [200, 203]:
         data = json.loads(response.content)['auth']
-        settings['token'] = data['token']['id']
-        settings['expires'] = parse(data['token']['expires'])
+        _settings['token'] = data['token']['id']
+        _settings['expires'] = parse(data['token']['expires'])
         for s, r in data['serviceCatalog'].items():
             if len(r) == 1:
-                settings[s.lower() + '_url'] = r[0]['publicURL']
+                _settings[s.lower() + '_url'] = r[0]['publicURL']
             elif len(r) > 1:
                 for i in r:
                     if i['region'] == region:
-                        settings[s.lower() + '_url'] = i['publicURL']
-        auth = Auth(settings['token'])
+                        _settings[s.lower() + '_url'] = i['publicURL']
+        auth = Auth(_settings['token'])
         headers = {'Content-Type': 'application/json',
                    'Accept': 'application/json'}
-        session = requests.session(auth=auth, headers=headers)
+        _session = requests._session(auth=auth, headers=headers)
     else:
         raise ConnectionError("HTTP %d: %s" % (response.status_code,
                                                response.content))
@@ -73,13 +73,13 @@ def handle_response(response, wrapper=None, container=None, **kwargs):
 
 
 def get_session():
-    return session
+    return _session
 
 
 def get_url(service):
     service = '%s_url' % service
-    if service in settings:
-        return settings[service]
+    if service in _settings:
+        return _settings[service]
     else:
         raise ConnectionError('Not connected to Rackspace Cloud')
 

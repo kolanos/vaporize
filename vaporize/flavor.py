@@ -4,7 +4,9 @@ from vaporize.util import DotDict
 
 class Flavor(DotDict):
     def __repr__(self):
-        return '<Flavor %s>' % self.name
+        if 'name' in self:
+            return '<Flavor %s>' % self['name']
+        return super(Flavor, self).__repr__()
 
 
 def list(limit=None, offset=None, detail=False):

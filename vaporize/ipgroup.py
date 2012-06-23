@@ -7,10 +7,12 @@ from vaporize.util import DotDict
 
 class SharedIPGroup(DotDict):
     def __repr__(self):
-        return '<SharedIPGroup %s>' % self.name
+        if 'name' in self:
+            return '<SharedIPGroup %s>' % self['name']
+        return super(SharedIPGroup, self).__repr__()
 
     def delete(self):
-        url = '/'.join([get_url('cloudservers'), 'shared_ip_groups', str(self.id)])
+        url = '/'.join([get_url('cloudservers'), 'shared_ip_groups', str(self['id'])])
         session = get_session()
         response = session.delete(url)
         return handle_response(response)

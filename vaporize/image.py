@@ -7,10 +7,12 @@ from vaporize.util import DotDict
 
 class Image(DotDict):
     def __repr__(self):
-        return '<Image %s>' % self.name
+        if 'name' in self:
+            return '<Image %s>' % self['name']
+        return super(Image, self).__repr__()
 
     def delete(self):
-        url = '/'.join([get_url('cloudservers'), 'images', str(self.id)])
+        url = '/'.join([get_url('cloudservers'), 'images', str(self['id'])])
         session = get_session()
         response = session.delete(url)
         return handle_response(response)

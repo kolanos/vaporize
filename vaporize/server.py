@@ -30,23 +30,30 @@ BACKUP_DAILY_H_2200_0000 = 'H_2200_0000'
 
 class BackupSchedule(DotDict):
     def __repr__(self):
-        return '<BackupSchedule %s %s>' % (self.weekly, self.daily)
+        if 'daily' in self:
+            return '<BackupSchedule %s>' % self['daily']
+        if 'weekly' in self:
+            return '<BackupSchedule %s>' % self['weekly']
+        return super(BackupSchedule, self).__repr__()
 
 
-class IP(DotDict):
+class IP(dict):
     def __repr__(self):
-        if hasattr(self, 'public'):
-            return '<IP %s>' % self.public[0]
-        elif hasattr(self, 'private'):
-            return '<IP %s>' % self.private[0]
+        if 'public' in self:
+            return '<IP %s>' % self['public'][0]
+        if 'private' in self:
+            return '<IP %s>' % self['private'][0]
+        return super(IP, self).__repr__()
 
 
 class Server(DotDict):
     def __repr__(self):
-        return "<Server %s>" % self.name
+        if 'name' in self:
+            return "<Server %s>" % self['name']
+        return super(Server, self).__repr__()
 
     def reload(self):
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self.id)])
+        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id'])])
         session = get_session()
         response = session.get(munge_url(url))
         self = handle_response(response, Server, 'server')
@@ -59,7 +66,7 @@ class Server(DotDict):
         if password:
             data['server']['adminPass'] = password
         data = json.dumps(data)
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self.id)])
+        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id'])])
         session = get_session()
         response = session.put(url, data=data)
         response = handle_response(response)
@@ -69,14 +76,14 @@ class Server(DotDict):
         return self
 
     def delete(self):
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self.id)])
+        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id'])])
         session = get_session()
         response = session.delete(url)
         return handle_response(response)
 
     @property
     def ips(self):
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self.id),
+        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'ips'])
         session = get_session()
         response = session.get(munge_url(url))
@@ -84,7 +91,7 @@ class Server(DotDict):
 
     @property
     def public_ips(self):
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self.id),
+        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'ips', 'public'])
         session = get_session()
         response = session.get(munge_url(url))
@@ -92,7 +99,7 @@ class Server(DotDict):
 
     @property
     def private_ips(self):
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self.id),
+        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'ips', 'private'])
         session = get_session()
         response = session.get(munge_url(url))
@@ -101,14 +108,14 @@ class Server(DotDict):
     def share_ip(self, address, ipgroup, configure=True):
         data = json.dumps({'shareIp': {'sharedIpGroup': int(ipgroup),
                                        'configureServer': configure}})
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self.id),
+        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'ips', 'public', address])
         session = get_session()
         response = session.put(url, data=data)
         return handle_response(response, IP)
 
     def unshare_ip(self, address):
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self.id),
+        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'ips', 'public', address])
         session = get_session()
         response = session.delete(url)
@@ -117,7 +124,7 @@ class Server(DotDict):
     def soft_reboot(self):
         data = json.dumps({'reboot': {'type': 'SOFT'}})
         url = '/'.join([get_url('cloudservers'), 'servers',
-                        str(self.id), 'action'])
+                        str(self['id']), 'action'])
         session = get_session()
         response = session.post(url, data=data)
         return handle_response(response)
@@ -125,7 +132,7 @@ class Server(DotDict):
     def hard_reboot(self):
         data = json.dumps({'reboot': {'type': 'HARD'}})
         url = '/'.join([get_url('cloudservers'), 'servers',
-                        str(self.id), 'action'])
+                        str(self['id']), 'action'])
         session = get_session()
         response = session.post(url, data=data)
         return handle_response(response)
@@ -133,14 +140,14 @@ class Server(DotDict):
     def rebuild(self, image):
         data = json.dumps({'rebuild': {'imageId': int(image)}})
         url = '/'.join([get_url('cloudservers'), 'servers',
-                        str(self.id), 'action'])
+                        str(self['id']), 'action'])
         session = get_session()
         response = session.post(url, data=data)
         return handle_response(response)
 
     def resize(self, flavor):
         data = json.dumps({'resize': {'flavorId': int(flavor)}})
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self.id), 'action'])
+        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']), 'action'])
         session = get_session()
         response = session.post(url, data=data)
         return handle_response(response)
@@ -148,7 +155,7 @@ class Server(DotDict):
     def confirm_resize(self):
         data = json.dumps({'confirmResize': None})
         url = '/'.join([get_url('cloudservers'), 'servers',
-                        str(self.id), 'action'])
+                        str(self['id']), 'action'])
         session = get_session()
         response = session.post(url, data=data)
         return handle_response(response)
@@ -156,14 +163,14 @@ class Server(DotDict):
     def revert_resize(self):
         data = json.dumps({'revertResize': None})
         url = '/'.join([get_url('cloudservers'), 'servers',
-                        str(self.id), 'action'])
+                        str(self['id']), 'action'])
         session = get_session()
         response = session.post(url, data=data)
         return handle_response(response)
 
     @property
     def backup_schedule(self):
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self.id),
+        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'backup_schedule'])
         session = get_session()
         response = session.get(munge_url(url))
@@ -173,14 +180,14 @@ class Server(DotDict):
         data = {'backupSchedule': {'enable': True,
                                    'weekly': weekly,
                                    'daily': daily}}
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self.id),
+        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'backup_schedule'])
         session = get_session()
         response = session.post(url, data=data)
         return handle_response(response)
 
     def disable_backup_schedule(self):
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self.id),
+        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'backup_schedule'])
         session = get_session()
         response = session.delete(url)
