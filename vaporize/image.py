@@ -56,7 +56,7 @@ def get(id):
 
     :param id: The ID of the Image to retrieve
     :type id: int
-    :returns: :class:`Image`
+    :returns: A :class:`Image`
 
     .. versionadded:: 0.1
     """

@@ -19,7 +19,7 @@ def list(limit=None, offset=None, detail=False):
     :type offset: int
     :param detail: Return additional details about each Flavor
     :type: bool
-    :returns: :class:`Flavor`
+    :returns: A :class:`Flavor`
 
     .. versionadded:: 0.1
     """
@@ -39,7 +39,7 @@ def get(id):
     
     :param id: The ID of the Flavor to retrieve
     :type id: int
-    :returns: :class:`Flavor`
+    :returns: A :class:`Flavor`
 
     .. versionadded:: 0.1
     """

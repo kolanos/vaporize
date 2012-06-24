@@ -33,7 +33,7 @@ class Domain(DotDict):
         """
         Reload this Domain
 
-        :returns: :class:`Domain`
+        :returns: a :class:`Domain`
 
         .. versionadded:: 0.1
         """
@@ -52,7 +52,7 @@ class Domain(DotDict):
         :type emailAddress: str
         :param comment: A comment or note about this Domain
         :type comment: str
-        :returns: :class:`Domain`
+        :returns: A :class:`Domain`
 
         .. versionadded:: 0.1
         """
@@ -215,7 +215,7 @@ class Record(DotDict):
         """
         Reload a Record (an implicit ``get``)
 
-        :returns: :class:`Record`
+        :returns: A :class:`Record`
 
         .. versionadded:: 0.1
         """

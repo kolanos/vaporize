@@ -39,7 +39,7 @@ class BackupSchedule(DotDict):
 
 
 class IP(dict):
-    """A CloudServer IP Address"""
+    """A CloudServers IP Address"""
     def __repr__(self):
         if 'public' in self:
             return '<IP %s>' % self['public'][0]
@@ -49,16 +49,18 @@ class IP(dict):
 
 
 class Server(DotDict):
-    """A CloudServer Server"""
+    """A CloudServers Server"""
     def __repr__(self):
         if 'name' in self:
             return "<Server %s>" % self['name']
         return super(Server, self).__repr__()
 
     def reload(self):
-        """reload this Server (implicit ``get``)
+        """Reload this Server (implicit ``get``)
 
-        :returns: self
+        :returns: a :class:`Server`
+
+        .. versionadded:: 0.1
         """
         assert 'id' in self
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id'])])
@@ -74,13 +76,15 @@ class Server(DotDict):
         :type name: str
         :param password: Change the Server's root password
         :type password: str
-        :returns: self
+        :returns: A :class:`Server`
+
+        .. versionadded:: 0.1
         """
         assert 'id' in self
         data = {'server': {}}
-        if name:
+        if name is not None:
             data['server']['name'] = name
-        if password:
+        if password is not None:
             data['server']['adminPass'] = password
         data = json.dumps(data)
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id'])])
@@ -88,22 +92,28 @@ class Server(DotDict):
         response = session.put(url, data=data)
         response = handle_response(response)
         if response:
-            if name:
-                self.name = name
+            if name is not None:
+                self['name'] = name
         return self
 
     def delete(self):
+        """Delete this Server
+
+        .. versionadded:: 0.1
+        """
+        assert 'id' in self
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id'])])
         session = get_session()
         response = session.delete(url)
         return handle_response(response)
 
-    @property
     def ips(self):
         """
         Returns a list of public and private IPs for this Server
-        
-        :returns: A list of IP types
+
+        :returns: A list of :class:`IP`
+
+        .. versionadded:: 0.1
         """
         assert 'id' in self
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
@@ -114,7 +124,10 @@ class Server(DotDict):
 
     @property
     def public_ips(self):
-        """Returns the Server's Public IP"""
+        """Returns the Server's Public IP
+        
+        .. versionadded:: 0.1
+        """
         assert 'id' in self
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'ips', 'public'])
@@ -124,7 +137,10 @@ class Server(DotDict):
 
     @property
     def private_ips(self):
-        """Returns the Server's Private IP"""
+        """Returns the Server's Private IP
+        
+        .. versionadded:: 0.1
+        """
         assert 'id' in self
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'ips', 'private'])
@@ -133,7 +149,10 @@ class Server(DotDict):
         return handle_response(response, IP)
 
     def share_ip(self, address, ipgroup, configure=True):
-        """Share this Server's IP in a Shared IP Group"""
+        """Share this Server's IP in a Shared IP Group
+        
+        .. versionadded:: 0.1
+        """
         assert 'id' in self
         data = json.dumps({'shareIp': {'sharedIpGroup': int(ipgroup),
                                        'configureServer': configure}})
@@ -144,7 +163,10 @@ class Server(DotDict):
         return handle_response(response, IP)
 
     def unshare_ip(self, address):
-        """Unshare this Server's IP"""
+        """Unshare this Server's IP
+        
+        .. versionadded:: 0.1
+        """
         assert 'id' in self
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'ips', 'public', address])
@@ -153,7 +175,10 @@ class Server(DotDict):
         return handle_response(response)
 
     def soft_reboot(self):
-        """Perform a soft reboot on this Server"""
+        """Perform a soft reboot on this Server
+        
+        .. versionadded:: 0.1
+        """
         assert 'id' in self
         data = json.dumps({'reboot': {'type': 'SOFT'}})
         url = '/'.join([get_url('cloudservers'), 'servers',
@@ -163,7 +188,10 @@ class Server(DotDict):
         return handle_response(response)
 
     def hard_reboot(self):
-        """Perform a hard reboot on this Server"""
+        """Perform a hard reboot on this Server
+        
+        .. versionadded:: 0.1
+        """
         assert 'id' in self
         data = json.dumps({'reboot': {'type': 'HARD'}})
         url = '/'.join([get_url('cloudservers'), 'servers',
@@ -173,47 +201,65 @@ class Server(DotDict):
         return handle_response(response)
 
     def rebuild(self, image):
-        """Rebuild this Server using a specified Image"""
+        """Rebuild this Server using a specified Image
+        
+        :param image: The :class:`vaporize.image.Image` ``id``
+        :type image: int
+
+        .. versionadded:: 0.1
+        """
         assert 'id' in self
         data = json.dumps({'rebuild': {'imageId': int(image)}})
         url = '/'.join([get_url('cloudservers'), 'servers',
                         str(self['id']), 'action'])
         session = get_session()
         response = session.post(url, data=data)
-        return handle_response(response)
 
     def resize(self, flavor):
-        """Resize this Server to a specific Flavor size"""
+        """Resize this Server to a specific Flavor size
+        
+        :param flavor: The :class:`vaporize.flavor.Flavor` ``id``
+        :type flavor: int
+
+        .. versionadded:: 0.1
+        """
         assert 'id' in self
         data = json.dumps({'resize': {'flavorId': int(flavor)}})
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']), 'action'])
         session = get_session()
         response = session.post(url, data=data)
-        return handle_response(response)
 
     def confirm_resize(self):
-        """Confirm a successful resize operation"""
+        """Confirm a successful resize operation
+        
+        .. versionadded:: 0.1
+        """
         assert 'id' in self
         data = json.dumps({'confirmResize': None})
         url = '/'.join([get_url('cloudservers'), 'servers',
                         str(self['id']), 'action'])
         session = get_session()
         response = session.post(url, data=data)
-        return handle_response(response)
 
     def revert_resize(self):
-        """Revert an unsuccessful resize operation"""
+        """Revert an unsuccessful resize operation
+        
+        .. versionadded:: 0.1
+        """
         assert 'id' in self
         data = json.dumps({'revertResize': None})
         url = '/'.join([get_url('cloudservers'), 'servers',
                         str(self['id']), 'action'])
         session = get_session()
         response = session.post(url, data=data)
-        return handle_response(response)
 
-    @property
     def backup_schedule(self):
-        """Return this Server's backup schedule"""
+        """Return this Server's backup schedule
+        
+        :return: :class:`BackupSchedule`
+
+        .. versionadded:: 0.1
+        """
         assert 'id' in self
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'backup_schedule'])
@@ -222,7 +268,15 @@ class Server(DotDict):
         return handle_response(response, BackupSchedule, 'backupSchedule')
 
     def enable_backup_schedule(self, weekly, daily):
-        """Enable a backup schedule for this Server"""
+        """Enable a backup schedule for this Server
+        
+        :param weekly: The weekly backup schedule
+        :type weekly: str
+        :param daily: The daily backup schedule
+        :type daily: str
+        
+        .. versionadded:: 0.1
+        """
         assert 'id' in self
         data = {'backupSchedule': {'enable': True,
                                    'weekly': weekly,
@@ -231,16 +285,17 @@ class Server(DotDict):
                         'backup_schedule'])
         session = get_session()
         response = session.post(url, data=data)
-        return handle_response(response)
 
     def disable_backup_schedule(self):
-        """Disable a backup schedule for this Server"""
+        """Disable a backup schedule for this Server
+        
+        .. versionadded:: 0.1
+        """
         assert 'id' in self
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'backup_schedule'])
         session = get_session()
         response = session.delete(url)
-        return handle_response(response)
 
 
 def list(limit=None, offset=None, detail=False):
@@ -253,7 +308,9 @@ def list(limit=None, offset=None, detail=False):
     :type offset: int
     :param detail: Return detailed information about each Server
     :type detail: bool
-    :returns: List of Servers
+    :returns: List of :class:`Server`
+
+    .. versionadded:: 0.1
     """
     url = [get_url('cloudservers'), 'servers']
     if detail:
@@ -267,12 +324,13 @@ def list(limit=None, offset=None, detail=False):
 
 
 def get(id):
-    """
-    Return a Server using an ID
+    """Return a Server using an ID
 
-    :param id: The ID ofthe Server to be retrieved
+    :param id: The ``id`` of the Server to be retrieved
     :type id: int
-    :return: A Server
+    :return: A :class:`Server`
+
+    .. versionadded:: 0.1
     """
     url = '/'.join([get_url('cloudservers'), 'servers', str(id)])
     session = get_session()
@@ -281,6 +339,22 @@ def get(id):
 
 
 def create(name, image, flavor, metadata=None, files=None):
+    """Create a CloudServers Server
+
+    :param name: A Server's name
+    :type name: str
+    :param image: A :class:`vaporize.image.Image` ``id``
+    :type image: int
+    :param flavor: A :class:`vaporize.flavor.Flavor` ``id``
+    :type flavor: int
+    :param metadata: Optional meta data to include with Server
+    :type metadata: dict
+    :param files: A list of files to load on Server
+    :type files: dict
+    :returns: A :class:`Server`
+
+    .. versionadded:: 0.1
+    """
     data = {'server': {'name': name,
                        'imageId': int(image),
                        'flavorId': int(flavor),
