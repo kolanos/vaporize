@@ -2,10 +2,10 @@ import json
 
 from vaporize.core import (get_session, get_url, handle_response, munge_url,
                            query)
-from vaporize.flavor import Flavor
-from vaporize.image import Image
-from vaporize.ipgroup import SharedIPGroup
-from vaporize.util import DotDict
+from vaporize.flavors import Flavor
+from vaporize.images import Image
+from vaporize.ipgroups import SharedIPGroup
+from vaporize.utils import DotDict
 
 BACKUP_WEEKLY_DISABLED  = 'DISABLED'
 BACKUP_WEEKLY_SUNDAY    = 'SUNDAY'

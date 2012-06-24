@@ -2,7 +2,7 @@ import json
 
 from vaporize.core import (get_session, get_url, handle_response, munge_url,
                            query)
-from vaporize.util import DotDict
+from vaporize.utils import DotDict
 
 
 class Image(DotDict):

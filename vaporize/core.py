@@ -3,10 +3,9 @@ import time
 import urllib
 import urlparse
 
-from dateutil.parser import parse
 import requests
 
-from vaporize.exception import ConnectionError, handle_exception
+from vaporize.exceptions import ConnectionError, handle_exception
 
 US_AUTH_URL = "https://identity.api.rackspacecloud.com/v1.1/auth"
 UK_AUTH_URL = "https://lon.identity.api.rackspacecloud.com/v1.1/auth"
@@ -40,7 +39,7 @@ def connect(user, apikey, region='DFW'):
     if response.status_code in [200, 203]:
         data = json.loads(response.content)['auth']
         _settings['token'] = data['token']['id']
-        _settings['expires'] = parse(data['token']['expires'])
+        _settings['expires'] = data['token']['expires']
         for s, r in data['serviceCatalog'].items():
             if len(r) == 1:
                 _settings[s.lower() + '_url'] = r[0]['publicURL']

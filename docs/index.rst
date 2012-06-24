@@ -12,12 +12,12 @@ API
 .. toctree::
    :maxdepth: 2
 
-   domain
-   flavor
-   image
-   ipgroup
-   loadbalancer
-   server
+   domains
+   flavors
+   images
+   ipgroups
+   loadbalancers
+   servers
 
 Indices and tables
 ==================
