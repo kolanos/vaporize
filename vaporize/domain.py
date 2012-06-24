@@ -1,3 +1,5 @@
+import json
+
 from vaporize.core import (get_session, get_url, handle_response, munge_url,
                            query)
 from vaporize.util import DotDict
@@ -81,7 +83,7 @@ class Domain(DotDict):
     def delete(self, subdomains=False):
         """
         Delete this Domain
-        
+
         :param subdomains: Delete this Domain's Subdomains (optional)
         :type subdomains: bool
 
@@ -96,7 +98,7 @@ class Domain(DotDict):
     def records(self):
         """
         Returns a list of CloudDNS Records
-        
+
         :returns: A list of :class:`Record`
 
         .. versionadded:: 0.1
@@ -113,7 +115,7 @@ class Domain(DotDict):
     def subdomains(self):
         """
         Returns a list of Subdomains.
-        
+
         :returns; A list of :class:`Subdomain`
 
         .. versionadded:: 0.1
@@ -185,9 +187,9 @@ class Record(DotDict):
 
         .. note::
 
-            This is only a factory method. In order for the Record to be created
-            on CloudDNS you must add the :class:`Record` this method returns to
-            an existing :class:`Domain`.
+            This is only a factory method. In order for the Record to be
+            created on CloudDNS you must add the :class:`Record` this method
+            returns to an existing :class:`Domain`.
 
         :param name: A domain name such as ``www.mydomain.com``
         :type name: str
@@ -244,8 +246,8 @@ class Subdomain(DotDict):
         .. note::
 
             This is only a factory method. In order for the Subdomain to be
-            created the :class:`Subdomain` returned by this method must be added
-            to an existing CloudDNS :class:`Domain`.
+            created the :class:`Subdomain` returned by this method must be
+            added to an existing CloudDNS :class:`Domain`.
 
         :param name: A subdomain such as ``www.yourdomain.com``
         :type name: str
@@ -351,13 +353,13 @@ def create(name, ttl=300, records=None, subdomains=None, comment=None,
                     'name': name,
                     'type': 'NS',
                     'data': 'dns1.stabletransit.com',
-                    'ttl' : 3600
+                    'ttl': 3600
                     })
             data['domains'][0]['recordsList']['records'].append({
                     'name': name,
                     'type': 'NS',
                     'data': 'dns2.stabletransit.com',
-                    'ttl' : 3600
+                    'ttl': 3600
                     })
     if isinstance(subdomains, (list, tuple)):
         for subdomain in subdomains:

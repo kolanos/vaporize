@@ -12,8 +12,11 @@ class AccessRule(DotDict):
         return super(AccessRule, self).__repr__()
 
     def delete(self):
+        assert 'id' in self
+        assert 'loadbalancer_id' in self
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
-                        str(self['loadbalancer_id']), 'accesslist', str(self['id'])])
+                        str(self['loadbalancer_id']), 'accesslist',
+                        str(self['id'])])
         session = get_session()
         response = session.delete(url)
         handle_response(response)
@@ -76,7 +79,8 @@ class LoadBalancer(DotDict):
         if port:
             data['loadBalancer']['port'] = int(port)
         if connection_logging:
-            data['loadBalancer']['connectionLogging'] = bool(connection_logging)
+            connection_logging = bool(connection_logging)
+            data['loadBalancer']['connectionLogging'] = connection_logging
         data = json.dumps(data)
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
                         str(self['id'])])
@@ -109,7 +113,8 @@ class LoadBalancer(DotDict):
                         str(self['id']), 'nodes'])
         session = get_session()
         response = session.get(munge_url(url))
-        return handle_response(response, Node, 'nodes', loadbalancer_id=self['id'])
+        return handle_response(response, Node, 'nodes',
+                               loadbalancer_id=self['id'])
 
     def create_node(self, address, port, condition, type, weight):
         data = {'nodes': [{'address': address,
@@ -122,7 +127,8 @@ class LoadBalancer(DotDict):
                         str(self['id']), 'nodes'])
         session = get_session()
         response = session.post(url, data=data)
-        return handle_response(response, Node, 'nodes', loadbalancer_id=self['id'])
+        return handle_response(response, Node, 'nodes',
+                               loadbalancer_id=self['id'])
 
     def delete_node(self, id):
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
@@ -239,10 +245,12 @@ class LoadBalancer(DotDict):
 
     def enable_connection_throttle(self, max_connections, min_connections,
                                    max_connection_rate, rate_interval):
-        data = {'connectionThrottle': {'maxConnections': int(max_connections),
-                                       'minConnections': int(min_connections),
-                                       'maxConnectionRate': int(max_connection_rate),
-                                       'rateInterval': int(rate_interval)}}
+        data = {'connectionThrottle': {
+            'maxConnections': int(max_connections),
+            'minConnections': int(min_connections),
+            'maxConnectionRate': int(max_connection_rate),
+            'rateInterval': int(rate_interval)
+            }}
         data = json.dumps(data)
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
                         str(self['id']), 'connectionthrottle'])
@@ -267,10 +275,12 @@ class LoadBalancer(DotDict):
 
     def enable_health_monitor(self, type, delay, timeout,
                               attempts_before_deactivation):
-        data = {'healthMonitor': {'type': type,
-                                  'delay': int(delay),
-                                  'timeout': int(timeout),
-                                  'attemptsBeforeDeactivation': int(attempts_before_deactivation)}}
+        data = {'healthMonitor': {
+            'type': type,
+            'delay': int(delay),
+            'timeout': int(timeout),
+            'attemptsBeforeDeactivation': int(attempts_before_deactivation)
+            }}
         data = json.dumps(data)
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
                         str(self['id']), 'healthmonitor'])
@@ -362,7 +372,8 @@ class Node(DotDict):
 
     def reload(self):
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
-                        str(self['loadbalancer_id']), 'nodes', str(self['id'])])
+                        str(self['loadbalancer_id']), 'nodes',
+                        str(self['id'])])
         session = get_session()
         response = session.get(url)
         response = handle_response(response, Node, 'node',
@@ -381,7 +392,8 @@ class Node(DotDict):
             data['node']['weight'] = int(weight)
         data = json.dumps(data)
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
-                        str(self['loadbalancer_id']), 'nodes', str(self['id'])])
+                        str(self['loadbalancer_id']), 'nodes',
+                        str(self['id'])])
         session = get_session()
         response = session.put(url, data=data)
         response = handle_response(response)
@@ -430,7 +442,8 @@ class VirtualIP(DotDict):
 
     def delete(self):
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
-                        str(self['loadbalancer_id']), 'virtualips', str(self['id'])])
+                        str(self['loadbalancer_id']), 'virtualips',
+                        str(self['id'])])
         session = get_session()
         response = session.delete(url)
         handle_response(response)
@@ -466,8 +479,10 @@ def create(name, protocol, port, virtual_ips, nodes, algorithm=None,
                              'nodes': [],
                              'metadata': metadata or {}}}
     for virtual_ip in virtual_ips:
-        data['loadBalancer']['virtualIps'].append({'ipVersion': virtual_ip.version,
-                                                   'type': virtual_ip.type})
+        data['loadBalancer']['virtualIps'].append({
+            'ipVersion': virtual_ip.version,
+            'type': virtual_ip.type
+            })
     for node in nodes:
         data['loadBalancer']['nodes'].append({'address': node.address,
                                               'port': int(node.port),

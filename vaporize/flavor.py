@@ -12,7 +12,7 @@ class Flavor(DotDict):
 
 def list(limit=None, offset=None, detail=False):
     """Returns a list of Flavors
-    
+
     :param limit: Limit the result set by a number
     :type limit: int
     :param offset: Offset the result set by a number
@@ -36,7 +36,7 @@ def list(limit=None, offset=None, detail=False):
 
 def get(id):
     """Returns a Flavor by ID
-    
+
     :param id: The ID of the Flavor to retrieve
     :type id: int
     :returns: A :class:`Flavor`

@@ -22,11 +22,12 @@ class SharedIPGroup(DotDict):
 
     def delete(self):
         """Delete this Shared IP Group
-        
+
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        url = '/'.join([get_url('cloudservers'), 'shared_ip_groups', str(self['id'])])
+        url = '/'.join([get_url('cloudservers'), 'shared_ip_groups',
+                        str(self['id'])])
         session = get_session()
         response = session.delete(url)
         handle_response(response)

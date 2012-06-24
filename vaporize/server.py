@@ -130,7 +130,7 @@ class Server(DotDict):
     @property
     def public_ips(self):
         """Returns the Server's Public IP
-        
+
         .. versionadded:: 0.1
         """
         assert 'id' in self
@@ -143,7 +143,7 @@ class Server(DotDict):
     @property
     def private_ips(self):
         """Returns the Server's Private IP
-        
+
         .. versionadded:: 0.1
         """
         assert 'id' in self
@@ -168,7 +168,7 @@ class Server(DotDict):
         """
         assert 'id' in self
         if isinstance(ipgroup, SharedIPGroup):
-            ipgroup = ipgroup.id 
+            ipgroup = ipgroup.id
         else:
             ipgroup = int(ipgroup)
         data = json.dumps({'shareIp': {'sharedIpGroup': ipgroup,
@@ -181,7 +181,7 @@ class Server(DotDict):
 
     def unshare_ip(self, address):
         """Unshare this Server's IP
-        
+
         .. versionadded:: 0.1
         """
         assert 'id' in self
@@ -193,7 +193,7 @@ class Server(DotDict):
 
     def soft_reboot(self):
         """Perform a soft reboot on this Server
-        
+
         .. versionadded:: 0.1
         """
         assert 'id' in self
@@ -206,7 +206,7 @@ class Server(DotDict):
 
     def hard_reboot(self):
         """Perform a hard reboot on this Server
-        
+
         .. versionadded:: 0.1
         """
         assert 'id' in self
@@ -219,7 +219,7 @@ class Server(DotDict):
 
     def rebuild(self, image):
         """Rebuild this Server using a specified Image
-        
+
         :param image: The :class:`Image` or ``id``
         :type image: int or :class:`Image`
 
@@ -266,7 +266,7 @@ class Server(DotDict):
 
     def revert_resize(self):
         """Revert an unsuccessful resize operation
-        
+
         .. versionadded:: 0.1
         """
         assert 'id' in self
@@ -279,7 +279,7 @@ class Server(DotDict):
 
     def backup_schedule(self):
         """Return this Server's backup schedule
-        
+
         :return: :class:`BackupSchedule`
 
         .. versionadded:: 0.1
@@ -293,12 +293,12 @@ class Server(DotDict):
 
     def enable_backup_schedule(self, weekly, daily):
         """Enable a backup schedule for this Server
-        
+
         :param weekly: The weekly backup schedule
         :type weekly: str
         :param daily: The daily backup schedule
         :type daily: str
-        
+
         .. versionadded:: 0.1
         """
         assert 'id' in self
@@ -313,7 +313,7 @@ class Server(DotDict):
 
     def disable_backup_schedule(self):
         """Disable a backup schedule for this Server
-        
+
         .. versionadded:: 0.1
         """
         assert 'id' in self
