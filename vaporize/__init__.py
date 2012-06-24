@@ -5,5 +5,5 @@ __license__ = 'MIT'
 __copyright__ = 'Copyright 2012 Michael Lavers'
 
 
-from . import flavor, image, ipgroup, loadbalancer, server
+from . import domain, flavor, image, ipgroup, loadbalancer, server
 from .core import connect
