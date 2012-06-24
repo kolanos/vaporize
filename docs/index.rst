@@ -6,6 +6,14 @@
 Welcome to Vaporize's documentation!
 ====================================
 
+User Guide
+----------
+
+.. toctree::
+   :maxdepth: 2
+
+   gettingstarted
+
 API
 ---
 
