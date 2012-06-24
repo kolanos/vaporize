@@ -2,6 +2,9 @@ import json
 
 from vaporize.core import (get_session, get_url, handle_response, munge_url,
                            query)
+from vaporize.flavor import Flavor
+from vaporize.image import Image
+from vaporize.ipgroup import SharedIPGroup
 from vaporize.util import DotDict
 
 BACKUP_WEEKLY_DISABLED  = 'DISABLED'
@@ -105,7 +108,7 @@ class Server(DotDict):
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id'])])
         session = get_session()
         response = session.delete(url)
-        return handle_response(response)
+        handle_response(response)
 
     def ips(self):
         """
@@ -120,7 +123,9 @@ class Server(DotDict):
                         'ips'])
         session = get_session()
         response = session.get(munge_url(url))
-        return handle_response(response, IP, 'addresses')
+        response = handle_response(response, IP, 'addresses')
+        self['addresses'] = response
+        return response
 
     @property
     def public_ips(self):
@@ -150,17 +155,29 @@ class Server(DotDict):
 
     def share_ip(self, address, ipgroup, configure=True):
         """Share this Server's IP in a Shared IP Group
-        
+
+        :param address: IP to share in the Shared IP Group
+        :type address: str
+        :param ipgroup: A :class:`SharedIPGroup` or ``id``
+        :type ipgroup: int or :class:`SharedIPGroup`
+        :param configure: Configure the shared IP on the Server
+        :type configure: bool
+        :returns: A :class:`SharedIPGroup`
+
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        data = json.dumps({'shareIp': {'sharedIpGroup': int(ipgroup),
+        if isinstance(ipgroup, SharedIPGroup):
+            ipgroup = ipgroup.id 
+        else:
+            ipgroup = int(ipgroup)
+        data = json.dumps({'shareIp': {'sharedIpGroup': ipgroup,
                                        'configureServer': configure}})
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'ips', 'public', address])
         session = get_session()
         response = session.put(url, data=data)
-        return handle_response(response, IP)
+        handle_response(response)
 
     def unshare_ip(self, address):
         """Unshare this Server's IP
@@ -172,7 +189,7 @@ class Server(DotDict):
                         'ips', 'public', address])
         session = get_session()
         response = session.delete(url)
-        return handle_response(response)
+        handle_response(response)
 
     def soft_reboot(self):
         """Perform a soft reboot on this Server
@@ -185,7 +202,7 @@ class Server(DotDict):
                         str(self['id']), 'action'])
         session = get_session()
         response = session.post(url, data=data)
-        return handle_response(response)
+        handle_response(response)
 
     def hard_reboot(self):
         """Perform a hard reboot on this Server
@@ -198,40 +215,45 @@ class Server(DotDict):
                         str(self['id']), 'action'])
         session = get_session()
         response = session.post(url, data=data)
-        return handle_response(response)
+        handle_response(response)
 
     def rebuild(self, image):
         """Rebuild this Server using a specified Image
         
-        :param image: The :class:`vaporize.image.Image` ``id``
-        :type image: int
+        :param image: The :class:`Image` or ``id``
+        :type image: int or :class:`Image`
 
         .. versionadded:: 0.1
         """
         assert 'id' in self
+        image = image.id if isinstance(image, Image) else int(image)
         data = json.dumps({'rebuild': {'imageId': int(image)}})
         url = '/'.join([get_url('cloudservers'), 'servers',
                         str(self['id']), 'action'])
         session = get_session()
         response = session.post(url, data=data)
+        handle_response(response)
 
     def resize(self, flavor):
         """Resize this Server to a specific Flavor size
-        
-        :param flavor: The :class:`vaporize.flavor.Flavor` ``id``
-        :type flavor: int
+
+        :param flavor: The :class:`Flavor` or ``id``
+        :type flavor: int or :class:`Flavor`
 
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        data = json.dumps({'resize': {'flavorId': int(flavor)}})
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']), 'action'])
+        flavor = flavor.id if isinstance(flavor, Flavor) else int(flavor)
+        data = json.dumps({'resize': {'flavorId': flavor}})
+        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
+                        'action'])
         session = get_session()
         response = session.post(url, data=data)
+        handle_response(response)
 
     def confirm_resize(self):
         """Confirm a successful resize operation
-        
+
         .. versionadded:: 0.1
         """
         assert 'id' in self
@@ -240,6 +262,7 @@ class Server(DotDict):
                         str(self['id']), 'action'])
         session = get_session()
         response = session.post(url, data=data)
+        handle_response(response)
 
     def revert_resize(self):
         """Revert an unsuccessful resize operation
@@ -252,6 +275,7 @@ class Server(DotDict):
                         str(self['id']), 'action'])
         session = get_session()
         response = session.post(url, data=data)
+        handle_response(response)
 
     def backup_schedule(self):
         """Return this Server's backup schedule
@@ -285,6 +309,7 @@ class Server(DotDict):
                         'backup_schedule'])
         session = get_session()
         response = session.post(url, data=data)
+        handle_response(response)
 
     def disable_backup_schedule(self):
         """Disable a backup schedule for this Server
@@ -296,6 +321,7 @@ class Server(DotDict):
                         'backup_schedule'])
         session = get_session()
         response = session.delete(url)
+        handle_response(response)
 
 
 def list(limit=None, offset=None, detail=False):
@@ -355,9 +381,11 @@ def create(name, image, flavor, metadata=None, files=None):
 
     .. versionadded:: 0.1
     """
+    image = image.id if isinstance(image, Image) else int(image)
+    flavor = flavor.id if isinstance(flavor, Flavor) else int(flavor)
     data = {'server': {'name': name,
-                       'imageId': int(image),
-                       'flavorId': int(flavor),
+                       'imageId': image,
+                       'flavorId': flavor,
                        'metadata': metadata or {},
                        'personality': []}}
     if isinstance(files, dict):

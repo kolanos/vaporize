@@ -51,7 +51,7 @@ def connect(user, apikey, region='DFW'):
         auth = Auth(_settings['token'])
         headers = {'Content-Type': 'application/json',
                    'Accept': 'application/json'}
-        _session = requests._session(auth=auth, headers=headers)
+        _session = requests.session(auth=auth, headers=headers)
     else:
         raise ConnectionError("HTTP %d: %s" % (response.status_code,
                                                response.content))
@@ -63,11 +63,11 @@ def handle_response(response, wrapper=None, container=None, **kwargs):
             return True
         data = json.loads(response.content)
         if isinstance(data[container], list):
-            return [wrapper(i.update(kwargs)) for i in data[container]]
+            return [wrapper(i, **kwargs) for i in data[container]]
         elif container is None:
-            return wrapper(data.update(kwargs))
+            return wrapper(data, **kwargs)
         else:
-            return wrapper(data[container].update(kwargs))
+            return wrapper(data[container], **kwargs)
     else:
         handle_exception(response.status_code, response.content)
 

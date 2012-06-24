@@ -91,6 +91,7 @@ class Domain(DotDict):
         url = query(url, deleteSubdomains=subdomains)
         session = get_session()
         response = session.delete(url)
+        handle_response(response)
 
     def records(self):
         """

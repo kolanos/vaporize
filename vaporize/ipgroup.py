@@ -12,6 +12,14 @@ class SharedIPGroup(DotDict):
             return '<SharedIPGroup %s>' % self['name']
         return super(SharedIPGroup, self).__repr__()
 
+    def __setitem__(self, key, value):
+        if key == 'sharedIpGroupId':
+            super(SharedIPGroup, self).__setitem__('id', value)
+        elif key == 'configuredServer':
+            super(SharedIPGroup, self).__setitem__('configured', bool(value))
+        else:
+            super(SharedIPGroup, self).__setitem__(key, value)
+
     def delete(self):
         """Delete this Shared IP Group
         
@@ -21,6 +29,7 @@ class SharedIPGroup(DotDict):
         url = '/'.join([get_url('cloudservers'), 'shared_ip_groups', str(self['id'])])
         session = get_session()
         response = session.delete(url)
+        handle_response(response)
 
 
 def list(limit=None, offset=None, detail=False):

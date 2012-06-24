@@ -25,6 +25,7 @@ class Image(DotDict):
         url = '/'.join([get_url('cloudservers'), 'images', str(self['id'])])
         session = get_session()
         response = session.delete(url)
+        handle_response(response)
 
 
 def list(limit=None, offset=None, detail=False):
