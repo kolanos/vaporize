@@ -86,7 +86,7 @@ class Domain(DotDict):
 
             There is no confirmation step to this operation. Deleting this
             domain is permanent. If in doubt you can export a copy of the DNS
-            zone (:func:`vaporize.domains.Domain.export`) before deleting.
+            zone (:func:`vaporize.domains.Domain.export_zone`) before deleting.
 
         :param subdomains: Delete this Domain's Subdomains (optional)
         :type subdomains: bool

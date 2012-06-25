@@ -31,7 +31,7 @@ default.
 First Request
 -------------
 
-There are many interfaces available on the Rackspace Cloud, but lets startwith a
+There are many interfaces available on the Rackspace Cloud, but lets start with a
 simple one. Lets get a list of all your CloudServers:
 
     >>> vaporize.servers.list()

@@ -2,6 +2,7 @@ import json
 
 from vaporize.core import (get_session, get_url, handle_response, munge_url,
                            query)
+from vaporize.server import Server
 from vaporize.utils import DotDict
 
 
@@ -19,6 +20,11 @@ class Image(DotDict):
 
             You can only delete Images you create.
 
+        .. warning::
+
+            Tehre is not confirmation step for this operation. Deleting an image
+            is permanent.
+
         .. versionadded:: 0.1
         """
         assert 'id' in self
@@ -29,7 +35,7 @@ class Image(DotDict):
 
 
 def list(limit=None, offset=None, detail=False):
-    """Returns a list of Images.
+    """Returns a list of CloudServers Images.
 
     :param limit: Limit the result set by a cetain number
     :type limit: int
@@ -37,7 +43,8 @@ def list(limit=None, offset=None, detail=False):
     :type offset: int
     :param detail: Return additional details about each Image
     :type detail: bool
-    :returns: A list of :class:`Image`
+    :returns: A list of CloudServers Images.
+    :rtype: A list of :class:`Image`
 
     .. versionadded:: 0.1
     """
@@ -57,7 +64,8 @@ def get(id):
 
     :param id: The ID of the Image to retrieve
     :type id: int
-    :returns: A :class:`Image`
+    :returns: A CloudServer Image matching the ID.
+    :rtype: :class:`Image`
 
     .. versionadded:: 0.1
     """
@@ -72,13 +80,15 @@ def create(name, server):
 
     :param name: Name of the Image
     :type name: str
-    :param server: :class:`vaporize.server.Server` ``id`` to create Image from
-    :type server: int
-    :returns: An :class:`Image`
+    :param server: :class:`vaporize.server.Server` or ``id`` base the Image upon
+    :type server: int or :class:`vaporize.server.Server`
+    :returns: A shiny new CloudServers Image.
+    :rtype: :class:`Image`
 
     .. versionadded:: 0.1
     """
-    data = {'image': {'serverId': int(server),
+    server = server.id if isintance(server, Server) else int(server)
+    data = {'image': {'serverId': server,
                       'name': name}}
     data = json.dumps(data)
     url = '/'.join([get_url('cloudservers'), 'images'])

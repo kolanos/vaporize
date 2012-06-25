@@ -61,7 +61,8 @@ class Server(DotDict):
     def reload(self):
         """Reload this Server (an implicit :func:`get`).
 
-        :returns: A :class:`Server`
+        :returns: An updated CloudServers Server.
+        :rtype: :class:`Server`
 
         .. versionadded:: 0.1
         """
@@ -77,7 +78,8 @@ class Server(DotDict):
         :type name: str
         :param password: Change the Server's root password
         :type password: str
-        :returns: A :class:`Server`
+        :returns: A modified CloudServers Server.
+        :rtype: :class:`Server`
 
         .. versionadded:: 0.1
         """
@@ -100,11 +102,11 @@ class Server(DotDict):
     def delete(self):
         """Delete this Server.
         
-        .. warning:
+        .. warning::
 
             There is no confirmation step for this operation. When you delete a
             server it is permanent. If in doubt, create a backup image
-            (:func:`vaporize.image.create`) first before deleting.
+            (:func:`vaporize.images.create`) first before deleting.
 
         .. versionadded:: 0.1
         """
@@ -118,7 +120,8 @@ class Server(DotDict):
         """
         Returns a list of public and private IPs for this Server.
 
-        :returns: A list of :class:`IP`
+        :returns: A list of public and private IPs for this Server.
+        :rtype: A list of :class:`IP`
 
         .. versionadded:: 0.1
         """
@@ -166,7 +169,8 @@ class Server(DotDict):
         :type ipgroup: int or :class:`SharedIPGroup`
         :param configure: Configure the shared IP on the Server
         :type configure: bool
-        :returns: A :class:`SharedIPGroup`
+        :returns: The Shared IP Group associated with this Server.
+        :rtype: :class:`SharedIPGroup`
 
         .. versionadded:: 0.1
         """
@@ -338,7 +342,8 @@ def list(limit=None, offset=None, detail=False):
     :type offset: int
     :param detail: Return detailed information about each Server
     :type detail: bool
-    :returns: List of :class:`Server`
+    :returns: A list of CloudServers Servers.
+    :rtype: List of :class:`Server`
 
     .. versionadded:: 0.1
     """
@@ -381,7 +386,8 @@ def create(name, image, flavor, metadata=None, files=None):
     :type metadata: dict
     :param files: A list of files to load on Server
     :type files: dict
-    :returns: A :class:`Server`
+    :returns: A shiny new CloudServers Server.
+    :rtype: :class:`Server`
 
     .. versionadded:: 0.1
     """
