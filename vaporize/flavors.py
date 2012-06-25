@@ -3,7 +3,7 @@ from vaporize.utils import DotDict
 
 
 class Flavor(DotDict):
-    """A CloudServers Flavor"""
+    """A CloudServers Flavor."""
     def __repr__(self):
         if 'name' in self:
             return '<Flavor %s>' % self['name']
@@ -11,7 +11,7 @@ class Flavor(DotDict):
 
 
 def list(limit=None, offset=None, detail=False):
-    """Returns a list of Flavors
+    """Returns a list of Flavors.
 
     :param limit: Limit the result set by a number
     :type limit: int
@@ -35,7 +35,7 @@ def list(limit=None, offset=None, detail=False):
 
 
 def get(id):
-    """Returns a Flavor by ID
+    """Returns a Flavor by ID.
 
     :param id: The ID of the Flavor to retrieve
     :type id: int

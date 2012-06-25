@@ -6,7 +6,7 @@ from vaporize.utils import DotDict
 
 
 class SharedIPGroup(DotDict):
-    """A Cloudservers Shared IP Group"""
+    """A Cloudservers Shared IP Group."""
     def __repr__(self):
         if 'name' in self:
             return '<SharedIPGroup %s>' % self['name']
@@ -21,7 +21,7 @@ class SharedIPGroup(DotDict):
             super(SharedIPGroup, self).__setitem__(key, value)
 
     def delete(self):
-        """Delete this Shared IP Group
+        """Delete this Shared IP Group.
 
         .. versionadded:: 0.1
         """
@@ -34,7 +34,7 @@ class SharedIPGroup(DotDict):
 
 
 def list(limit=None, offset=None, detail=False):
-    """Returns a list of Shared IP Groups
+    """Returns a list of Shared IP Groups.
 
     :param limit: Limit the result set by a certain number
     :type limit: int
@@ -58,7 +58,7 @@ def list(limit=None, offset=None, detail=False):
 
 
 def get(id):
-    """Return a Shared IP Group by ID
+    """Return a Shared IP Group by ID.
 
     :param id: The ID of the Shared IP Group to retrieve
     :type id: int
@@ -73,7 +73,7 @@ def get(id):
 
 
 def create(name, server):
-    """Create a Shared IP Group
+    """Create a Shared IP Group.
 
     :param name: Name of the Shared IP Group
     :type name: str

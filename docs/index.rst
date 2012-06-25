@@ -20,6 +20,7 @@ API
 .. toctree::
    :maxdepth: 2
 
+   core
    domains
    flavors
    images

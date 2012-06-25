@@ -32,7 +32,7 @@ BACKUP_DAILY_H_2200_0000 = 'H_2200_0000'
 
 
 class BackupSchedule(DotDict):
-    """A CloudServers Backup Schedule"""
+    """A CloudServers Backup Schedule."""
     def __repr__(self):
         if 'daily' in self:
             return '<BackupSchedule %s>' % self['daily']
@@ -42,7 +42,7 @@ class BackupSchedule(DotDict):
 
 
 class IP(dict):
-    """A CloudServers IP Address"""
+    """A CloudServers IP Address."""
     def __repr__(self):
         if 'public' in self:
             return '<IP %s>' % self['public'][0]
@@ -52,28 +52,26 @@ class IP(dict):
 
 
 class Server(DotDict):
-    """A CloudServers Server"""
+    """A CloudServers Server."""
     def __repr__(self):
         if 'name' in self:
             return "<Server %s>" % self['name']
         return super(Server, self).__repr__()
 
     def reload(self):
-        """Reload this Server (implicit ``get``)
+        """Reload this Server (an implicit :func:`get`).
 
-        :returns: a :class:`Server`
+        :returns: A :class:`Server`
 
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id'])])
-        session = get_session()
-        response = session.get(munge_url(url))
-        self = handle_response(response, Server, 'server')
+        response = get(self['id'])
+        self.update(response)
         return self
 
-    def update(self, name=None, password=None):
-        """Update this Server
+    def modify(self, name=None, password=None):
+        """Modify this Server's name or root password.
 
         :param name: Change the Server's name
         :type name: str
@@ -100,7 +98,13 @@ class Server(DotDict):
         return self
 
     def delete(self):
-        """Delete this Server
+        """Delete this Server.
+        
+        .. warning:
+
+            There is no confirmation step for this operation. When you delete a
+            server it is permanent. If in doubt, create a backup image
+            (:func:`vaporize.image.create`) first before deleting.
 
         .. versionadded:: 0.1
         """
@@ -112,7 +116,7 @@ class Server(DotDict):
 
     def ips(self):
         """
-        Returns a list of public and private IPs for this Server
+        Returns a list of public and private IPs for this Server.
 
         :returns: A list of :class:`IP`
 
@@ -129,7 +133,7 @@ class Server(DotDict):
 
     @property
     def public_ips(self):
-        """Returns the Server's Public IP
+        """Returns the Server's Public IP.
 
         .. versionadded:: 0.1
         """
@@ -142,7 +146,7 @@ class Server(DotDict):
 
     @property
     def private_ips(self):
-        """Returns the Server's Private IP
+        """Returns the Server's Private IP.
 
         .. versionadded:: 0.1
         """
@@ -154,7 +158,7 @@ class Server(DotDict):
         return handle_response(response, IP)
 
     def share_ip(self, address, ipgroup, configure=True):
-        """Share this Server's IP in a Shared IP Group
+        """Share this Server's IP in a Shared IP Group.
 
         :param address: IP to share in the Shared IP Group
         :type address: str

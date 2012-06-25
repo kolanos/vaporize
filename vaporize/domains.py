@@ -6,12 +6,12 @@ from vaporize.utils import DotDict
 
 
 class Change(DotDict):
-    """A CloudDNS Change History"""
+    """A CloudDNS Change History."""
     pass
 
 
 class Domain(DotDict):
-    """A CloudDNS Domain"""
+    """A CloudDNS Domain."""
     def __repr__(self):
         if 'name' in self:
             return '<Domain %s>' % self.name
@@ -33,20 +33,19 @@ class Domain(DotDict):
 
     def reload(self):
         """
-        Reload this Domain
+        Reload this Domain (an implicit :func:`get`).
 
         :returns: a :class:`Domain`
 
         .. versionadded:: 0.1
         """
-        url = '/'.join([get_url('clouddns'), 'domains', str(self['id'])])
-        session = get_session()
-        response = session.get(munge_url(url))
-        return handle_response(response, Domain)
+        assert 'id' in self
+        response = get(self['id'])
+        self.update(response)
+        return self
 
-    def update(self, ttl=None, emailAddress=None, comment=None):
-        """
-        Update this Domain
+    def modify(self, ttl=None, emailAddress=None, comment=None):
+        """Modify this Domain's properties.
 
         :param ttl: Time-To-Live (TTL0 in seconds
         :type ttl: int
@@ -81,8 +80,13 @@ class Domain(DotDict):
         return self
 
     def delete(self, subdomains=False):
-        """
-        Delete this Domain
+        """Delete this Domain.
+
+        .. warning::
+
+            There is no confirmation step to this operation. Deleting this
+            domain is permanent. If in doubt you can export a copy of the DNS
+            zone (:func:`vaporize.domains.Domain.export`) before deleting.
 
         :param subdomains: Delete this Domain's Subdomains (optional)
         :type subdomains: bool
@@ -96,8 +100,7 @@ class Domain(DotDict):
         handle_response(response)
 
     def records(self):
-        """
-        Returns a list of CloudDNS Records
+        """Returns a list of CloudDNS Records.
 
         :returns: A list of :class:`Record`
 
@@ -113,8 +116,7 @@ class Domain(DotDict):
         return self['records']
 
     def subdomains(self):
-        """
-        Returns a list of Subdomains.
+        """Returns a list of Subdomains.
 
         :returns; A list of :class:`Subdomain`
 
@@ -130,8 +132,7 @@ class Domain(DotDict):
         return self['subdomains']
 
     def changes(self, since):
-        """
-        Returns a list of CloudDNS changes for this domain.
+        """Returns a list of CloudDNS changes for this domain.
 
         :param since: A datetime as a starting point.
         :type since: str
@@ -148,7 +149,7 @@ class Domain(DotDict):
         return handle_response(response, Change, 'changes')
 
     def export_zone(self):
-        """Export the raw BIND zone for this Domain
+        """Export the raw BIND zone for this Domain.
 
         :returns: An :class:`Export` containing the raw BIND zone
 
@@ -162,12 +163,12 @@ class Domain(DotDict):
 
 
 class Export(DotDict):
-    """A BIND Zone Export"""
+    """A BIND Zone Export."""
     pass
 
 
 class Nameserver(DotDict):
-    """A DNS Nameserver"""
+    """A DNS Nameserver."""
     def __repr__(self):
         if 'name' in self:
             return '<Nameserver %s>' % self['name']
@@ -175,7 +176,7 @@ class Nameserver(DotDict):
 
 
 class Record(DotDict):
-    """A CloudDNS Record"""
+    """A CloudDNS Record."""
     def __repr__(self):
         if 'name' in self:
             return '<Record %s>' % self['name']
@@ -183,7 +184,7 @@ class Record(DotDict):
 
     @classmethod
     def create(cls, name, type, data, ttl=300, priority=None, comment=None):
-        """Create a CloudDNS Record
+        """Create a CloudDNS Record.
 
         .. note::
 
@@ -215,8 +216,7 @@ class Record(DotDict):
                    comment=comment)
 
     def reload(self):
-        """
-        Reload a Record (an implicit ``get``)
+        """Reload a Record (an implicit ``get``).
 
         :returns: A :class:`Record`
 
@@ -233,7 +233,7 @@ class Record(DotDict):
 
 
 class Subdomain(DotDict):
-    """A CloudDNS Subdomain"""
+    """A CloudDNS Subdomain."""
     def __repr__(self):
         if 'name' in self:
             return '<Subdomain %s>' % self['name']
@@ -241,7 +241,7 @@ class Subdomain(DotDict):
 
     @classmethod
     def create(cls, name, comment=None, emailAddress=None):
-        """Create a Subdomain
+        """Create a Subdomain.
 
         .. note::
 
@@ -263,8 +263,7 @@ class Subdomain(DotDict):
 
 
 def list(limit=None, offset=None, filter=None):
-    """
-    List of Domains
+    """List of Domains.
 
     :param limit: Limit the number of results returned
     :type limit: int
@@ -288,8 +287,7 @@ def list(limit=None, offset=None, filter=None):
 
 
 def get(id, records=False, subdomains=False):
-    """
-    Retrieve a Domain using an ID
+    """Retrieve a Domain using an ID.
 
     :param records: Include the Domain's Records in the result
     :type records: bool
@@ -311,8 +309,7 @@ def get(id, records=False, subdomains=False):
 
 def create(name, ttl=300, records=None, subdomains=None, comment=None,
            emailAddress=None):
-    """
-    Create a CloudDNS Domain
+    """Create a CloudDNS Domain.
 
     :param name: A domain name such as ``yourname.com``
     :type name: str
@@ -381,8 +378,7 @@ def create(name, ttl=300, records=None, subdomains=None, comment=None,
 
 
 def import_zone(contents, type='BIND_9'):
-    """
-    Import a raw BIND zone into CloudDNS
+    """Import a raw BIND zone into CloudDNS.
 
     :param contents: Contents of the BIND zone
     :type contents: str

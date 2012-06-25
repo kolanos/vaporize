@@ -6,14 +6,14 @@ from vaporize.utils import DotDict
 
 
 class Image(DotDict):
-    """A CloudServers Image"""
+    """A CloudServers Image."""
     def __repr__(self):
         if 'name' in self:
             return '<Image %s>' % self['name']
         return super(Image, self).__repr__()
 
     def delete(self):
-        """Delete this Image
+        """Delete this Image.
 
         .. note::
 
@@ -29,7 +29,7 @@ class Image(DotDict):
 
 
 def list(limit=None, offset=None, detail=False):
-    """Returns a list of Images
+    """Returns a list of Images.
 
     :param limit: Limit the result set by a cetain number
     :type limit: int
@@ -53,7 +53,7 @@ def list(limit=None, offset=None, detail=False):
 
 
 def get(id):
-    """Return an Image by ID
+    """Return an Image by ID.
 
     :param id: The ID of the Image to retrieve
     :type id: int
@@ -68,7 +68,7 @@ def get(id):
 
 
 def create(name, server):
-    """Create an Image
+    """Create an Image.
 
     :param name: Name of the Image
     :type name: str

@@ -29,3 +29,21 @@ Documentation
 -------------
 
 Coming soon! (this is a priority, promise)
+
+Planned for v0.1
+----------------
+
+Support for the following Rackspace Cloud services:
+
+ * CloudServers
+ * CloudLoadBalancers
+ * CloudDNS
+
+Planned for v0.2
+----------------
+
+Support for the following Rackspace Cloud services:
+
+ * CloudFiles
+ * CloudDatabase
+ * CloudMonitoring

@@ -24,6 +24,22 @@ class Auth(requests.auth.AuthBase):
 
 
 def connect(user, apikey, region='DFW'):
+    """Create a session with the Rackspace Cloud API.
+
+    .. note::
+
+        Region support is not universal across all Rackspace Cloud services.
+
+    :param user: A Rackspace Cloud username.
+    :type user: str
+    :param apikey: A Rackspace Cloud API key.
+    :param apikey: str
+    :param region: A Rackspace Cloud region, such as ``DFW``, ``ORD`` or ``LON``.
+    :type region: str
+
+    Raises:
+        ConnectionError: An error occured while creating the connection/session.
+    """
     global _settings, _session
     if region in ['DFW', 'ORD']:
         auth_url = US_AUTH_URL
@@ -57,6 +73,7 @@ def connect(user, apikey, region='DFW'):
 
 
 def handle_response(response, wrapper=None, container=None, **kwargs):
+    """Handle a requests response in a consistent way."""
     if response.status_code in [200, 201, 202, 203, 204]:
         if not response.content.strip():
             return True
@@ -72,10 +89,12 @@ def handle_response(response, wrapper=None, container=None, **kwargs):
 
 
 def get_session():
+    """Return the requests session."""
     return _session
 
 
 def get_url(service):
+    """Return the URL for the specific Rackspace Cloud service."""
     service = '%s_url' % service
     if service in _settings:
         return _settings[service]
@@ -84,6 +103,7 @@ def get_url(service):
 
 
 def query(url, **kwargs):
+    """Append to the URL's query string."""
     scheme, netloc, path, query, fragment = urlparse.urlsplit(url)
     query = urlparse.parse_qsl(query)
     for k, v in kwargs.items():
@@ -94,6 +114,7 @@ def query(url, **kwargs):
 
 
 def munge_url(url):
+    """Prevent GET responses from being aggressively cached."""
     scheme, netloc, path, query, fragment = urlparse.urlsplit(url)
     query = urlparse.parse_qsl(query)
     query.append(('fresh', str(time.time())))
