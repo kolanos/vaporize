@@ -58,6 +58,11 @@ class Server(DotDict):
             return "<Server %s>" % self['name']
         return super(Server, self).__repr__()
 
+    def __setitem__(self, key, value):
+        if key == 'addresses':
+            value = IP(value)
+        super(Server, self).__setitem__(key, value)
+
     def reload(self):
         """Reload this Server (an implicit :func:`get`).
 
@@ -227,7 +232,7 @@ class Server(DotDict):
     def rebuild(self, image):
         """Rebuild this Server using a specified Image
 
-        :param image: The :class:`vaporize.images.Image` or ``id``
+        :param image: The Image or ``id``
         :type image: int or :class:`vaporize.images.Image`
 
         .. versionadded:: 0.1
@@ -246,7 +251,7 @@ class Server(DotDict):
     def resize(self, flavor):
         """Resize this Server to a specific Flavor size
 
-        :param flavor: The :class:`vaporize.flavors.Flavor` or ``id``
+        :param flavor: The Flavor or ``id``
         :type flavor: int or :class:`vaporize.flavors.Flavor`
 
         .. versionadded:: 0.1
@@ -381,9 +386,9 @@ def create(name, image, flavor, metadata=None, files=None):
 
     :param name: A Server's name
     :type name: str
-    :param image: A :class:`vaporize.images.Image` or ``id``
+    :param image: An Image or ``id``
     :type image: int or :class:`vaporize.images.Image`
-    :param flavor: A :class:`vaporize.flavors.Flavor` or ``id``
+    :param flavor: A Flavor or ``id``
     :type flavor: int or :class:`vaporize.flavors.Flavor`
     :param metadata: Optional meta data to include with Server
     :type metadata: dict

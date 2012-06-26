@@ -15,11 +15,10 @@ class SharedIPGroup(DotDict):
 
     def __setitem__(self, key, value):
         if key == 'sharedIpGroupId':
-            super(SharedIPGroup, self).__setitem__('id', value)
+            key = 'id'
         elif key == 'configuredServer':
-            super(SharedIPGroup, self).__setitem__('configured', bool(value))
-        else:
-            super(SharedIPGroup, self).__setitem__(key, value)
+            key = 'configured'
+        super(SharedIPGroup, self).__setitem__(key, value)
 
     def delete(self):
         """Delete this Shared IP Group.

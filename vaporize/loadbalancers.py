@@ -1,7 +1,8 @@
+import datetime
 import json
 
-from vaporize.core import (get_session, get_url, handle_response, munge_url,
-                           query)
+from vaporize.core import (DATETIME_FORMAT, get_session, get_url,
+                           handle_response, munge_url, query)
 from vaporize.utils import DotDict
 
 
@@ -41,7 +42,11 @@ class Algorithm(DotDict):
 
 class AllowedDomain(DotDict):
     """A CloudLoadBalancer Allowed Domains."""
-    pass
+    def __setitem__(self, key, value):
+        if key == 'allowedDomain':
+            key = 'name'
+            value = value['name']
+        super(Domain, self).__setitem__(key, value)
 
 
 class ContentCaching(DotDict):
@@ -75,6 +80,23 @@ class LoadBalancer(DotDict):
         if 'name' in self:
             return '<LoadBalancer %s>' % self['name']
         return super(LoadBalancer, self).__repr__()
+
+    def __setitem__(self, key, value):
+        if key == 'connectionLogging':
+            value = ConnectionLogging(value)
+        elif key == 'virtualIps':
+            value = map(lambda v: VirtualIP(v), value)
+        elif key == 'nodes':
+            value = map(lambda v: Node(v), value)
+        elif key == 'sessionPersistence':
+            value = SessionPersistence(value)
+        elif key == 'connectionThrottle':
+            value = ConnectionThrottle(value)
+        elif key == 'healthMonitor':
+            value = HealthMonitor(value)
+        elif key in ['created', 'updated']:
+            value = datetime.datetime.strptime(value['time'], DATETIME_FORMAT)
+        super(Domain, self).__setitem__(key, value)
 
     def reload(self):
         """Reload this Load Balancer (an implicit :func:`get`).
@@ -556,7 +578,7 @@ class LoadBalancer(DotDict):
         """Returns stats for this Load Balancer.
 
         :returns: Stats for this Load Balancer.
-        :rtype: dict
+        :rtype: :class:`Stat`
         
         .. versionadded:: 0.1
         """
@@ -565,7 +587,7 @@ class LoadBalancer(DotDict):
                         str(self['id']), 'stats'])
         session = get_session()
         response = session.get(munge_url(url))
-        return handle_response(response, dict)
+        return handle_response(response, Stat)
 
     def usage(self, start_time=None, end_time=None):
         """Returns Usage Report for this Load Balancer.
@@ -691,9 +713,18 @@ class SessionPersistence(DotDict):
             return '<SessionPersistence %s>' % self['persistenceType']
         return super(SessionPersistence, self).__repr__()
 
+    def __setitem__(self, key, value):
+        if key == 'persistenceType':
+            key = 'type'
+        super(Domain, self).__setitem__(key, value)
+
 
 class UsageReport(DotDict):
     """A CloudLoadBalancer Usage Report."""
+    pass
+
+
+class Stat(DotDict):
     pass
 
 

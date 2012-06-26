@@ -7,6 +7,8 @@ import requests
 
 from vaporize.exceptions import ConnectionError, handle_exception
 
+DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S.000+0000'
+
 US_AUTH_URL = "https://identity.api.rackspacecloud.com/v1.1/auth"
 UK_AUTH_URL = "https://lon.identity.api.rackspacecloud.com/v1.1/auth"
 

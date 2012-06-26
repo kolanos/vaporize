@@ -1,7 +1,8 @@
+import datetime
 import json
 
-from vaporize.core import (get_session, get_url, handle_response, munge_url,
-                           query)
+from vaporize.core import (DATETIME_FORMAT, get_session, get_url,
+                           handle_response, munge_url, query)
 import vaporize.servers
 from vaporize.utils import DotDict
 
@@ -12,6 +13,14 @@ class Image(DotDict):
         if 'name' in self:
             return '<Image %s>' % self['name']
         return super(Image, self).__repr__()
+
+    def __setitem__(self, key, value):
+        if key == 'serverId':
+            key = 'server_id'
+        elif key in ['created', 'updated']:
+            value = datetime.datetime.strptime(value, DATETIME_FORMAT)
+        super(Image, self).__setitem__(key, value)
+
 
     def delete(self):
         """Delete this Image.
@@ -80,7 +89,7 @@ def create(name, server):
 
     :param name: Name of the Image
     :type name: str
-    :param server: :class:`vaporize.servers.Server` or ``id`` base the Image upon
+    :param server: Server or ``id`` to base the Image upon
     :type server: int or :class:`vaporize.servers.Server`
     :returns: A shiny new CloudServers Image.
     :rtype: :class:`Image`

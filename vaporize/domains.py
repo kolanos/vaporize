@@ -1,7 +1,8 @@
+import datetime
 import json
 
-from vaporize.core import (get_session, get_url, handle_response, munge_url,
-                           query)
+from vaporize.core import (DATETIME_FORMAT, get_session, get_url,
+                           handle_response, munge_url, query)
 from vaporize.utils import DotDict
 
 
@@ -19,17 +20,13 @@ class Domain(DotDict):
 
     def __setitem__(self, key, value):
         if key == 'recordsList':
-            records = []
-            for record in value['records']:
-                records.append(Record(record))
-            super(Record, self).__setitem__('records', records)
+            key = 'records'
+            value = map(lambda v: Record(v), value['records'])
         elif key == 'subdomains':
-            subdomains = []
-            for domain in value['domains']:
-                subdomains.append(Subdomain(domain))
-            super(Record, self).__setitem__('subdomains', subdomains)
-        else:
-            super(Domain, self).__setitem__(key, value)
+            value = map(lambda v: Subdomain(v), value['domains'])
+        elif key in ['created', 'updated']:
+            value = datetime.datetime.strptime(value, DATETIME_FORMAT)
+        super(Domain, self).__setitem__(key, value)
 
     def reload(self):
         """
@@ -181,6 +178,11 @@ class Record(DotDict):
         if 'name' in self:
             return '<Record %s>' % self['name']
         return super(Record, self).__repr__()
+
+    def __setitem__(self, key, value):
+        if key in ['created', 'updated']:
+            value = datetime.datetime.strptime(value, DATETIME_FORMAT)
+        super(Record, self).__setitem__(key, value)
 
     @classmethod
     def create(cls, name, type, data, ttl=300, priority=None, comment=None):
