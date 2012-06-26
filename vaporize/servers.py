@@ -2,9 +2,9 @@ import json
 
 from vaporize.core import (get_session, get_url, handle_response, munge_url,
                            query)
-from vaporize.flavors import Flavor
-from vaporize.images import Image
-from vaporize.ipgroups import SharedIPGroup
+import vaporize.flavors
+import vaporize.images
+import vaporize.ipgroups
 from vaporize.utils import DotDict
 
 BACKUP_WEEKLY_DISABLED  = 'DISABLED'
@@ -165,20 +165,19 @@ class Server(DotDict):
 
         :param address: IP to share in the Shared IP Group
         :type address: str
-        :param ipgroup: A :class:`SharedIPGroup` or ``id``
-        :type ipgroup: int or :class:`SharedIPGroup`
+        :param ipgroup: A :class:`vaporize.ipgroups.SharedIPGroup` or ``id``
+        :type ipgroup: int or :class:`vaporize.ipgroups.SharedIPGroup`
         :param configure: Configure the shared IP on the Server
         :type configure: bool
         :returns: The Shared IP Group associated with this Server.
-        :rtype: :class:`SharedIPGroup`
+        :rtype: :class:`vaporize.ipgroups.SharedIPGroup`
 
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        if isinstance(ipgroup, SharedIPGroup):
+        if isinstance(ipgroup, vaporize.ipgroups.SharedIPGroup):
             ipgroup = ipgroup.id
-        else:
-            ipgroup = int(ipgroup)
+        ipgroup = int(ipgroup)
         data = json.dumps({'shareIp': {'sharedIpGroup': ipgroup,
                                        'configureServer': configure}})
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
@@ -228,13 +227,15 @@ class Server(DotDict):
     def rebuild(self, image):
         """Rebuild this Server using a specified Image
 
-        :param image: The :class:`Image` or ``id``
-        :type image: int or :class:`Image`
+        :param image: The :class:`vaporize.images.Image` or ``id``
+        :type image: int or :class:`vaporize.images.Image`
 
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        image = image.id if isinstance(image, Image) else int(image)
+        if isinstance(image, vaporize.images.Image):
+            image = image.id
+        image = int(image)
         data = json.dumps({'rebuild': {'imageId': int(image)}})
         url = '/'.join([get_url('cloudservers'), 'servers',
                         str(self['id']), 'action'])
@@ -245,13 +246,15 @@ class Server(DotDict):
     def resize(self, flavor):
         """Resize this Server to a specific Flavor size
 
-        :param flavor: The :class:`Flavor` or ``id``
-        :type flavor: int or :class:`Flavor`
+        :param flavor: The :class:`vaporize.flavors.Flavor` or ``id``
+        :type flavor: int or :class:`vaporize.flavors.Flavor`
 
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        flavor = flavor.id if isinstance(flavor, Flavor) else int(flavor)
+        if isinstance(flavor, vaporize.flavors.Flavor):
+            flavor = flavor.id
+        flavor = int(flavor)
         data = json.dumps({'resize': {'flavorId': flavor}})
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'action'])
@@ -378,10 +381,10 @@ def create(name, image, flavor, metadata=None, files=None):
 
     :param name: A Server's name
     :type name: str
-    :param image: A :class:`vaporize.image.Image` ``id``
-    :type image: int
-    :param flavor: A :class:`vaporize.flavor.Flavor` ``id``
-    :type flavor: int
+    :param image: A :class:`vaporize.images.Image` or ``id``
+    :type image: int or :class:`vaporize.images.Image`
+    :param flavor: A :class:`vaporize.flavors.Flavor` or ``id``
+    :type flavor: int or :class:`vaporize.flavors.Flavor`
     :param metadata: Optional meta data to include with Server
     :type metadata: dict
     :param files: A list of files to load on Server
@@ -391,8 +394,12 @@ def create(name, image, flavor, metadata=None, files=None):
 
     .. versionadded:: 0.1
     """
-    image = image.id if isinstance(image, Image) else int(image)
-    flavor = flavor.id if isinstance(flavor, Flavor) else int(flavor)
+    if isinstance(image, vaporize.images.Image):
+        image = image.id
+    image = int(image)
+    if isinstance(flavor, vaporize.flavors.Flavor):
+        flavor = flavor.id
+    flavor = int(flavor)
     data = {'server': {'name': name,
                        'imageId': image,
                        'flavorId': flavor,

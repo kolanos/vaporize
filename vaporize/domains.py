@@ -371,7 +371,7 @@ def create(name, ttl=300, records=None, subdomains=None, comment=None,
     if emailAddress is not None:
         data['domains'][0]['emailAddress'] = emailAddress
     data = json.dumps(data)
-    url = '/'.join([get_url('clouddns'), 'servers'])
+    url = '/'.join([get_url('clouddns'), 'domains'])
     session = get_session()
     response = session.post(url, data=data)
     return handle_response(response, Domain, 'domains')

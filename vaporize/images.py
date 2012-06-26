@@ -2,7 +2,7 @@ import json
 
 from vaporize.core import (get_session, get_url, handle_response, munge_url,
                            query)
-from vaporize.server import Server
+import vaporize.servers
 from vaporize.utils import DotDict
 
 
@@ -80,14 +80,16 @@ def create(name, server):
 
     :param name: Name of the Image
     :type name: str
-    :param server: :class:`vaporize.server.Server` or ``id`` base the Image upon
-    :type server: int or :class:`vaporize.server.Server`
+    :param server: :class:`vaporize.servers.Server` or ``id`` base the Image upon
+    :type server: int or :class:`vaporize.servers.Server`
     :returns: A shiny new CloudServers Image.
     :rtype: :class:`Image`
 
     .. versionadded:: 0.1
     """
-    server = server.id if isintance(server, Server) else int(server)
+    if isinstance(server, vaporize.servers.Server):
+        server = server.id
+    server = int(server)
     data = {'image': {'serverId': server,
                       'name': name}}
     data = json.dumps(data)

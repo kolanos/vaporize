@@ -2,7 +2,7 @@ import json
 
 from vaporize.core import (get_session, get_url, handle_response, munge_url,
                            query)
-from vaporize.server import Server
+import vaporize.servers
 from vaporize.utils import DotDict
 
 
@@ -79,14 +79,16 @@ def create(name, server):
 
     :param name: Name of the Shared IP Group
     :type name: str
-    :param server: The :class:`vaporize.server.Server` or ``id`` to add to group
-    :type server: int or :class:`vaporize.server.Server`
+    :param server: The :class:`vaporize.servers.Server` or ``id`` to add to group
+    :type server: int or :class:`vaporize.servers.Server`
     :returns: A shiny new CloudServers Shared IP Group.
     :rtype: :class:`SharedIPGroup`
 
     .. versionadded:: 0.1
     """
-    server = server.id if isintance(server, Server) else int(server)
+    if isinstance(server, vaporize.servers.Server):
+        server = server.id
+    server = int(server)
     data = {'sharedIpGroup': {'name': name,
                               'server': server}}
     data = json.dumps(data)
