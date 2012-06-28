@@ -13,6 +13,19 @@ class AccessRule(DotDict):
             return '<AccessRule %s %s>' % (self['type'], self['address'])
         return super(AccessRule, self).__repr__()
 
+    @classmethod
+    def create(cls, type, address):
+        """Create an Access Rule.
+
+        :param type: ``ACCEPT`` or ``DENY``
+        :param address: The IP address in which to apply the rule.
+        :returns: A shiny new Access Rule.
+        :rtype: :class:`AccessRule`
+
+        .. versionadded:: 0.1
+        """
+        return cls(type=type, address=address)
+
     def delete(self):
         """Delete this Access Rule.
 
@@ -82,18 +95,24 @@ class LoadBalancer(DotDict):
         return super(LoadBalancer, self).__repr__()
 
     def __setitem__(self, key, value):
-        if key == 'connectionLogging':
+        if key == 'accessList':
+            value = map(lambda v: AccessRule(v), value)
+        elif key == 'connectionLogging':
             value = ConnectionLogging(value)
-        elif key == 'virtualIps':
-            value = map(lambda v: VirtualIP(v), value)
+        elif key == 'connectionThrottle':
+            value = ConnectionThrottle(value)
+        elif key == 'contentCaching':
+            value = ContentCaching(value)
+        elif key == 'errorpage':
+            value = ErrorPage(value)
+        elif key == 'healthMonitor':
+            value = HealthMonitor(value)
         elif key == 'nodes':
             value = map(lambda v: Node(v), value)
         elif key == 'sessionPersistence':
             value = SessionPersistence(value)
-        elif key == 'connectionThrottle':
-            value = ConnectionThrottle(value)
-        elif key == 'healthMonitor':
-            value = HealthMonitor(value)
+        elif key == 'virtualIps':
+            value = map(lambda v: VirtualIP(v), value)
         elif key in ['created', 'updated']:
             value = datetime.datetime.strptime(value['time'], DATETIME_FORMAT)
         super(Domain, self).__setitem__(key, value)
@@ -187,38 +206,44 @@ class LoadBalancer(DotDict):
                         str(self['id']), 'nodes'])
         session = get_session()
         response = session.get(munge_url(url))
-        response = handle_response(response, Node, 'nodes',
-                               loadbalancer_id=self['id'])
-        self['nodes'] = response
+        self['nodes'] = handle_response(response, Node, 'nodes',
+                                        loadbalancer_id=self['id'])
         return self['nodes']
 
-    def add_node(self, address, port, condition, type, weight):
-        """Add a Node to this Load Balancer.
+    def add_nodes(self, *nodes):
+        """Add Nodes to this Load Balancer.
         
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        data = {'nodes': [{'address': address,
-                           'port': int(port),
-                           'condition': condition,
-                           'type': type,
-                           'weight': int(weight)}]}
+        data = {'nodes': []}
+        for node in nodes:
+            if isinstance(node, Node):
+                data['nodes'].append({
+                    'address': node.address,
+                    'port': node.port,
+                    'condition': node.condition,
+                    'type': node.type,
+                    'weight': node.weight
+                    })
         data = json.dumps(data)
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
                         str(self['id']), 'nodes'])
         session = get_session()
         response = session.post(url, data=data)
-        return handle_response(response, Node, 'nodes',
-                               loadbalancer_id=self['id'])
+        self['nodes'] = handle_response(response, Node, 'nodes',
+                                        loadbalancer_id=self['id'])
+        return self['nodes']
 
-    def remove_node(self, id):
+    def remove_node(self, node):
         """Remove a Node from this Load Balancer.
 
         .. versionadded:: 0.1
         """
+        node = node.id if isinstance(node, Node) else int(node)
         assert 'id' in self
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
-                        str(self['id']), 'nodes', str(id)])
+                        str(self['id']), 'nodes', str(node)])
         session = get_session()
         response = session.delete(url)
         handle_response(response)
@@ -241,28 +266,40 @@ class LoadBalancer(DotDict):
         self['virtual_ips'] = response
         return self['virtual_ips']
 
-    def add_virtual_ip(self, type):
-        """Add a Virtual IP to this Load Balancer.
+    def add_virtual_ips(self, *virtual_ips):
+        """Add Virtual IPs to this Load Balancer.
 
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        data = json.dumps({'virtualIp': {'ipVersion': 'IPV6', 'type': type}})
+        data = {'virtualIps': []}
+        for virtual_ip in virtual_ips:
+            if isinstance(virtual_ip, VirtualIP):
+                data['virtualIps'].append({
+                    'ipVersion': virtual_ip.version,
+                    'type': virtual_ip.type
+                    })
+        data = json.dumps(data)
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
                         str(self['id']), 'virtualips'])
         session = get_session()
         response = session.post(url, data=data)
-        return handle_response(response, VirtualIP, 'virtualIp',
-                               loadbalancer_id=self['id'])
+        self['virtual_ips'] = handle_response(response, VirtualIP, 'virtualIps',
+                                              loadbalancer_id=self['id'])
+        return self['virtual_ips']
 
-    def remove_virtual_ip(self, id):
+    def remove_virtual_ip(self, virtual_ip):
         """Remove a VirtualIP from this Load Balancer.
 
         .. versionadded:: 0.1
         """
         assert 'id' in self
+        if isintance(virtual_ip, VirtualIP):
+            virtual_ip = virtual_ip.id
+        else:
+            virtual_ip = int(virtual_ip)
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
-                        str(self['id']), 'virtualips', str(id)])
+                        str(self['id']), 'virtualips', str(virtual_ip)])
         session = get_session()
         response = session.delete(url)
         handle_response(response)
@@ -280,28 +317,47 @@ class LoadBalancer(DotDict):
                         str(self['id']), 'accesslist'])
         session = get_session()
         response = session.get(munge_url(url))
-        return handle_response(response, AccessRule, 'accessList',
-                               loadbalancer_id=self['id'])
+        self['access_list'] = handle_response(response,
+                                              AccessRule,
+                                              'accessList',
+                                              loadbalancer_id=self['id'])
+        return self['access_list']
 
-    def add_access_rule(self, type, address):
-        """Add AccessRule to this Load Balancer.
+    def add_access_rules(self, *access_rules):
+        """Add AccessRules to this Load Balancer.
 
         .. versionadded:: 0.1
         """
+        data = {'accessList': []}
+        for access_rule in access_rules:
+            if isinstance(access_rule, AccessRule):
+                data['accessList'].append({
+                    'type': access_rule.type,
+                    'address': access_rule.address
+                    })
+        data = json.dumps(data)
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
                         str(self['id']), 'accesslist'])
         session = get_session()
-        response = session.post(url)
-        return handle_response(response, AccessRule, 'accessList')
+        response = session.post(url, data=data)
+        self['access_list'] = handle_response(response,
+                                              AccessRule,
+                                              'accessList',
+                                              loadbalancer_id=self['id'])
+        return self['access_list']
 
-    def remove_access_rule(self, id):
+    def remove_access_rule(self, access_rule):
         """Remove an AccessRule from this Load Balancer.
 
         .. versionadded:: 0.1
         """
         assert 'id' in self
+        if isinstance(access_rule, AccessRule):
+            access_rule = access_rule.id
+        else:
+            access_rule = int(access_rule)
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
-                        str(self['id']), 'accesslist', str(id)])
+                        str(self['id']), 'accesslist', str(access_rule)])
         session = get_session()
         response = session.delete(url)
         handle_response(response)
@@ -319,8 +375,10 @@ class LoadBalancer(DotDict):
                         str(self['id']), 'connectionlogging'])
         session = get_session()
         response = session.get(munge_url(url))
-        return handle_response(response, ConnectionLogging,
-                               'connectionLogging')
+        self['connection_logging'] = handle_response(response,
+                                                     ConnectionLogging,
+                                                     'connectionLogging')
+        return self['connection_logging']
 
     def enable_connection_logging(self):
         """Enable Connection Logging for this Load Balancer.
@@ -337,6 +395,7 @@ class LoadBalancer(DotDict):
         session = get_session()
         response = session.put(url, data=data)
         handle_response(response)
+        self['connection_logging']['enabled'] = True
 
     def disable_connection_logging(self):
         """Disable Connection Logging for this Load Balancer.
@@ -350,6 +409,7 @@ class LoadBalancer(DotDict):
         session = get_session()
         response = session.put(url, data=data)
         handle_response(response)
+        self['connection_logging']['enabled'] = False
 
     def content_caching(self):
         """Returns the Connection Caching setting for this Load Balancer.
@@ -364,7 +424,10 @@ class LoadBalancer(DotDict):
                         str(self['id']), 'contentcaching'])
         session = get_session()
         response = session.get(munge_url(url))
-        return handle_response(response, ContentCaching, 'contentCaching')
+        self['content_caching'] = handle_response(response,
+                                                  ContentCaching,
+                                                  'contentCaching')
+        return self['content_caching']
 
     def enable_content_caching(self):
         """Enable Content Caching for this Load Balancer.
@@ -378,6 +441,7 @@ class LoadBalancer(DotDict):
         session = get_session()
         response = session.put(url, data=data)
         handle_response(response)
+        self['content_caching']['enabled'] = True
 
     def disable_content_caching(self):
         """Disable Content Caching for this Load Balancer.
@@ -391,6 +455,7 @@ class LoadBalancer(DotDict):
         session = get_session()
         response = session.put(url, data=data)
         handle_response(response)
+        self['content_caching']['enabled'] = False
 
     def connection_throttle(self):
         """Return the Connection Throttle setting for this Load Balancer.
@@ -405,8 +470,10 @@ class LoadBalancer(DotDict):
                         str(self['id']), 'connectionthrottle'])
         session = get_session()
         response = session.get(munge_url(url))
-        return handle_response(response, ConnectionThrottle,
-                               'connectionThrottle')
+        self['connection_throttle'] = handle_response(response,
+                                                      ConnectionThrottle,
+                                                      'connectionThrottle')
+        return self['connection_throttle']
 
     def enable_connection_throttle(self, max_connections, min_connections,
                                    max_connection_rate, rate_interval):
@@ -427,6 +494,13 @@ class LoadBalancer(DotDict):
         session = get_session()
         response = session.put(url, data=data)
         handle_response(response)
+        self['connection_throttle'].update({
+                'max_connections': int(max_connections),
+                'min_connections': int(min_connections),
+                'max_connection_rate': int(max_connection_rate),
+                'rate_interval': int(rate_interval)
+                })
+        return self['connection_throttle']
 
     def disable_connection_throttle(self):
         """Disable Connection Throttle for this Load Balancer.
@@ -439,6 +513,7 @@ class LoadBalancer(DotDict):
         session = get_session()
         response = session.delete(url)
         handle_response(response)
+        self['connection_throttle'] = {}
 
     def health_monitor(self):
         """Returns the Health Monitor setting for this Load Balancer.
@@ -621,6 +696,15 @@ class Node(DotDict):
             return '<Node %s>' % self['address']
         return super(Node, self).__repr__()
 
+    @classmethod
+    def create(cls, address, port, condition, type, weight):
+        """Create a Load Balancer Node.
+        
+        .. versionadded:: 0.1
+        """
+        return cls(address=address, port=int(port), condition=condition,
+                   type=type, weight=int(weight))
+
     def reload(self):
         """Reload this Node.
 
@@ -735,6 +819,27 @@ class VirtualIP(DotDict):
             return '<VirtualIP %s>' % self['address']
         return super(VirtualIP, self).__repr__()
 
+    def __setitem__(self, key, value):
+        if key == 'ipVersion':
+            key = 'version'
+        super(VirtualIP, self).__setitem__(key, value)
+
+
+    @classmethod
+    def create(cls, version, type):
+        """Create a Virtual IP.
+
+        :param version: ``IPV4`` or ``IPV6``.
+        :type version: str
+        :param type: ``PUBLIC`` or ``SERVICENET``
+        :type type: str
+        :returns: A shiny new Virtual IP.
+        :rtype: :class:`VirtualIP`
+
+        .. versionadded:: 0.1
+        """
+        return cls(version=version, type=type)
+ 
     def delete(self):
         """Delete this Virtual IP.
 

@@ -41,13 +41,13 @@ class Domain(DotDict):
         self.update(response)
         return self
 
-    def modify(self, ttl=None, emailAddress=None, comment=None):
+    def modify(self, ttl=None, email_address=None, comment=None):
         """Modify this Domain's properties.
 
         :param ttl: Time-To-Live (TTL0 in seconds
         :type ttl: int
-        :param emailAddress: E-mail address associated with Domain
-        :type emailAddress: str
+        :param email_address: E-mail address associated with Domain
+        :type email_address: str
         :param comment: A comment or note about this Domain
         :type comment: str
         :returns: A :class:`Domain`
@@ -58,8 +58,8 @@ class Domain(DotDict):
         data = {}
         if ttl is not None:
             data['ttl'] = int(ttl)
-        if emailAddress is not None:
-            data['emailAddress'] = emailAddress
+        if email_address is not None:
+            data['email_address'] = email_address
         if comment is not None:
             data['comment'] = comment
         data = json.dumps(data)
@@ -70,8 +70,8 @@ class Domain(DotDict):
         if response:
             if ttl is not None:
                 self['ttl'] = int(ttl)
-            if emailAddress is not None:
-                self['emailAddress'] = emailAddress
+            if email_address is not None:
+                self['emailAddress'] = email_address
             if comment is not None:
                 self['comment'] = comment
         return self
@@ -90,6 +90,7 @@ class Domain(DotDict):
 
         .. versionadded:: 0.1
         """
+        assert 'id' in self
         url = '/'.join([get_url('clouddns'), 'domains', str(self['id'])])
         url = query(url, deleteSubdomains=subdomains)
         session = get_session()
@@ -111,6 +112,53 @@ class Domain(DotDict):
         self['records'] = handle_response(response, Record, 'records',
                                           domain_id=self['id'])
         return self['records']
+
+    def add_records(self, *records):
+        """Add Records to a Domain.
+
+        :param records: Records you wish to add to this Domain.
+        :type records: :class:`Record`
+        :returns: A list of Records
+        :rtype: :class:`Record`
+
+        .. versionadded:: 0.1
+        """
+        assert 'id' in self
+        data = {'records': []}
+        for record in records:
+            if isinstance(record, Record):
+                data['records'].append({
+                    'name': record.name,
+                    'type': record.type,
+                    'data': record.data,
+                    'ttl': record.ttl,
+                    'priority': record.priority,
+                    'comment': record.comment
+                    })
+        data = json.dumps(data)
+        url = '/'.join([get_url('clouddns'), 'domains', str(self['id']),
+                        'records'])
+        session = get_session()
+        response = session.post(url, data=data)
+        self['records'] = handle_response(response, Record, 'records',
+                                          domain_id=self['id'])
+        return self['records']
+
+    def remove_record(self, record):
+        """Remove a Record from this Domain.
+
+        :param record: A Record or ``id`` for the Record to remove.
+        :type record: int or :class:`REcord`
+
+        .. versionadded:: 0.1
+        """
+        assert 'id' in self
+        record = record.id if isinstance(record, Record) else int(record)
+        url = '/'.join([get_url('clouddns'), 'domains', str(self['id']),
+                        'records', str(record)])
+        session = get_session()
+        response = session.delete(url)
+        handle_response(response)
 
     def subdomains(self):
         """Returns a list of Subdomains.
@@ -188,7 +236,7 @@ class Record(DotDict):
     def create(cls, name, type, data, ttl=300, priority=None, comment=None):
         """Create a CloudDNS Record.
 
-        .. note::
+        .. important::
 
             This is only a factory method. In order for the Record to be
             created on CloudDNS you must add the :class:`Record` this method
@@ -230,8 +278,65 @@ class Record(DotDict):
                                 'records', str(self['id'])])
         session = get_session()
         response = session.get(munge_url(url))
-        self = handle_response(response, Record)
+        response = handle_response(response, Record)
+        self.update(response)
         return self
+
+    def modify(self, name=None, data=None, ttl=None):
+        """Modify this Record's properties.
+
+        :param name: Modify the Record's name.
+        :type ttl: str
+        :param data: Modify the Record's data.
+        :type data: str
+        :param ttl: Modify the Record's time-to-live (TTL).
+        :type ttl: int
+        :returns: A list of Records.
+        :rtype: A list of :class:`Record`
+
+        .. versionadded:: 0.1
+        """
+        assert 'id' in self
+        assert 'domain_id' in self
+        data = {}
+        if name is not None:
+            data['name'] = name
+        if data is not None:
+            data['data'] = data
+        if ttl is not None:
+            data['ttl'] = int(ttl)
+        data = json.dumps(data)
+        url = '/'.join([get_url('clouddns'), 'domains', str(self['domain_id']),
+                        'records', str(self['id'])])
+        session = get_session()
+        response = session.put(url, data=data)
+        response = handle_response(response)
+        if name is not None:
+            self['name'] = name
+        if data is not None:
+            self['data'] = data
+        if ttl is not None:
+            self['ttl'] = int(ttl)
+        return self
+
+    def delete(self, subdomains=False):
+        """Delete this Record.
+
+        .. warning::
+
+            There is no confirmation step to this operation. Deleting this
+            record is permanent. If in doubt you can export a copy of the DNS
+            zone (:func:`vaporize.domains.Domain.export_zone`) before deleting.
+
+        .. versionadded:: 0.1
+        """
+        assert 'id' in self
+        assert 'domain_id' in self
+        url = '/'.join([get_url('clouddns'), 'domains', str(self['domain_id']),
+                        'records', str(self['id'])])
+        session = get_session()
+        response = session.delete(url)
+        handle_response(response)
 
 
 class Subdomain(DotDict):
@@ -242,10 +347,10 @@ class Subdomain(DotDict):
         return super(Nameserver, self).__repr__()
 
     @classmethod
-    def create(cls, name, comment=None, emailAddress=None):
+    def create(cls, name, comment=None, email_address=None):
         """Create a Subdomain.
 
-        .. note::
+        .. important::
 
             This is only a factory method. In order for the Subdomain to be
             created the :class:`Subdomain` returned by this method must be
@@ -255,13 +360,13 @@ class Subdomain(DotDict):
         :type name: str
         :param comment: An optional comment associated with the subdomain
         :type comment: str
-        :param emailAddress: An e-mail address associated with the subdomain
-        :type emailAddress: str
+        :param email_address: An e-mail address associated with the subdomain
+        :type email_address: str
         :returns: A :class:`Subdomain`
 
         .. versionadded:: 0.1
         """
-        return cls(name=name, comment=comment, emailAddress=None)
+        return cls(name=name, comment=comment, email_address=None)
 
 
 def list(limit=None, offset=None, filter=None):
@@ -273,7 +378,8 @@ def list(limit=None, offset=None, filter=None):
     :type offset: int
     :param filter: Filter results by a domain name
     :type filter: str
-    :returns: List of :class:`Domain`
+    :returns: List of Domains
+    :rtype: :class:`Domain`
 
     .. versionadded:: 0.1
     """
@@ -310,7 +416,7 @@ def get(id, records=False, subdomains=False):
 
 
 def create(name, ttl=300, records=None, subdomains=None, comment=None,
-           emailAddress=None):
+           email_address=None):
     """Create a CloudDNS Domain.
 
     :param name: A domain name such as ``yourname.com``
@@ -320,12 +426,13 @@ def create(name, ttl=300, records=None, subdomains=None, comment=None,
     :param records: A list of :class:`Record` to create
     :type records: list
     :param subdomains: A list of :class:`Subdomain` to create
-    :type suddomains: list
+    :type subdomains: list
     :param comment: An optional comment to associated with the domain
     :type comment: str
-    :param emailAddress: An e-mail address to associated with the domain
-    :type emailAddress: str
-    :returns: A :class:`Domain`
+    :param email_address: An e-mail address to associated with the domain
+    :type email_address: str
+    :returns: A shiny new Domain.
+    :rtype: :class:`Domain`
 
     .. versionadded:: 0.1
     """
@@ -344,8 +451,8 @@ def create(name, ttl=300, records=None, subdomains=None, comment=None,
                         'type': record.type,
                         'data': record.data,
                         'ttl': record.ttl,
-                        'priority': record.get('priority', None),
-                        'comment': record.get('comment', None)
+                        'priority': record.priority,
+                        'comment': record.comment
                         })
     if create_ns_records:
             data['domains'][0]['recordsList']['records'].append({
@@ -365,13 +472,13 @@ def create(name, ttl=300, records=None, subdomains=None, comment=None,
             if isinstance(subdomain, Subdomain):
                 data['domains'][0]['subdomains']['domains'].append({
                         'name': subdomain.name,
-                        'emailAddress': subdomain.get('emailAddress', None),
-                        'comment': subdomain.get('comment', None)
+                        'emailAddress': subdomain.email_address,
+                        'comment': subdomain.comment
                         })
     if comment is not None:
         data['domains'][0]['comment'] = comment
-    if emailAddress is not None:
-        data['domains'][0]['emailAddress'] = emailAddress
+    if email_address is not None:
+        data['domains'][0]['email_address'] = email_address
     data = json.dumps(data)
     url = '/'.join([get_url('clouddns'), 'domains'])
     session = get_session()
