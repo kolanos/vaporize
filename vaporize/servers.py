@@ -307,7 +307,7 @@ class Server(DotDict):
         response = session.get(munge_url(url))
         return handle_response(response, BackupSchedule, 'backupSchedule')
 
-    def enable_backup_schedule(self, weekly, daily):
+    def enable_backup_schedule(self, weekly=None, daily=None):
         """Enable a backup schedule for this Server
 
         :param weekly: The weekly backup schedule
@@ -318,9 +318,11 @@ class Server(DotDict):
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        data = {'backupSchedule': {'enable': True,
-                                   'weekly': weekly,
-                                   'daily': daily}}
+        data = {'backupSchedule': {'enable': True}}
+        if weekly is not None:
+            data['backupSchedule']['weekly'] = weekly
+        if daily is not None:
+            data['backupSchedule']['daily'] = daily
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'backup_schedule'])
         session = get_session()
