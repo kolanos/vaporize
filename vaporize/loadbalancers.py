@@ -1,4 +1,3 @@
-import datetime
 import json
 
 from vaporize.core import (DATETIME_FORMAT, get_session, get_url,
@@ -114,7 +113,7 @@ class LoadBalancer(DotDict):
         elif key == 'virtualIps':
             value = map(lambda v: VirtualIP(v), value)
         elif key in ['created', 'updated']:
-            value = datetime.datetime.strptime(value['time'], DATETIME_FORMAT)
+            value = convert_datetime(value['time'])
         super(Domain, self).__setitem__(key, value)
 
     def reload(self):

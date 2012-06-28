@@ -1,7 +1,6 @@
-import datetime
 import json
 
-from vaporize.core import (DATETIME_FORMAT, get_session, get_url,
+from vaporize.core import (convert_datetime, get_session, get_url,
                            handle_response, munge_url, query)
 from vaporize.utils import DotDict
 
@@ -25,7 +24,7 @@ class Domain(DotDict):
         elif key == 'subdomains':
             value = map(lambda v: Subdomain(v), value['domains'])
         elif key in ['created', 'updated']:
-            value = datetime.datetime.strptime(value, DATETIME_FORMAT)
+            value = convert_datetime(value)
         super(Domain, self).__setitem__(key, value)
 
     def reload(self):
@@ -229,11 +228,11 @@ class Record(DotDict):
 
     def __setitem__(self, key, value):
         if key in ['created', 'updated']:
-            value = datetime.datetime.strptime(value, DATETIME_FORMAT)
+            value = convert_datetime(value)
         super(Record, self).__setitem__(key, value)
 
     @classmethod
-    def create(cls, name, type, data, ttl=300, priority=None, comment=None):
+    def create(cls, name, type, data, ttl=None, priority=None, comment=None):
         """Create a CloudDNS Record.
 
         .. important::
