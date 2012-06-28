@@ -41,7 +41,7 @@ class BackupSchedule(DotDict):
         return super(BackupSchedule, self).__repr__()
 
 
-class IP(dict):
+class IP(DotDict):
     """A CloudServers IP Address."""
     def __repr__(self):
         if 'public' in self:
@@ -137,7 +137,7 @@ class Server(DotDict):
         response = session.get(munge_url(url))
         response = handle_response(response, IP, 'addresses')
         self['addresses'] = response
-        return response
+        return self['addresses']
 
     @property
     def public_ips(self):
@@ -150,7 +150,9 @@ class Server(DotDict):
                         'ips', 'public'])
         session = get_session()
         response = session.get(munge_url(url))
-        return handle_response(response, IP)
+        response = handle_response(response, IP)
+        self['addresses'].update(response)
+        return self['addresses']['public']
 
     @property
     def private_ips(self):
@@ -163,7 +165,9 @@ class Server(DotDict):
                         'ips', 'private'])
         session = get_session()
         response = session.get(munge_url(url))
-        return handle_response(response, IP)
+        response = handle_response(response, IP)
+        self['addresses'].update(response)
+        return self['addresses']['private']
 
     def share_ip(self, address, ipgroup, configure=True):
         """Share this Server's IP in a Shared IP Group.

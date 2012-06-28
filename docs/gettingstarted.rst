@@ -24,9 +24,13 @@ session is typically good for 24 hours.
 There's an optional third parameter available in the ``connect`` function as
 well. It lets you choose which region you wish to work with. It accepts one of
 three options: ``DFW`` (Dallas/Fort Worth), ``ORD`` (Chicago) or ``LON``
-(London). Keep in mind that at the time of this writing only a few of the
-Rackspace Cloud APIs support this third parameter. Vaporize uses ``DFW`` by
-default.
+(London).
+
+.. note::
+
+    Keep in mind that at the time of this writing only a few of the
+    Rackspace Cloud APIs support this third parameter. Vaporize uses ``DFW`` by
+    default.
 
 First Request
 -------------
@@ -58,8 +62,8 @@ The first question is up to you. I recommend that you make it the intended
 hostname of the server, but for the sake of this example we'll just use the name
 'foo'.
 
-The two questions can be determined using two seperate interfaces. On the
-Rackspace Cloud operating systems are called "Images", as in .iso images and
+The next two questions can be determined using two separate interfaces. On the
+Rackspace Cloud operating systems are called "Images" (as in .iso images) and
 server specifications care called "Flavors".
 
 Lets get a list of Images available on the Rackspace Cloud (as of this writing):
@@ -96,13 +100,19 @@ Lets get a list of Images available on the Rackspace Cloud (as of this writing):
     25 CentOS 5.6
     26 Debian 5 (Lenny)
 
-Wow! So many to choose from! Most of them are Linux distributions. The ones that
-start with the word "Windows" cost extra, check the Rackspace Cloud website for
-details. I'm partial to UBuntu Server myself, so lets choose option 22.
+Wow! So many to choose from!
+
+.. note::
+
+    Most of them are Linux distributions. The ones that start
+    with the word "Windows" cost extra. Check the Rackspace 
+    Cloud website for details.
+
+I'm partial to UBuntu Server myself, so lets choose option 22:
 
     >>> image = images[22]
 
-Now, what bout those Flavors?
+Now, what about those Flavors?
 
     >>> flavors = vaporize.flavors.list()
     >>> for i, flavor in enumerate(flavors):
@@ -117,9 +127,13 @@ Now, what bout those Flavors?
     6 15.5GB server
     7 30GB server
 
-That was easy, huh? In case you're confused, the 256 and 512 servers are in MBs.
-Not sure why they don't include the MB, but I digress. For the sake of this
-example lets choose the smallest server type, option 0 (256MB).
+That was easy, huh?
+
+.. note::
+
+    In case you're confused, the 256 and 512 servers are in MBs.
+
+For the sake of this example lets choose the smallest server, option 0 (256MB):
 
     >>> flavor = flavors[0]
 
@@ -128,14 +142,16 @@ That's pretty much all we need to create a server. So without further ado...
     >>> server = vaporize.servers.create('foo', image, flavor)
 
 Are we done? No, not quite yet. Rackspace still needs to build the server for
-us. We can check the status of this process like so:
+us.
+
+We can check the status of this process like so:
 
     >>> server.status
     u'BUILD'
     >>> server.progress
     0
 
-And ot update it:
+And to update it:
 
     >>> server.reload()
     >>> server.status
@@ -143,8 +159,13 @@ And ot update it:
     >>> server.progress
     25
 
-Hey, it's 25% built! Progress! The amount of time it takes to build a server
-varies. When it is done it will look like this:
+Hey, it's 25% built! Progress!
+
+.. note:::
+
+    The amount of time it takes to build a server varies.
+
+When it is done it will look like this:
 
     >>> server.status
     u'ACTIVE'
@@ -154,20 +175,24 @@ varies. When it is done it will look like this:
 Until it is ``ACTIVE`` you wont be able to perform any additional operations on
 your server. So sit tight until it is done.
 
-Done? Great! Lets take a look at the server we've built:
+Done? Great! Lets take a look at the server we've just built:
 
     >>> server.name
     u'foo'
     >>> server.id
     12345678
     >>> server.addresses.public
-    [u'198.101.209.35']
+    [u'128.128.128.128']
 
-Yours will look a little different, obviously. Lets go ahead and change the root
-password for this server (the one Rackspace created for you should have been
-e-mailed to you):
+Yours will look a little different, obviously. Go ahead and change the root
+password for this server:
 
     >>> server.modify(password='thisisaterriblepasswordamirite?')
+
+.. note::
+
+    This is an optional step. By default Rackspace will generate a root password
+    and e-mail it to you.
 
 Now lets check the status:
 
@@ -176,11 +201,13 @@ Now lets check the status:
     u'PASSWORD'
 
 Once it is ``ACTIVE`` again (this operation doesn't take long), you will be able
-to SSH into this newly created server with your newly set password. For example:
+to SSH into this newly created server with your newly set password.
 
-    $ ssh root@198.101.209.35
+For example:
 
-And just like that you've got your very own Rackspace CloudServer!
+    $ ssh root@128.128.128.128
+
+Now you've got your very own Rackspace CloudServer!
 
 Where are you going? We're not done yet! We have to clean up after ourselves.
 This was just an example, afterall.

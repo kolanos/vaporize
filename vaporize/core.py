@@ -79,7 +79,7 @@ def handle_response(response, wrapper=None, container=None, **kwargs):
         if not response.content.strip():
             return True
         data = json.loads(response.content)
-        if isinstance(data[container], list):
+        if container and isinstance(data[container], list):
             return [wrapper(i, **kwargs) for i in data[container]]
         elif container is None:
             return wrapper(data, **kwargs)
