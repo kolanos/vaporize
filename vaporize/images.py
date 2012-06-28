@@ -1,7 +1,6 @@
-import datetime
 import json
 
-from vaporize.core import (DATETIME_FORMAT, get_session, get_url,
+from vaporize.core import (convert_datetime, get_session, get_url,
                            handle_response, munge_url, query)
 import vaporize.servers
 from vaporize.utils import DotDict
@@ -18,7 +17,7 @@ class Image(DotDict):
         if key == 'serverId':
             key = 'server_id'
         elif key in ['created', 'updated']:
-            value = datetime.datetime.strptime(value, DATETIME_FORMAT)
+            value = convert_datetime(value)
         super(Image, self).__setitem__(key, value)
 
 

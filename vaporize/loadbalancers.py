@@ -1,6 +1,6 @@
 import json
 
-from vaporize.core import (DATETIME_FORMAT, get_session, get_url,
+from vaporize.core import (convert_datetime, get_session, get_url,
                            handle_response, munge_url, query)
 from vaporize.utils import DotDict
 
