@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from vaporize.core import get_url, handle_request, query
 from vaporize.utils import DotDict
 

@@ -17,5 +17,18 @@ setup(
     version=vaporize.__version__,
     license='MIT',
     install_requires=open('requirements.txt').readlines(),
-    packages=['vaporize']
+    packages=['vaporize'],
+    classifiers = [
+        'Development Status :: 4 - Beta',
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'Intended Audience :: Information Technology',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Topic :: Internet :: WWW/HTTP',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'Topic :: System :: Distributed Computing',
+        'Topic :: Utilities',
+    ],
 )
