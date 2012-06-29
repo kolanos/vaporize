@@ -7,6 +7,7 @@ except ImportError:
     from urllib import urlencode
     from urlparse import parse_qsl, urlsplit, urlunsplit
 
+import dateutil.parser
 import requests
 
 from vaporize.exceptions import ConnectionError, handle_exception
@@ -136,11 +137,6 @@ def munge_url(url):
     query = urlencode(query)
     return urlunsplit((scheme, netloc, path, query, fragment))
 
+
 def convert_datetime(value):
-    format = '%Y-%m-%dT%H:%M:%S.000+0000'
-    if type(value) is datetime.datetime:
-        return value
-    if value.endswith('Z'):
-        value = value.split('Z')[0]
-        format = '%Y-%m-%dT%H:%M:%S'
-    return datetime.datetime.strptime(value, format)
+    return dateutil.parser.parse(value)
