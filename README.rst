@@ -32,8 +32,8 @@ Simple API
 Vaporize is designed to be simple to use. Connect to your Rackspace Cloud in
 just two lines of code:
 
-    import vaporize
-    vaporize.connect('username', 'apikey')
+    >>> import vaporize
+    >>> vaporize.connect('username', 'apikey')
 
 Documentation
 -------------
