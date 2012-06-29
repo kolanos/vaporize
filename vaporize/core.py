@@ -1,8 +1,11 @@
 import datetime
 import json
 import time
-import urllib
-import urlparse
+try:
+    from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+except ImportError:
+    from urllib import urlencode
+    from urlparse import parse_qsl, urlsplit, urlunsplit
 
 import requests
 
@@ -57,7 +60,7 @@ def connect(user, apikey, region='DFW'):
         data = json.loads(response.content)['auth']
         _settings['token'] = data['token']['id']
         _settings['expires'] = data['token']['expires']
-        for s, r in data['serviceCatalog'].items():
+        for s, r in list(data['serviceCatalog'].items()):
             if len(r) == 1:
                 _settings[s.lower() + '_url'] = r[0]['publicURL']
             elif len(r) > 1:
@@ -116,22 +119,22 @@ def get_url(service):
 
 def query(url, **kwargs):
     """Append to the URL's query string."""
-    scheme, netloc, path, query, fragment = urlparse.urlsplit(url)
-    query = urlparse.parse_qsl(query)
-    for k, v in kwargs.items():
+    scheme, netloc, path, query, fragment = urlsplit(url)
+    query = parse_qsl(query)
+    for k, v in list(kwargs.items()):
         if v is not None:
             query.append((k, v))
-    query = urllib.urlencode(query)
-    return urlparse.urlunsplit((scheme, netloc, path, query, fragment))
+    query = urlencode(query)
+    return urlunsplit((scheme, netloc, path, query, fragment))
 
 
 def munge_url(url):
     """Prevent GET responses from being aggressively cached."""
-    scheme, netloc, path, query, fragment = urlparse.urlsplit(url)
-    query = urlparse.parse_qsl(query)
+    scheme, netloc, path, query, fragment = urlsplit(url)
+    query = parse_qsl(query)
     query.append(('fresh', str(time.time())))
-    query = urllib.urlencode(query)
-    return urlparse.urlunsplit((scheme, netloc, path, query, fragment))
+    query = urlencode(query)
+    return urlunsplit((scheme, netloc, path, query, fragment))
 
 def convert_datetime(value):
     format = '%Y-%m-%dT%H:%M:%S.000+0000'

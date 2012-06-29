@@ -382,7 +382,7 @@ def create(name, image, flavor, metadata=None, files=None):
                        'metadata': metadata or {},
                        'personality': []}}
     if isinstance(files, dict):
-        for path, contents in files.items():
+        for path, contents in list(files.items()):
             data['personality'].append({'path': path, 'contents': contents})
     data = json.dumps(data)
     url = '/'.join([get_url('cloudservers'), 'servers'])

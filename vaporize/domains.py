@@ -19,9 +19,9 @@ class Domain(DotDict):
     def __setitem__(self, key, value):
         if key == 'recordsList':
             key = 'records'
-            value = map(lambda v: Record(v), value['records'])
+            value = [Record(v) for v in value['records']]
         elif key == 'subdomains':
-            value = map(lambda v: Subdomain(v), value['domains'])
+            value = [Subdomain(v) for v in value['domains']]
         elif key in ['created', 'updated']:
             value = convert_datetime(value)
         super(Domain, self).__setitem__(key, value)
