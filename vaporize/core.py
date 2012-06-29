@@ -40,11 +40,11 @@ def connect(user, apikey, region='DFW'):
     :param user: A Rackspace Cloud username.
     :type user: str
     :param apikey: A Rackspace Cloud API key.
-    :param apikey: str
+    :type apikey: str
     :param region: A Rackspace Cloud region, such as ``DFW``, ``ORD`` or ``LON``.
     :type region: str
 
-    Raises:
+    Raises::
         ConnectionError: An error occured while creating the connection/session.
     """
     global _settings, _session

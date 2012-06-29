@@ -19,16 +19,34 @@ and it's up to you to smooth over incompatibilities between them.
 
 So Vaporize was born. One library for one API.
 
-In Development
---------------
+Installation
+------------
 
-Vaporize is currently still in development. Contributors are welcome. Just fork
-this repo and start making pull requests.
+To install Vaporize using PIP:
+
+    $ pip install vaporize
+
+Simple API
+----------
+
+Vaporize is designed to be simple to use. Connect to your Rackspace Cloud in
+just two lines of code:
+
+    >>> import vaporize
+    >>> vaporize.connect('username', 'apikey')
 
 Documentation
 -------------
 
-Coming soon! (this is a priority, promise)
+API Documentation and a User Guide (in the works) available here_.
+
+.. _here: https://kolanos.github.com/vaporize/
+
+Contributors
+------------
+
+Vaporize is currently still in development. Contributors are welcome. Just fork
+this repo and start making pull requests.
 
 Planned for v0.1
 ----------------
