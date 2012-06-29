@@ -1,7 +1,6 @@
 import json
 
-from vaporize.core import (get_session, get_url, handle_response, munge_url,
-                           query)
+from vaporize.core import get_url, handle_request, query
 import vaporize.servers
 from vaporize.utils import DotDict
 
@@ -28,9 +27,7 @@ class SharedIPGroup(DotDict):
         assert 'id' in self
         url = '/'.join([get_url('cloudservers'), 'shared_ip_groups',
                         str(self['id'])])
-        session = get_session()
-        response = session.delete(url)
-        handle_response(response)
+        handle_request('delete', url)
 
 
 def list(limit=None, offset=None, detail=False):
@@ -53,9 +50,8 @@ def list(limit=None, offset=None, detail=False):
     url = '/'.join(url)
     if limit is not None or offset is not None:
         url = query(url, limit=limit, offset=offset)
-    session = get_session()
-    response = session.get(munge_url(url))
-    return handle_response(response, SharedIPGroup, 'sharedIpGroups')
+    return handle_request('get', url, wrapper=SharedIPGroup,
+                          container='sharedIpGroups')
 
 
 def get(id):
@@ -68,9 +64,8 @@ def get(id):
     .. versionadded:: 0.1
     """
     url = '/'.join([get_url('cloudservers'), 'shared_ip_groups', str(id)])
-    session = get_session()
-    response = session.get(munge_url(url))
-    return handle_response(response, SharedIPGroup, 'sharedIpGroup')
+    return handle_request('get', url, wrapper=SharedIPGroup,
+                          container='sharedIpGroup')
 
 
 def create(name, server):
@@ -78,7 +73,7 @@ def create(name, server):
 
     :param name: Name of the Shared IP Group
     :type name: str
-    :param server: The :class:`vaporize.servers.Server` or ``id`` to add to group
+    :param server: The Server or ``id`` to add to group
     :type server: int or :class:`vaporize.servers.Server`
     :returns: A shiny new CloudServers Shared IP Group.
     :rtype: :class:`SharedIPGroup`
@@ -92,6 +87,4 @@ def create(name, server):
                               'server': server}}
     data = json.dumps(data)
     url = '/'.join([get_url('cloudservers'), 'server_ip_groups'])
-    session = get_session()
-    response = session.post(url, data=data)
-    return handle_response(response, SharedIPGroup, 'sharedIpGroup')
+    return handle_request('post', url, data, SharedIPGroup, 'sharedIpGroup')

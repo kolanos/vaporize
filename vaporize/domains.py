@@ -1,7 +1,6 @@
 import json
 
-from vaporize.core import (convert_datetime, get_session, get_url,
-                           handle_response, munge_url, query)
+from vaporize.core import convert_datetime, get_url, handle_request, query
 from vaporize.utils import DotDict
 
 
@@ -63,9 +62,7 @@ class Domain(DotDict):
             data['comment'] = comment
         data = json.dumps(data)
         url = '/'.join([get_url('clouddns'), 'domains', str(self['id'])])
-        session = get_session()
-        response = session.put(url, data=data)
-        response = handle_response(response)
+        response = handle_request('put', url, data)
         if response:
             if ttl is not None:
                 self['ttl'] = int(ttl)
@@ -92,9 +89,7 @@ class Domain(DotDict):
         assert 'id' in self
         url = '/'.join([get_url('clouddns'), 'domains', str(self['id'])])
         url = query(url, deleteSubdomains=subdomains)
-        session = get_session()
-        response = session.delete(url)
-        handle_response(response)
+        handle_request('delete', url)
 
     def records(self):
         """Returns a list of CloudDNS Records.
@@ -106,10 +101,9 @@ class Domain(DotDict):
         assert 'id' in self
         url = '/'.join([get_url('clouddns'), 'domains', str(self['id']),
                         'records'])
-        session = get_session()
-        response = session.get(munge_url(url))
-        self['records'] = handle_response(response, Record, 'records',
-                                          domain_id=self['id'])
+        self['records'] = handle_request('get', url, wrapper=Record,
+                                         container='records',
+                                         domain_id=self['id'])
         return self['records']
 
     def add_records(self, *records):
@@ -137,9 +131,7 @@ class Domain(DotDict):
         data = json.dumps(data)
         url = '/'.join([get_url('clouddns'), 'domains', str(self['id']),
                         'records'])
-        session = get_session()
-        response = session.post(url, data=data)
-        self['records'] = handle_response(response, Record, 'records',
+        self['records'] = handle_request('post', url, data, Record, 'records',
                                           domain_id=self['id'])
         return self['records']
 
@@ -155,9 +147,7 @@ class Domain(DotDict):
         record = record.id if isinstance(record, Record) else int(record)
         url = '/'.join([get_url('clouddns'), 'domains', str(self['id']),
                         'records', str(record)])
-        session = get_session()
-        response = session.delete(url)
-        handle_response(response)
+        handle_request('delete', url)
 
     def subdomains(self):
         """Returns a list of Subdomains.
@@ -169,10 +159,9 @@ class Domain(DotDict):
         assert 'id' in self
         url = '/'.join([get_url('clouddns'), 'domains', str(self['id']),
                         'subdomains'])
-        session = get_session()
-        response = session.get(munge_url(url))
-        self['subdomains'] = handle_response(response, Subdomain, 'domains',
-                                             domain_id=self['id'])
+        self['subdomains'] = handle_request('get', url, wrapper=Subdomain,
+                                            container='domains',
+                                            domain_id=self['id'])
         return self['subdomains']
 
     def changes(self, since):
@@ -188,9 +177,7 @@ class Domain(DotDict):
         url = '/'.join([get_url('clouddns'), 'domains', str(self['id']),
                         'changes'])
         url = query(url, since=str(since))
-        session = get_session()
-        response = session.get(munge_url(url))
-        return handle_response(response, Change, 'changes')
+        return handle_request('get', url, wrapper=Change, container='changes')
 
     def export_zone(self):
         """Export the raw BIND zone for this Domain.
@@ -201,9 +188,7 @@ class Domain(DotDict):
         """
         url = '/'.join([get_url('clouddns'), 'domains', str(self['id']),
                         'export'])
-        session = get_session()
-        response = session.get(munge_url(url))
-        return handle_response(response, Export)
+        return handle_request('get', url, wrapper=Export)
 
 
 class Export(DotDict):
@@ -275,9 +260,7 @@ class Record(DotDict):
         assert 'domain_id' in self
         url = '/'.join([get_url('clouddns'), 'domains', str(self['domain_id']),
                                 'records', str(self['id'])])
-        session = get_session()
-        response = session.get(munge_url(url))
-        response = handle_response(response, Record)
+        response = handle_request('get', url, wrapper=Record)
         self.update(response)
         return self
 
@@ -307,9 +290,7 @@ class Record(DotDict):
         data = json.dumps(data)
         url = '/'.join([get_url('clouddns'), 'domains', str(self['domain_id']),
                         'records', str(self['id'])])
-        session = get_session()
-        response = session.put(url, data=data)
-        response = handle_response(response)
+        handle_request('put', url, data)
         if name is not None:
             self['name'] = name
         if data is not None:
@@ -333,9 +314,7 @@ class Record(DotDict):
         assert 'domain_id' in self
         url = '/'.join([get_url('clouddns'), 'domains', str(self['domain_id']),
                         'records', str(self['id'])])
-        session = get_session()
-        response = session.delete(url)
-        handle_response(response)
+        handle_request('delete', url)
 
 
 class Subdomain(DotDict):
@@ -388,9 +367,7 @@ def list(limit=None, offset=None, filter=None):
         url = query(url, limit=limit, offset=offset)
     if filter is not None:
         url = query(url, name=filter)
-    session = get_session()
-    response = session.get(munge_url(url))
-    return handle_response(response, Domain, 'domains')
+    return handle_request('get', url, wrapper=Domain, container='domains')
 
 
 def get(id, records=False, subdomains=False):
@@ -409,9 +386,7 @@ def get(id, records=False, subdomains=False):
         url = query(url, showRecords='true')
     if subdomains is True:
         url = query(url, showSubdomains='true')
-    session = get_session()
-    response = session.get(munge_url(url))
-    return handle_response(response, Domain)
+    return handle_request('get', url, wrapper=Domain)
 
 
 def create(name, ttl=300, records=None, subdomains=None, comment=None,
@@ -480,9 +455,7 @@ def create(name, ttl=300, records=None, subdomains=None, comment=None,
         data['domains'][0]['email_address'] = email_address
     data = json.dumps(data)
     url = '/'.join([get_url('clouddns'), 'domains'])
-    session = get_session()
-    response = session.post(url, data=data)
-    return handle_response(response, Domain, 'domains')
+    return handle_request('post', url, data, Domain, 'domains')
 
 
 def import_zone(contents, type='BIND_9'):
@@ -500,6 +473,4 @@ def import_zone(contents, type='BIND_9'):
                          'contents': contents}]}
     data = json.dumps(data)
     url = '/'.join([get_url('clouddns'), 'import'])
-    session = get_session()
-    response = session.post(url, data=data)
-    return handle_response(response, Domain, 'domains')
+    return handle_request('post', url, data, Domain, 'domains')

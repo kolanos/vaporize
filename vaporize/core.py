@@ -73,20 +73,31 @@ def connect(user, apikey, region='DFW'):
                                                response.content))
 
 
-def handle_response(response, wrapper=None, container=None, **kwargs):
-    """Handle a requests response in a consistent way."""
-    if response.status_code in [200, 201, 202, 203, 204]:
-        if not response.content.strip():
-            return True
-        data = json.loads(response.content)
-        if container and isinstance(data[container], list):
-            return [wrapper(i, **kwargs) for i in data[container]]
-        elif container is None:
-            return wrapper(data, **kwargs)
-        else:
-            return wrapper(data[container], **kwargs)
-    else:
+def handle_request(verb, url, data=None, wrapper=None, container=None, **kwargs):
+    """Handle a request/response in a consistent way."""
+    session = get_session()
+    if verb == 'get':
+        request = session.get
+        url = munge_url(url)
+    elif verb == 'post':
+        request = session.post
+    elif verb == 'put':
+        request = session.put
+    elif verb == 'delete':
+        request = session.delete
+    response = request(url, data=data)
+    if response.status_code not in [200, 201, 202, 203, 204]:
         handle_exception(response.status_code, response.content)
+    content = response.content.strip()
+    if not content:
+        return True
+    content = json.loads(content)
+    if container and isinstance(content[container], list):
+        return [wrapper(i, **kwargs) for i in content[container]]
+    elif container is None:
+        return wrapper(content, **kwargs)
+    else:
+        return wrapper(content[container], **kwargs)
 
 
 def get_session():

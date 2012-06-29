@@ -1,4 +1,4 @@
-from vaporize.core import get_session, get_url, handle_response, query
+from vaporize.core import get_url, handle_request, query
 from vaporize.utils import DotDict
 
 
@@ -30,9 +30,7 @@ def list(limit=None, offset=None, detail=False):
     url = '/'.join(url)
     if limit is not None or offset is not None:
         url = query(url, limit=limit, offset=offset)
-    session = get_session()
-    response = session.get(url)
-    return handle_response(response, Flavor, 'flavors')
+    return handle_request('get', url, wrapper=Flavor, container='flavors')
 
 
 def get(id):
@@ -46,6 +44,4 @@ def get(id):
     .. versionadded:: 0.1
     """
     url = '/'.join([get_url('cloudservers'), 'flavors', str(id)])
-    session = get_session()
-    response = session.get(url)
-    return handle_response(response, Flavor, 'flavor')
+    return handle_request('get', url, wrapper=Flavor, container='flavor')

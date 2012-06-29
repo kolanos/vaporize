@@ -1,7 +1,6 @@
 import json
 
-from vaporize.core import (get_session, get_url, handle_response, munge_url,
-                           query)
+from vaporize.core import get_url, handle_request, query
 import vaporize.flavors
 import vaporize.images
 import vaporize.ipgroups
@@ -96,9 +95,7 @@ class Server(DotDict):
             data['server']['adminPass'] = password
         data = json.dumps(data)
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id'])])
-        session = get_session()
-        response = session.put(url, data=data)
-        response = handle_response(response)
+        response = handle_request('put', url, data=data)
         if response:
             if name is not None:
                 self['name'] = name
@@ -106,7 +103,7 @@ class Server(DotDict):
 
     def delete(self):
         """Delete this Server.
-        
+
         .. warning::
 
             There is no confirmation step for this operation. When you delete a
@@ -117,9 +114,7 @@ class Server(DotDict):
         """
         assert 'id' in self
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id'])])
-        session = get_session()
-        response = session.delete(url)
-        handle_response(response)
+        handle_request('delete', url)
 
     def ips(self):
         """
@@ -133,9 +128,8 @@ class Server(DotDict):
         assert 'id' in self
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'ips'])
-        session = get_session()
-        response = session.get(munge_url(url))
-        response = handle_response(response, IP, 'addresses')
+        response = handle_request('get', url, wrapper=IP,
+                                  container='addresses')
         self['addresses'] = response
         return self['addresses']
 
@@ -148,9 +142,7 @@ class Server(DotDict):
         assert 'id' in self
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'ips', 'public'])
-        session = get_session()
-        response = session.get(munge_url(url))
-        response = handle_response(response, IP)
+        response = handle_request('get', url, wrapper=IP)
         self['addresses'].update(response)
         return self['addresses']['public']
 
@@ -163,9 +155,7 @@ class Server(DotDict):
         assert 'id' in self
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'ips', 'private'])
-        session = get_session()
-        response = session.get(munge_url(url))
-        response = handle_response(response, IP)
+        response = handle_request('get', url, wrapper=IP)
         self['addresses'].update(response)
         return self['addresses']['private']
 
@@ -191,9 +181,7 @@ class Server(DotDict):
                                        'configureServer': configure}})
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'ips', 'public', address])
-        session = get_session()
-        response = session.put(url, data=data)
-        handle_response(response)
+        handle_request('put', url, data=data)
 
     def unshare_ip(self, address):
         """Unshare this Server's IP
@@ -203,9 +191,7 @@ class Server(DotDict):
         assert 'id' in self
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'ips', 'public', address])
-        session = get_session()
-        response = session.delete(url)
-        handle_response(response)
+        handle_request('delete', url)
 
     def soft_reboot(self):
         """Perform a soft reboot on this Server
@@ -216,9 +202,7 @@ class Server(DotDict):
         data = json.dumps({'reboot': {'type': 'SOFT'}})
         url = '/'.join([get_url('cloudservers'), 'servers',
                         str(self['id']), 'action'])
-        session = get_session()
-        response = session.post(url, data=data)
-        handle_response(response)
+        handle_request('post', url, data)
 
     def hard_reboot(self):
         """Perform a hard reboot on this Server
@@ -229,9 +213,7 @@ class Server(DotDict):
         data = json.dumps({'reboot': {'type': 'HARD'}})
         url = '/'.join([get_url('cloudservers'), 'servers',
                         str(self['id']), 'action'])
-        session = get_session()
-        response = session.post(url, data=data)
-        handle_response(response)
+        handle_request('post', url, data)
 
     def rebuild(self, image):
         """Rebuild this Server using a specified Image
@@ -248,9 +230,7 @@ class Server(DotDict):
         data = json.dumps({'rebuild': {'imageId': int(image)}})
         url = '/'.join([get_url('cloudservers'), 'servers',
                         str(self['id']), 'action'])
-        session = get_session()
-        response = session.post(url, data=data)
-        handle_response(response)
+        handle_request('post', url, data)
 
     def resize(self, flavor):
         """Resize this Server to a specific Flavor size
@@ -267,9 +247,7 @@ class Server(DotDict):
         data = json.dumps({'resize': {'flavorId': flavor}})
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'action'])
-        session = get_session()
-        response = session.post(url, data=data)
-        handle_response(response)
+        handle_request('post', url, data)
 
     def confirm_resize(self):
         """Confirm a successful resize operation
@@ -280,9 +258,7 @@ class Server(DotDict):
         data = json.dumps({'confirmResize': None})
         url = '/'.join([get_url('cloudservers'), 'servers',
                         str(self['id']), 'action'])
-        session = get_session()
-        response = session.post(url, data=data)
-        handle_response(response)
+        handle_request('post', url, data)
 
     def revert_resize(self):
         """Revert an unsuccessful resize operation
@@ -293,9 +269,7 @@ class Server(DotDict):
         data = json.dumps({'revertResize': None})
         url = '/'.join([get_url('cloudservers'), 'servers',
                         str(self['id']), 'action'])
-        session = get_session()
-        response = session.post(url, data=data)
-        handle_response(response)
+        handle_request('post', url, data)
 
     def backup_schedule(self):
         """Return this Server's backup schedule
@@ -307,9 +281,8 @@ class Server(DotDict):
         assert 'id' in self
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'backup_schedule'])
-        session = get_session()
-        response = session.get(munge_url(url))
-        return handle_response(response, BackupSchedule, 'backupSchedule')
+        return handle_request('get', url, wrapper=BackupSchedule,
+                              container='backupSchedule')
 
     def enable_backup_schedule(self, weekly=None, daily=None):
         """Enable a backup schedule for this Server
@@ -329,9 +302,7 @@ class Server(DotDict):
             data['backupSchedule']['daily'] = daily
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'backup_schedule'])
-        session = get_session()
-        response = session.post(url, data=data)
-        handle_response(response)
+        handle_request('post', url, data)
 
     def disable_backup_schedule(self):
         """Disable a backup schedule for this Server
@@ -341,9 +312,7 @@ class Server(DotDict):
         assert 'id' in self
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'backup_schedule'])
-        session = get_session()
-        response = session.delete(url)
-        handle_response(response)
+        handle_request('delete', url)
 
 
 def list(limit=None, offset=None, detail=False):
@@ -367,9 +336,7 @@ def list(limit=None, offset=None, detail=False):
     url = '/'.join(url)
     if limit is not None or offset is not None:
         url = query(url, limit=limit, offset=offset)
-    session = get_session()
-    response = session.get(munge_url(url))
-    return handle_response(response, Server, 'servers')
+    return handle_request('get', url, wrapper=Server, container='servers')
 
 
 def get(id):
@@ -382,9 +349,7 @@ def get(id):
     .. versionadded:: 0.1
     """
     url = '/'.join([get_url('cloudservers'), 'servers', str(id)])
-    session = get_session()
-    response = session.get(munge_url(url))
-    return handle_response(response, Server, 'server')
+    return handle_request('get', url, wrapper=Server, container='server')
 
 
 def create(name, image, flavor, metadata=None, files=None):
@@ -421,6 +386,4 @@ def create(name, image, flavor, metadata=None, files=None):
             data['personality'].append({'path': path, 'contents': contents})
     data = json.dumps(data)
     url = '/'.join([get_url('cloudservers'), 'servers'])
-    session = get_session()
-    response = session.post(url, data=data)
-    return handle_response(response, Server, 'server')
+    return handle_request('post', url, data, Server, 'server')
