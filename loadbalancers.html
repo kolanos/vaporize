@@ -1,0 +1,899 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>loadbalancers — Load Balancers &mdash; Vaporize 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="Vaporize 0.1 documentation" href="index.html" />
+    <link rel="next" title="servers — Servers" href="servers.html" />
+    <link rel="prev" title="ipgroups — Shared IP Groups" href="ipgroups.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="servers.html" title="servers — Servers"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ipgroups.html" title="ipgroups — Shared IP Groups"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Vaporize 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-vaporize.loadbalancers">
+<span id="loadbalancers-load-balancers"></span><h1><tt class="docutils literal"><span class="pre">loadbalancers</span></tt> &#8212; Load Balancers<a class="headerlink" href="#module-vaporize.loadbalancers" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="vaporize.loadbalancers.AccessRule">
+<em class="property">class </em><tt class="descclassname">vaporize.loadbalancers.</tt><tt class="descname">AccessRule</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.AccessRule" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CloudLoadBalancer Access List Rule.</p>
+<dl class="classmethod">
+<dt id="vaporize.loadbalancers.AccessRule.create">
+<em class="property">classmethod </em><tt class="descname">create</tt><big>(</big><em>type</em>, <em>address</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.AccessRule.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an Access Rule.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>type</strong> &#8211; <tt class="docutils literal"><span class="pre">ACCEPT</span></tt> or <tt class="docutils literal"><span class="pre">DENY</span></tt></li>
+<li><strong>address</strong> &#8211; The IP address in which to apply the rule.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A shiny new Access Rule.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#vaporize.loadbalancers.AccessRule" title="vaporize.loadbalancers.AccessRule"><tt class="xref py py-class docutils literal"><span class="pre">AccessRule</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.AccessRule.delete">
+<tt class="descname">delete</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.AccessRule.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete this Access Rule.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">There is no confirmation step for this operation.</p>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vaporize.loadbalancers.Algorithm">
+<em class="property">class </em><tt class="descclassname">vaporize.loadbalancers.</tt><tt class="descname">Algorithm</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.Algorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CloudLoadBalancer Algorithm.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="vaporize.loadbalancers.AllowedDomain">
+<em class="property">class </em><tt class="descclassname">vaporize.loadbalancers.</tt><tt class="descname">AllowedDomain</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.AllowedDomain" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CloudLoadBalancer Allowed Domains.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="vaporize.loadbalancers.ConnectionLogging">
+<em class="property">class </em><tt class="descclassname">vaporize.loadbalancers.</tt><tt class="descname">ConnectionLogging</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.ConnectionLogging" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CloudLoadBalancer Connection Logging.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="vaporize.loadbalancers.ConnectionThrottle">
+<em class="property">class </em><tt class="descclassname">vaporize.loadbalancers.</tt><tt class="descname">ConnectionThrottle</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.ConnectionThrottle" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CloudLoadBalancer Connection Throttle.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="vaporize.loadbalancers.ContentCaching">
+<em class="property">class </em><tt class="descclassname">vaporize.loadbalancers.</tt><tt class="descname">ContentCaching</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.ContentCaching" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CloudLoadBalancer Content Caching.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="vaporize.loadbalancers.ErrorPage">
+<em class="property">class </em><tt class="descclassname">vaporize.loadbalancers.</tt><tt class="descname">ErrorPage</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.ErrorPage" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CloudLoadBalancer Custom Error Page.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="vaporize.loadbalancers.HealthMonitor">
+<em class="property">class </em><tt class="descclassname">vaporize.loadbalancers.</tt><tt class="descname">HealthMonitor</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.HealthMonitor" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CloudLoadBalancer Health Monitor.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="vaporize.loadbalancers.LoadBalancer">
+<em class="property">class </em><tt class="descclassname">vaporize.loadbalancers.</tt><tt class="descname">LoadBalancer</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CloudLoadBalancer Load Balancer.</p>
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.access_list">
+<tt class="descname">access_list</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.access_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of AccessRules for this Load Balancer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of Access List Rules for this Load Balancer.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">A list of <a class="reference internal" href="#vaporize.loadbalancers.AccessRule" title="vaporize.loadbalancers.AccessRule"><tt class="xref py py-class docutils literal"><span class="pre">AccessRule</span></tt></a>.</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.add_access_rules">
+<tt class="descname">add_access_rules</tt><big>(</big><em>*access_rules</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.add_access_rules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add AccessRules to this Load Balancer.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.add_nodes">
+<tt class="descname">add_nodes</tt><big>(</big><em>*nodes</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.add_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add Nodes to this Load Balancer.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.add_virtual_ips">
+<tt class="descname">add_virtual_ips</tt><big>(</big><em>*virtual_ips</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.add_virtual_ips" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add Virtual IPs to this Load Balancer.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.connection_logging">
+<tt class="descname">connection_logging</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.connection_logging" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the ConnectionLogging setting for this Load Balancer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">This Load Balancer&#8217;s Content Logging setting.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#vaporize.loadbalancers.ConnectionLogging" title="vaporize.loadbalancers.ConnectionLogging"><tt class="xref py py-class docutils literal"><span class="pre">ConnectionLogging</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.connection_throttle">
+<tt class="descname">connection_throttle</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.connection_throttle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the Connection Throttle setting for this Load Balancer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Connection Throttle setting.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#vaporize.loadbalancers.ConnectionThrottle" title="vaporize.loadbalancers.ConnectionThrottle"><tt class="xref py py-class docutils literal"><span class="pre">ConnectionThrottle</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.content_caching">
+<tt class="descname">content_caching</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.content_caching" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Connection Caching setting for this Load Balancer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Content Caching setting.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#vaporize.loadbalancers.ContentCaching" title="vaporize.loadbalancers.ContentCaching"><tt class="xref py py-class docutils literal"><span class="pre">ContentCaching</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.delete">
+<tt class="descname">delete</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete this Load Balancer.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">There is not confirmation step for this operation. Deleting a Load
+Balancer is permanent.</p>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.disable_connection_logging">
+<tt class="descname">disable_connection_logging</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.disable_connection_logging" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable Connection Logging for this Load Balancer.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.disable_connection_throttle">
+<tt class="descname">disable_connection_throttle</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.disable_connection_throttle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable Connection Throttle for this Load Balancer.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.disable_content_caching">
+<tt class="descname">disable_content_caching</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.disable_content_caching" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable Content Caching for this Load Balancer.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.disable_health_monitor">
+<tt class="descname">disable_health_monitor</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.disable_health_monitor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable Health Monitor for this Load Balancer.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.disable_session_persistence">
+<tt class="descname">disable_session_persistence</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.disable_session_persistence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable Session Persistance for this Load Balancer.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.enable_connection_logging">
+<tt class="descname">enable_connection_logging</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.enable_connection_logging" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable Connection Logging for this Load Balancer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Health Monitor setting.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#vaporize.loadbalancers.HealthMonitor" title="vaporize.loadbalancers.HealthMonitor"><tt class="xref py py-class docutils literal"><span class="pre">HealthMonitor</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.enable_connection_throttle">
+<tt class="descname">enable_connection_throttle</tt><big>(</big><em>max_connections</em>, <em>min_connections</em>, <em>max_connection_rate</em>, <em>rate_interval</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.enable_connection_throttle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable Connection Throttle setting for this Load Balancer.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.enable_content_caching">
+<tt class="descname">enable_content_caching</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.enable_content_caching" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable Content Caching for this Load Balancer.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.enable_health_monitor">
+<tt class="descname">enable_health_monitor</tt><big>(</big><em>type</em>, <em>delay</em>, <em>timeout</em>, <em>attempts_before_deactivation</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.enable_health_monitor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable Health Monitor for this Load Balancer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Health Monitor setting.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#vaporize.loadbalancers.HealthMonitor" title="vaporize.loadbalancers.HealthMonitor"><tt class="xref py py-class docutils literal"><span class="pre">HealthMonitor</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.enable_session_persistence">
+<tt class="descname">enable_session_persistence</tt><big>(</big><em>type</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.enable_session_persistence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable Session Persistence for this Load Balancer.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.error_page">
+<tt class="descname">error_page</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.error_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Error Page for this Load Balancer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Error Page setting.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#vaporize.loadbalancers.ErrorPage" title="vaporize.loadbalancers.ErrorPage"><tt class="xref py py-class docutils literal"><span class="pre">ErrorPage</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.health_monitor">
+<tt class="descname">health_monitor</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.health_monitor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Health Monitor setting for this Load Balancer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Health Monitor setting.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#vaporize.loadbalancers.HealthMonitor" title="vaporize.loadbalancers.HealthMonitor"><tt class="xref py py-class docutils literal"><span class="pre">HealthMonitor</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.modify">
+<tt class="descname">modify</tt><big>(</big><em>name=None</em>, <em>protocol=None</em>, <em>port=None</em>, <em>algorithm=None</em>, <em>connection_logging=False</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.modify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify this Load Balancer&#8217;s properties.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) &#8211; The Load Balancer&#8217;s name.</li>
+<li><strong>protocol</strong> (<em>str</em>) &#8211; A Load Balancer protocol, see: <a class="reference internal" href="#vaporize.loadbalancers.protocols" title="vaporize.loadbalancers.protocols"><tt class="xref py py-func docutils literal"><span class="pre">protocols()</span></tt></a>.</li>
+<li><strong>port</strong> (<em>int</em>) &#8211; A Load Balancer port, see <a class="reference internal" href="#vaporize.loadbalancers.protocols" title="vaporize.loadbalancers.protocols"><tt class="xref py py-func docutils literal"><span class="pre">protocols()</span></tt></a>.</li>
+<li><strong>algorithm</strong> (<em>str</em>) &#8211; A Load Balancer Algorithm, see <a class="reference internal" href="#vaporize.loadbalancers.algorithms" title="vaporize.loadbalancers.algorithms"><tt class="xref py py-func docutils literal"><span class="pre">algorithms()</span></tt></a>.</li>
+<li><strong>connection_logging</strong> (<em>bool</em>) &#8211; Enable or disable Connection Logging.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">An updated Load Balancer.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#vaporize.loadbalancers.LoadBalancer" title="vaporize.loadbalancers.LoadBalancer"><tt class="xref py py-class docutils literal"><span class="pre">LoadBalancer</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.nodes">
+<tt class="descname">nodes</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of Nodes for this Load Balancer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of <a class="reference internal" href="#vaporize.loadbalancers.Node" title="vaporize.loadbalancers.Node"><tt class="xref py py-class docutils literal"><span class="pre">Node</span></tt></a>.</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.reload">
+<tt class="descname">reload</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.reload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reload this Load Balancer (an implicit <a class="reference internal" href="#vaporize.loadbalancers.get" title="vaporize.loadbalancers.get"><tt class="xref py py-func docutils literal"><span class="pre">get()</span></tt></a>).</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.remove_access_rule">
+<tt class="descname">remove_access_rule</tt><big>(</big><em>access_rule</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.remove_access_rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove an AccessRule from this Load Balancer.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.remove_node">
+<tt class="descname">remove_node</tt><big>(</big><em>node</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.remove_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a Node from this Load Balancer.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.remove_virtual_ip">
+<tt class="descname">remove_virtual_ip</tt><big>(</big><em>virtual_ip</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.remove_virtual_ip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a VirtualIP from this Load Balancer.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.reset_error_page">
+<tt class="descname">reset_error_page</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.reset_error_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the Error Page for this Load Balancer.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.session_persistence">
+<tt class="descname">session_persistence</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.session_persistence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return Session Persistence setting for this Load Balancer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Session Persistence setting.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#vaporize.loadbalancers.SessionPersistence" title="vaporize.loadbalancers.SessionPersistence"><tt class="xref py py-class docutils literal"><span class="pre">SessionPersistence</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.set_error_page">
+<tt class="descname">set_error_page</tt><big>(</big><em>content</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.set_error_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a Custom Error Page for this Load Balancer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>content</strong> (<em>str</em>) &#8211; Contents of the custom error page.</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.stats">
+<tt class="descname">stats</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns stats for this Load Balancer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Stats for this Load Balancer.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><tt class="xref py py-class docutils literal"><span class="pre">Stat</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.usage">
+<tt class="descname">usage</tt><big>(</big><em>start_time=None</em>, <em>end_time=None</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.usage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns Usage Report for this Load Balancer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>start_time</strong> (<em>str</em>) &#8211; A datetime string as a starting point.</li>
+<li><strong>end_time</strong> (<em>str</em>) &#8211; A datetime string as an ending point.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A usage report for this Load Balancer.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#vaporize.loadbalancers.UsageReport" title="vaporize.loadbalancers.UsageReport"><tt class="xref py py-class docutils literal"><span class="pre">UsageReport</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.LoadBalancer.virtual_ips">
+<tt class="descname">virtual_ips</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.virtual_ips" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of VirtualIPs for this Load Balancer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of Virtual IPs on this Load Balancer.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">A list of <a class="reference internal" href="#vaporize.loadbalancers.VirtualIP" title="vaporize.loadbalancers.VirtualIP"><tt class="xref py py-class docutils literal"><span class="pre">VirtualIP</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vaporize.loadbalancers.Node">
+<em class="property">class </em><tt class="descclassname">vaporize.loadbalancers.</tt><tt class="descname">Node</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.Node" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CloudLoadBalancer Node.</p>
+<dl class="classmethod">
+<dt id="vaporize.loadbalancers.Node.create">
+<em class="property">classmethod </em><tt class="descname">create</tt><big>(</big><em>address</em>, <em>port</em>, <em>condition</em>, <em>type</em>, <em>weight</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.Node.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Load Balancer Node.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.Node.delete">
+<tt class="descname">delete</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.Node.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete this Node.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.Node.modify">
+<tt class="descname">modify</tt><big>(</big><em>condition=None</em>, <em>type=None</em>, <em>weight=None</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.Node.modify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify a Node&#8217;s properties.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>condition</strong> (<em>str</em>) &#8211; A Node condition; <tt class="docutils literal"><span class="pre">ENABLED</span></tt>, <tt class="docutils literal"><span class="pre">DISABLED</span></tt> or
+<tt class="docutils literal"><span class="pre">DRAINING</span></tt>.</li>
+<li><strong>type</strong> (<em>str</em>) &#8211; A Node type.</li>
+<li><strong>weight</strong> (<em>int</em>) &#8211; A Node weight.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">An updated Node.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#vaporize.loadbalancers.Node" title="vaporize.loadbalancers.Node"><tt class="xref py py-class docutils literal"><span class="pre">Node</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.Node.reload">
+<tt class="descname">reload</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.Node.reload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reload this Node.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">An pudated Node.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#vaporize.loadbalancers.Node" title="vaporize.loadbalancers.Node"><tt class="xref py py-class docutils literal"><span class="pre">Node</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vaporize.loadbalancers.Protocol">
+<em class="property">class </em><tt class="descclassname">vaporize.loadbalancers.</tt><tt class="descname">Protocol</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.Protocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CloudLoadBalancer Protocol.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="vaporize.loadbalancers.SessionPersistence">
+<em class="property">class </em><tt class="descclassname">vaporize.loadbalancers.</tt><tt class="descname">SessionPersistence</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.SessionPersistence" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CloudLoadBalancer Session Persistence.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="vaporize.loadbalancers.UsageReport">
+<em class="property">class </em><tt class="descclassname">vaporize.loadbalancers.</tt><tt class="descname">UsageReport</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.UsageReport" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CloudLoadBalancer Usage Report.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="vaporize.loadbalancers.VirtualIP">
+<em class="property">class </em><tt class="descclassname">vaporize.loadbalancers.</tt><tt class="descname">VirtualIP</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.VirtualIP" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CloudLoadBalancer Virtual IP.</p>
+<dl class="classmethod">
+<dt id="vaporize.loadbalancers.VirtualIP.create">
+<em class="property">classmethod </em><tt class="descname">create</tt><big>(</big><em>version</em>, <em>type</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.VirtualIP.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Virtual IP.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>version</strong> (<em>str</em>) &#8211; <tt class="docutils literal"><span class="pre">IPV4</span></tt> or <tt class="docutils literal"><span class="pre">IPV6</span></tt>.</li>
+<li><strong>type</strong> (<em>str</em>) &#8211; <tt class="docutils literal"><span class="pre">PUBLIC</span></tt> or <tt class="docutils literal"><span class="pre">SERVICENET</span></tt></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A shiny new Virtual IP.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#vaporize.loadbalancers.VirtualIP" title="vaporize.loadbalancers.VirtualIP"><tt class="xref py py-class docutils literal"><span class="pre">VirtualIP</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.loadbalancers.VirtualIP.delete">
+<tt class="descname">delete</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.VirtualIP.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete this Virtual IP.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="vaporize.loadbalancers.algorithms">
+<tt class="descclassname">vaporize.loadbalancers.</tt><tt class="descname">algorithms</tt><big>(</big><em>limit=None</em>, <em>offset=None</em>, <em>marker=None</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.algorithms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of supported algorithms.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>limit</strong> (<em>int</em>) &#8211; Limit the result set by a certain amount.</li>
+<li><strong>offset</strong> (<em>int</em>) &#8211; Offset the result set by a certain amount.</li>
+<li><strong>marker</strong> (<em>int</em>) &#8211; Start result set at a specific marker (ID).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of supported CloudLoadBalancer algorithms.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">A list of <a class="reference internal" href="#vaporize.loadbalancers.Algorithm" title="vaporize.loadbalancers.Algorithm"><tt class="xref py py-class docutils literal"><span class="pre">Algorithm</span></tt></a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="vaporize.loadbalancers.allowed_domains">
+<tt class="descclassname">vaporize.loadbalancers.</tt><tt class="descname">allowed_domains</tt><big>(</big><em>limit=None</em>, <em>offset=None</em>, <em>marker=None</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.allowed_domains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of allowed domains.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>limit</strong> (<em>int</em>) &#8211; Limit the result set by a certain amount.</li>
+<li><strong>offset</strong> (<em>int</em>) &#8211; Offset the result set by a certain amount.</li>
+<li><strong>marker</strong> (<em>int</em>) &#8211; Start result set at a specific marker (ID).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of CloudLoadBalancer allowed domains.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">A list of <a class="reference internal" href="#vaporize.loadbalancers.AllowedDomain" title="vaporize.loadbalancers.AllowedDomain"><tt class="xref py py-class docutils literal"><span class="pre">AllowedDomain</span></tt></a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="vaporize.loadbalancers.create">
+<tt class="descclassname">vaporize.loadbalancers.</tt><tt class="descname">create</tt><big>(</big><em>name</em>, <em>protocol</em>, <em>port</em>, <em>virtual_ips</em>, <em>nodes</em>, <em>algorithm=None</em>, <em>access_list=None</em>, <em>connection_logging=None</em>, <em>connection_throttle=None</em>, <em>health_monitor=None</em>, <em>session_persistence=None</em>, <em>metadata=None</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Load Balancer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A shiny new CloudLoadBalancer Load Balancer.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#vaporize.loadbalancers.LoadBalancer" title="vaporize.loadbalancers.LoadBalancer"><tt class="xref py py-class docutils literal"><span class="pre">LoadBalancer</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="vaporize.loadbalancers.get">
+<tt class="descclassname">vaporize.loadbalancers.</tt><tt class="descname">get</tt><big>(</big><em>id</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Load Balancer by ID.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>int</em>) &#8211; A Load Balancer ID.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A CloudLoadBalancer Load Balancer with this ID.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#vaporize.loadbalancers.LoadBalancer" title="vaporize.loadbalancers.LoadBalancer"><tt class="xref py py-class docutils literal"><span class="pre">LoadBalancer</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="vaporize.loadbalancers.list">
+<tt class="descclassname">vaporize.loadbalancers.</tt><tt class="descname">list</tt><big>(</big><em>limit=None</em>, <em>offset=None</em>, <em>marker=None</em>, <em>node=None</em>, <em>deleted=False</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of Load Balancers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of CloudLoadBalancer Load Balancers.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">A list of <a class="reference internal" href="#vaporize.loadbalancers.LoadBalancer" title="vaporize.loadbalancers.LoadBalancer"><tt class="xref py py-class docutils literal"><span class="pre">LoadBalancer</span></tt></a>.</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="vaporize.loadbalancers.protocols">
+<tt class="descclassname">vaporize.loadbalancers.</tt><tt class="descname">protocols</tt><big>(</big><em>limit=None</em>, <em>offset=None</em>, <em>marker=None</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.protocols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of supported protocols.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>limit</strong> (<em>int</em>) &#8211; Limit the result set by a certain amount.</li>
+<li><strong>offset</strong> (<em>int</em>) &#8211; Offset the result set by a certain amount.</li>
+<li><strong>marker</strong> (<em>int</em>) &#8211; Start result set at a specific marker (ID).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of supported CloudLoadBalancer protocols.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">A list of <a class="reference internal" href="#vaporize.loadbalancers.Protocol" title="vaporize.loadbalancers.Protocol"><tt class="xref py py-class docutils literal"><span class="pre">Protocol</span></tt></a>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ipgroups.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">ipgroups</span></tt> &#8212; Shared IP Groups</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="servers.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">servers</span></tt> &#8212; Servers</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/loadbalancers.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="servers.html" title="servers — Servers"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ipgroups.html" title="ipgroups — Shared IP Groups"
+             >previous</a> |</li>
+        <li><a href="index.html">Vaporize 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Michael Lavers.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

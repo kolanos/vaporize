@@ -1,0 +1,327 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Getting Started &mdash; Vaporize 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="Vaporize 0.1 documentation" href="index.html" />
+    <link rel="next" title="core — Core" href="core.html" />
+    <link rel="prev" title="Welcome to Vaporize’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="core.html" title="core — Core"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Vaporize’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Vaporize 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<p>Vaporize is designed to be simple and easy to use. This documentation is
+provided as a reference, but hopefully once you begin using Vaporize it should
+be consistent enough that you won&#8217;t need to rely upon it.</p>
+<div class="section" id="connecting">
+<h2>Connecting<a class="headerlink" href="#connecting" title="Permalink to this headline">¶</a></h2>
+<p>First things first, lets connect to the Rackspace Cloud.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vaporize</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vaporize</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&#39;username&#39;</span><span class="p">,</span> <span class="s">&#39;apikey&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Replace <tt class="docutils literal"><span class="pre">username</span></tt> and <tt class="docutils literal"><span class="pre">apikey</span></tt> with your
+Rackspace Cloud username and API key. If you don&#8217;t have an API key you can
+generate one on the Rackspace Cloud web site after logging in.</p>
+<p>Calling <tt class="docutils literal"><span class="pre">vaporize.connect()</span></tt> will create a session with the Rackspace Cloud
+API. This session will be used for all subsequent requests made to the API. A
+session is typically good for 24 hours.</p>
+<p>There&#8217;s an optional third parameter available in the <tt class="docutils literal"><span class="pre">connect</span></tt> function as
+well. It lets you choose which region you wish to work with. It accepts one of
+three options: <tt class="docutils literal"><span class="pre">DFW</span></tt> (Dallas/Fort Worth), <tt class="docutils literal"><span class="pre">ORD</span></tt> (Chicago) or <tt class="docutils literal"><span class="pre">LON</span></tt>
+(London).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Keep in mind that at the time of this writing only a few of the
+Rackspace Cloud APIs support this third parameter. Vaporize uses <tt class="docutils literal"><span class="pre">DFW</span></tt> by
+default.</p>
+</div>
+</div>
+<div class="section" id="first-request">
+<h2>First Request<a class="headerlink" href="#first-request" title="Permalink to this headline">¶</a></h2>
+<p>There are many interfaces available on the Rackspace Cloud, but lets start with a
+simple one. Lets get a list of all your CloudServers:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">vaporize</span><span class="o">.</span><span class="n">servers</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+<span class="go">[&lt;Server ...&gt;, &lt;Server ...&gt;, ...]</span>
+</pre></div>
+</div>
+<p>Assuming you have some CloudServers already created you should see a list like
+the one above. If you don&#8217;t have any CloudServers yet, you&#8217;ll just see an empty
+list.</p>
+</div>
+<div class="section" id="creating-a-server">
+<h2>Creating a Server<a class="headerlink" href="#creating-a-server" title="Permalink to this headline">¶</a></h2>
+<p>Shall we create a CLoudServer? It&#8217;ll cost you. But for the sake of this guide,
+you&#8217;ll only be charged a small pro-rated fee.</p>
+<p>Before we create a server we need to know what kind of server we want to create.
+There are three things we need to know:</p>
+<ol class="arabic simple">
+<li>What should we name the server?</li>
+<li>Which operating system should it run?</li>
+<li>What should the server&#8217;s specs be? (like RAM and disk space)</li>
+</ol>
+<p>The first question is up to you. I recommend that you make it the intended
+hostname of the server, but for the sake of this example we&#8217;ll just use the name
+&#8216;foo&#8217;.</p>
+<p>The next two questions can be determined using two separate interfaces. On the
+Rackspace Cloud operating systems are called &#8220;Images&#8221; (as in .iso images) and
+server specifications care called &#8220;Flavors&#8221;.</p>
+<p>Lets get a list of Images available on the Rackspace Cloud (as of this writing):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">images</span> <span class="o">=</span> <span class="n">vaporize</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">image</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
+<span class="gp">... </span>  <span class="k">print</span> <span class="n">i</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">name</span>
+<span class="gp">...</span>
+<span class="go">0 Arch 2011.10</span>
+<span class="go">1 Fedora 17</span>
+<span class="go">2 Gentoo 11.0</span>
+<span class="go">3 openSUSE 12</span>
+<span class="go">4 Windows Server 2008 R2 x64 - SQL2K8R2 Web</span>
+<span class="go">5 Red Hat Enterprise Linux 5.5</span>
+<span class="go">6 Windows Server 2008 R2 x64</span>
+<span class="go">7 Fedora 16</span>
+<span class="go">8 Ubuntu 11.10</span>
+<span class="go">9 CentOS 6.2</span>
+<span class="go">10 Debian 6 (Squeeze)</span>
+<span class="go">11 Windows Server 2008 R2 + SQL Server 2012 Standard</span>
+<span class="go">12 Ubuntu 11.04</span>
+<span class="go">13 CentOS 6.0</span>
+<span class="go">14 Windows Server 2008 R2 + SQL Server 2012 Web</span>
+<span class="go">15 Ubuntu 10.04 LTS</span>
+<span class="go">16 Windows Server 2008 SP2 x86</span>
+<span class="go">17 Windows Server 2008 SP2 x64</span>
+<span class="go">18 Windows Server 2008 SP2 x64 - MSSQL2K8R2</span>
+<span class="go">19 CentOS 5.8</span>
+<span class="go">20 Red Hat Enterprise Linux 6</span>
+<span class="go">21 Fedora 15</span>
+<span class="go">22 Ubuntu 12.04 LTS</span>
+<span class="go">23 Windows Server 2008 SP2 x86 - MSSQL2K8R2</span>
+<span class="go">24 Windows Server 2008 R2 x64 - MSSQL2K8R2</span>
+<span class="go">25 CentOS 5.6</span>
+<span class="go">26 Debian 5 (Lenny)</span>
+</pre></div>
+</div>
+<p>Wow! So many to choose from!</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Most of them are Linux distributions. The ones that start
+with the word &#8220;Windows&#8221; cost extra. Check the Rackspace
+Cloud website for details.</p>
+</div>
+<p>I&#8217;m partial to UBuntu Server myself, so lets choose option 22:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">image</span> <span class="o">=</span> <span class="n">images</span><span class="p">[</span><span class="mi">22</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Now, what about those Flavors?</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">flavors</span> <span class="o">=</span> <span class="n">vaporize</span><span class="o">.</span><span class="n">flavors</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">flavor</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">flavors</span><span class="p">):</span>
+<span class="gp">... </span>  <span class="k">print</span> <span class="n">i</span><span class="p">,</span> <span class="n">flavor</span><span class="o">.</span><span class="n">name</span>
+<span class="gp">...</span>
+<span class="go">0 256 server</span>
+<span class="go">1 512 server</span>
+<span class="go">2 1GB server</span>
+<span class="go">3 2GB server</span>
+<span class="go">4 4GB server</span>
+<span class="go">5 8GB server</span>
+<span class="go">6 15.5GB server</span>
+<span class="go">7 30GB server</span>
+</pre></div>
+</div>
+<p>That was easy, huh?</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In case you&#8217;re confused, the 256 and 512 servers are in MBs.</p>
+</div>
+<p>For the sake of this example lets choose the smallest server, option 0 (256MB):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">flavor</span> <span class="o">=</span> <span class="n">flavors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>That&#8217;s pretty much all we need to create a server. So without further ado...</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">server</span> <span class="o">=</span> <span class="n">vaporize</span><span class="o">.</span><span class="n">servers</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s">&#39;foo&#39;</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">flavor</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Are we done? No, not quite yet. Rackspace still needs to build the server for
+us.</p>
+<p>We can check the status of this process like so:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">server</span><span class="o">.</span><span class="n">status</span>
+<span class="go">u&#39;BUILD&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">server</span><span class="o">.</span><span class="n">progress</span>
+<span class="go">0</span>
+</pre></div>
+</div>
+<p>And to update it:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">server</span><span class="o">.</span><span class="n">reload</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">server</span><span class="o">.</span><span class="n">status</span>
+<span class="go">u&#39;BUILD&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">server</span><span class="o">.</span><span class="n">progress</span>
+<span class="go">25</span>
+</pre></div>
+</div>
+<p>Hey, it&#8217;s 25% built! Progress!</p>
+<p>When it is done it will look like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">server</span><span class="o">.</span><span class="n">status</span>
+<span class="go">u&#39;ACTIVE&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">server</span><span class="o">.</span><span class="n">progress</span>
+<span class="go">100</span>
+</pre></div>
+</div>
+<p>Until it is <tt class="docutils literal"><span class="pre">ACTIVE</span></tt> you wont be able to perform any additional operations on
+your server. So sit tight until it is done.</p>
+<p>Done? Great! Lets take a look at the server we&#8217;ve just built:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">server</span><span class="o">.</span><span class="n">name</span>
+<span class="go">u&#39;foo&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">server</span><span class="o">.</span><span class="n">id</span>
+<span class="go">12345678</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">server</span><span class="o">.</span><span class="n">addresses</span><span class="o">.</span><span class="n">public</span>
+<span class="go">[u&#39;128.128.128.128&#39;]</span>
+</pre></div>
+</div>
+<p>Yours will look a little different, obviously. Go ahead and change the root
+password for this server:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">server</span><span class="o">.</span><span class="n">modify</span><span class="p">(</span><span class="n">password</span><span class="o">=</span><span class="s">&#39;thisisaterriblepasswordamirite?&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This is an optional step. By default Rackspace will generate a root password
+and e-mail it to you.</p>
+</div>
+<p>Now lets check the status:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">server</span><span class="o">.</span><span class="n">reload</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">server</span><span class="o">.</span><span class="n">status</span>
+<span class="go">u&#39;PASSWORD&#39;</span>
+</pre></div>
+</div>
+<p>Once it is <tt class="docutils literal"><span class="pre">ACTIVE</span></tt> again (this operation doesn&#8217;t take long), you will be able
+to SSH into this newly created server with your newly set password.</p>
+<p>For example:</p>
+<blockquote>
+<div>$ ssh <a class="reference external" href="mailto:root&#37;&#52;&#48;128&#46;128&#46;128&#46;128">root<span>&#64;</span>128<span>&#46;</span>128<span>&#46;</span>128<span>&#46;</span>128</a></div></blockquote>
+<p>Now you&#8217;ve got your very own Rackspace CloudServer!</p>
+<p>Where are you going? We&#8217;re not done yet! We have to clean up after ourselves.
+This was just an example, afterall.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">server</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>And just like that the server is torn back down again.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you don&#8217;t delete it, Rackspace will start to bill you for it. Spare me
+the angry e-mails please!</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Getting Started</a><ul>
+<li><a class="reference internal" href="#connecting">Connecting</a></li>
+<li><a class="reference internal" href="#first-request">First Request</a></li>
+<li><a class="reference internal" href="#creating-a-server">Creating a Server</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to Vaporize&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="core.html"
+                        title="next chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">core</span></tt> &#8212; Core</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/gettingstarted.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="core.html" title="core — Core"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Vaporize’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">Vaporize 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Michael Lavers.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

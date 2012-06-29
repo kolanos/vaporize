@@ -1,0 +1,435 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>servers — Servers &mdash; Vaporize 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="Vaporize 0.1 documentation" href="index.html" />
+    <link rel="prev" title="loadbalancers — Load Balancers" href="loadbalancers.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="loadbalancers.html" title="loadbalancers — Load Balancers"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Vaporize 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-vaporize.servers">
+<span id="servers-servers"></span><h1><tt class="docutils literal"><span class="pre">servers</span></tt> &#8212; Servers<a class="headerlink" href="#module-vaporize.servers" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="vaporize.servers.BackupSchedule">
+<em class="property">class </em><tt class="descclassname">vaporize.servers.</tt><tt class="descname">BackupSchedule</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.servers.BackupSchedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CloudServers Backup Schedule.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="vaporize.servers.IP">
+<em class="property">class </em><tt class="descclassname">vaporize.servers.</tt><tt class="descname">IP</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.servers.IP" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CloudServers IP Address.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="vaporize.servers.Server">
+<em class="property">class </em><tt class="descclassname">vaporize.servers.</tt><tt class="descname">Server</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.servers.Server" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CloudServers Server.</p>
+<dl class="method">
+<dt id="vaporize.servers.Server.backup_schedule">
+<tt class="descname">backup_schedule</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.servers.Server.backup_schedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return this Server&#8217;s backup schedule</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><a class="reference internal" href="#vaporize.servers.BackupSchedule" title="vaporize.servers.BackupSchedule"><tt class="xref py py-class docutils literal"><span class="pre">BackupSchedule</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.servers.Server.confirm_resize">
+<tt class="descname">confirm_resize</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.servers.Server.confirm_resize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Confirm a successful resize operation</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.servers.Server.delete">
+<tt class="descname">delete</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.servers.Server.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete this Server.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">There is no confirmation step for this operation. When you delete a
+server it is permanent. If in doubt, create a backup image
+(<a class="reference internal" href="images.html#vaporize.images.create" title="vaporize.images.create"><tt class="xref py py-func docutils literal"><span class="pre">vaporize.images.create()</span></tt></a>) first before deleting.</p>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.servers.Server.disable_backup_schedule">
+<tt class="descname">disable_backup_schedule</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.servers.Server.disable_backup_schedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable a backup schedule for this Server</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.servers.Server.enable_backup_schedule">
+<tt class="descname">enable_backup_schedule</tt><big>(</big><em>weekly=None</em>, <em>daily=None</em><big>)</big><a class="headerlink" href="#vaporize.servers.Server.enable_backup_schedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable a backup schedule for this Server</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>weekly</strong> (<em>str</em>) &#8211; The weekly backup schedule</li>
+<li><strong>daily</strong> (<em>str</em>) &#8211; The daily backup schedule</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.servers.Server.hard_reboot">
+<tt class="descname">hard_reboot</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.servers.Server.hard_reboot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a hard reboot on this Server</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.servers.Server.ips">
+<tt class="descname">ips</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.servers.Server.ips" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of public and private IPs for this Server.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of public and private IPs for this Server.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">A list of <a class="reference internal" href="#vaporize.servers.IP" title="vaporize.servers.IP"><tt class="xref py py-class docutils literal"><span class="pre">IP</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.servers.Server.modify">
+<tt class="descname">modify</tt><big>(</big><em>name=None</em>, <em>password=None</em><big>)</big><a class="headerlink" href="#vaporize.servers.Server.modify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify this Server&#8217;s name or root password.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) &#8211; Change the Server&#8217;s name</li>
+<li><strong>password</strong> (<em>str</em>) &#8211; Change the Server&#8217;s root password</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A modified CloudServers Server.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#vaporize.servers.Server" title="vaporize.servers.Server"><tt class="xref py py-class docutils literal"><span class="pre">Server</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="vaporize.servers.Server.private_ips">
+<tt class="descname">private_ips</tt><a class="headerlink" href="#vaporize.servers.Server.private_ips" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Server&#8217;s Private IP.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="vaporize.servers.Server.public_ips">
+<tt class="descname">public_ips</tt><a class="headerlink" href="#vaporize.servers.Server.public_ips" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Server&#8217;s Public IP.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.servers.Server.rebuild">
+<tt class="descname">rebuild</tt><big>(</big><em>image</em><big>)</big><a class="headerlink" href="#vaporize.servers.Server.rebuild" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rebuild this Server using a specified Image</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>image</strong> (int or <a class="reference internal" href="images.html#vaporize.images.Image" title="vaporize.images.Image"><tt class="xref py py-class docutils literal"><span class="pre">vaporize.images.Image</span></tt></a>) &#8211; The Image or <tt class="docutils literal"><span class="pre">id</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.servers.Server.reload">
+<tt class="descname">reload</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.servers.Server.reload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reload this Server (an implicit <a class="reference internal" href="#vaporize.servers.get" title="vaporize.servers.get"><tt class="xref py py-func docutils literal"><span class="pre">get()</span></tt></a>).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">An updated CloudServers Server.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#vaporize.servers.Server" title="vaporize.servers.Server"><tt class="xref py py-class docutils literal"><span class="pre">Server</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.servers.Server.resize">
+<tt class="descname">resize</tt><big>(</big><em>flavor</em><big>)</big><a class="headerlink" href="#vaporize.servers.Server.resize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resize this Server to a specific Flavor size</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>flavor</strong> (int or <a class="reference internal" href="flavors.html#vaporize.flavors.Flavor" title="vaporize.flavors.Flavor"><tt class="xref py py-class docutils literal"><span class="pre">vaporize.flavors.Flavor</span></tt></a>) &#8211; The Flavor or <tt class="docutils literal"><span class="pre">id</span></tt></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.servers.Server.revert_resize">
+<tt class="descname">revert_resize</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.servers.Server.revert_resize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Revert an unsuccessful resize operation</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.servers.Server.share_ip">
+<tt class="descname">share_ip</tt><big>(</big><em>address</em>, <em>ipgroup</em>, <em>configure=True</em><big>)</big><a class="headerlink" href="#vaporize.servers.Server.share_ip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Share this Server&#8217;s IP in a Shared IP Group.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>address</strong> (<em>str</em>) &#8211; IP to share in the Shared IP Group</li>
+<li><strong>ipgroup</strong> (int or <a class="reference internal" href="ipgroups.html#vaporize.ipgroups.SharedIPGroup" title="vaporize.ipgroups.SharedIPGroup"><tt class="xref py py-class docutils literal"><span class="pre">vaporize.ipgroups.SharedIPGroup</span></tt></a>) &#8211; A <a class="reference internal" href="ipgroups.html#vaporize.ipgroups.SharedIPGroup" title="vaporize.ipgroups.SharedIPGroup"><tt class="xref py py-class docutils literal"><span class="pre">vaporize.ipgroups.SharedIPGroup</span></tt></a> or <tt class="docutils literal"><span class="pre">id</span></tt></li>
+<li><strong>configure</strong> (<em>bool</em>) &#8211; Configure the shared IP on the Server</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The Shared IP Group associated with this Server.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ipgroups.html#vaporize.ipgroups.SharedIPGroup" title="vaporize.ipgroups.SharedIPGroup"><tt class="xref py py-class docutils literal"><span class="pre">vaporize.ipgroups.SharedIPGroup</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.servers.Server.soft_reboot">
+<tt class="descname">soft_reboot</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.servers.Server.soft_reboot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a soft reboot on this Server</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.servers.Server.unshare_ip">
+<tt class="descname">unshare_ip</tt><big>(</big><em>address</em><big>)</big><a class="headerlink" href="#vaporize.servers.Server.unshare_ip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unshare this Server&#8217;s IP</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="vaporize.servers.create">
+<tt class="descclassname">vaporize.servers.</tt><tt class="descname">create</tt><big>(</big><em>name</em>, <em>image</em>, <em>flavor</em>, <em>metadata=None</em>, <em>files=None</em><big>)</big><a class="headerlink" href="#vaporize.servers.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a CloudServers Server</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) &#8211; A Server&#8217;s name</li>
+<li><strong>image</strong> (int or <a class="reference internal" href="images.html#vaporize.images.Image" title="vaporize.images.Image"><tt class="xref py py-class docutils literal"><span class="pre">vaporize.images.Image</span></tt></a>) &#8211; An Image or <tt class="docutils literal"><span class="pre">id</span></tt></li>
+<li><strong>flavor</strong> (int or <a class="reference internal" href="flavors.html#vaporize.flavors.Flavor" title="vaporize.flavors.Flavor"><tt class="xref py py-class docutils literal"><span class="pre">vaporize.flavors.Flavor</span></tt></a>) &#8211; A Flavor or <tt class="docutils literal"><span class="pre">id</span></tt></li>
+<li><strong>metadata</strong> (<em>dict</em>) &#8211; Optional meta data to include with Server</li>
+<li><strong>files</strong> (<em>dict</em>) &#8211; A list of files to load on Server</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A shiny new CloudServers Server.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#vaporize.servers.Server" title="vaporize.servers.Server"><tt class="xref py py-class docutils literal"><span class="pre">Server</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="vaporize.servers.get">
+<tt class="descclassname">vaporize.servers.</tt><tt class="descname">get</tt><big>(</big><em>id</em><big>)</big><a class="headerlink" href="#vaporize.servers.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a Server using an ID</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>int</em>) &#8211; The <tt class="docutils literal"><span class="pre">id</span></tt> of the Server to be retrieved</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A <a class="reference internal" href="#vaporize.servers.Server" title="vaporize.servers.Server"><tt class="xref py py-class docutils literal"><span class="pre">Server</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="vaporize.servers.list">
+<tt class="descclassname">vaporize.servers.</tt><tt class="descname">list</tt><big>(</big><em>limit=None</em>, <em>offset=None</em>, <em>detail=False</em><big>)</big><a class="headerlink" href="#vaporize.servers.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of CloudServer Servers</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>limit</strong> (<em>int</em>) &#8211; Limit the result set to a certain number</li>
+<li><strong>offset</strong> (<em>int</em>) &#8211; Offset the result set by a certain number</li>
+<li><strong>detail</strong> (<em>bool</em>) &#8211; Return detailed information about each Server</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of CloudServers Servers.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">List of <a class="reference internal" href="#vaporize.servers.Server" title="vaporize.servers.Server"><tt class="xref py py-class docutils literal"><span class="pre">Server</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="loadbalancers.html"
+                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">loadbalancers</span></tt> &#8212; Load Balancers</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/servers.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="loadbalancers.html" title="loadbalancers — Load Balancers"
+             >previous</a> |</li>
+        <li><a href="index.html">Vaporize 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Michael Lavers.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
