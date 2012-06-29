@@ -24,7 +24,7 @@ Installation
 
 To install Vaporize using PIP:
 
-    $ pip install vaporize
+    pip install vaporize
 
 Simple API
 ----------
@@ -32,17 +32,17 @@ Simple API
 Vaporize is designed to be simple to use. Connect to your Rackspace Cloud in
 just two lines of code:
 
-    >>> import vaporize
-    >>> vaporize.connect('username', 'apikey')
+    import vaporize
+    vaporize.connect('username', 'apikey')
 
 Documentation
 -------------
 
 API Documentation and a User Guide (in the works) available here_.
 
-.. _here: https://kolanos.github.com/vaporize/
+.. _here: http://kolanos.github.com/vaporize/
 
-Contributors
+Contributing
 ------------
 
 Vaporize is currently still in development. Contributors are welcome. Just fork
