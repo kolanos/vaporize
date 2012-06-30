@@ -15,8 +15,8 @@ import requests
 
 from vaporize.exceptions import ConnectionError, handle_exception
 
-US_AUTH_URL = "https://identity.api.rackspacecloud.com/v1.1/auth"
-UK_AUTH_URL = "https://lon.identity.api.rackspacecloud.com/v1.1/auth"
+US_AUTH_URL = "https://identity.api.rackspacecloud.com/v2.0/tokens"
+UK_AUTH_URL = "https://lon.identity.api.rackspacecloud.com/v2.0/tokens"
 
 _settings = {}
 _session = {}
@@ -57,20 +57,26 @@ def connect(user, apikey, region='DFW'):
         raise ConnectionError("Unrecognized region %s" % region)
     headers = {'Content-Type': 'application/json',
                'Accept': 'application/json'}
-    data = json.dumps({'credentials': {'username': user,
-                                       'key': apikey}})
+    data = json.dumps({'auth': {
+        'RAX-KSKEY:apiKeyCredentials': {
+            'username': user,
+            'apiKey': apikey
+            }
+        }})
     response = requests.post(auth_url, headers=headers, data=data)
     if response.status_code in [200, 203]:
-        data = json.loads(response.content)['auth']
+        data = json.loads(response.content)['access']
         _settings['token'] = data['token']['id']
-        _settings['expires'] = data['token']['expires']
-        for s, r in list(data['serviceCatalog'].items()):
-            if len(r) == 1:
-                _settings[s.lower() + '_url'] = r[0]['publicURL']
-            elif len(r) > 1:
-                for i in r:
-                    if i['region'] == region:
-                        _settings[s.lower() + '_url'] = i['publicURL']
+        _settings['expires'] = dateutil.parser.parse(data['token']['expires'])
+        for service in data['serviceCatalog']:
+            name = service['name'].lower()
+            if len(service['endpoints']) == 1:
+                url = service['endpoints'][0]['publicURL']
+            else:
+                for endpoint in service['endpoints']:
+                    if endpoint['region'] == region:
+                        url = endpoint['publicURL']
+            _settings[name + '_url'] = url
         auth = Auth(_settings['token'])
         headers = {'Content-Type': 'application/json',
                    'Accept': 'application/json'}
