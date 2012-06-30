@@ -26,8 +26,8 @@ To install Vaporize using PIP:
 
     pip install vaporize
 
-Simple API
-----------
+Usage
+-----
 
 Vaporize is designed to be simple to use. Connect to your Rackspace Cloud in
 just two lines of code:

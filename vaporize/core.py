@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import datetime
 import json
 import time
 try:
+    # Python 3.x
     from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 except ImportError:
+    # Python 2.x
     from urllib import urlencode
     from urlparse import parse_qsl, urlsplit, urlunsplit
 

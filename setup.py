@@ -8,14 +8,14 @@ except ImportError:
     from distutils.core import setup
 
 setup(
-    name='vaporize',
+    name=vaporize.__title__,
     description='A clean and consistent library for Rackspace Cloud.',
     long_description=open('README.rst').read(),
-    author='Michael Lavers',
-    author_email='kolanos@gmail.com',
+    author=vaporize.__author__,
+    author_email=vaporize.__email__,
     url='https://github.com/kolanos/vaporize',
     version=vaporize.__version__,
-    license='MIT',
+    license=vaporize.__license__,
     install_requires=open('requirements.txt').readlines(),
     packages=['vaporize'],
     classifiers = [

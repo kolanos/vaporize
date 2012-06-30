@@ -32,7 +32,8 @@ class Domain(DotDict):
         """
         Reload this Domain (an implicit :func:`get`).
 
-        :returns: a :class:`Domain`
+        :returns: An updated Domain.
+        :rtype: :class:`Domain`
 
         .. versionadded:: 0.1
         """
@@ -59,19 +60,18 @@ class Domain(DotDict):
         if ttl is not None:
             data['ttl'] = int(ttl)
         if email_address is not None:
-            data['email_address'] = email_address
+            data['emailAddress'] = email_address
         if comment is not None:
             data['comment'] = comment
         data = json.dumps(data)
         url = '/'.join([get_url('clouddns'), 'domains', str(self['id'])])
-        response = handle_request('put', url, data)
-        if response:
-            if ttl is not None:
-                self['ttl'] = int(ttl)
-            if email_address is not None:
-                self['emailAddress'] = email_address
-            if comment is not None:
-                self['comment'] = comment
+        handle_request('put', url, data)
+        if ttl is not None:
+            self['ttl'] = int(ttl)
+        if email_address is not None:
+            self['email_address'] = email_address
+        if comment is not None:
+            self['comment'] = comment
         return self
 
     def delete(self, subdomains=False):
@@ -96,20 +96,26 @@ class Domain(DotDict):
     def records(self):
         """Returns a list of CloudDNS Records.
 
-        :returns: A list of :class:`Record`
+        :returns: A list of Records.
+        :rtype: A list of :class:`Record`
 
         .. versionadded:: 0.1
         """
         assert 'id' in self
         url = '/'.join([get_url('clouddns'), 'domains', str(self['id']),
                         'records'])
-        self['records'] = handle_request('get', url, wrapper=Record,
-                                         container='records',
-                                         domain_id=self['id'])
+        response = handle_request('get', url, wrapper=Record,
+                                  container='records', domain_id=self['id'])
+        self['records'] = response
         return self['records']
 
     def add_records(self, *records):
         """Add Records to a Domain.
+
+            >>> domain = vaporize.domains.create(...)
+            >>> record1 = vaporize.domains.Record.create(....)
+            >>> record2 = vaporize.domains.Record.create(...)
+            >>> domain.add_recrods(record1, record2)
 
         :param records: Records you wish to add to this Domain.
         :type records: :class:`Record`
@@ -154,7 +160,8 @@ class Domain(DotDict):
     def subdomains(self):
         """Returns a list of Subdomains.
 
-        :returns; A list of :class:`Subdomain`
+        :returns; A list of Subdomains.
+        :rtype: A list of :class:`Subdomain`
 
         .. versionadded:: 0.1
         """
@@ -170,8 +177,9 @@ class Domain(DotDict):
         """Returns a list of CloudDNS changes for this domain.
 
         :param since: A datetime as a starting point.
-        :type since: str
-        :returns: A list of :class:`Change`
+        :type since: str or datetime
+        :returns: A list of Changes
+        :rtype: A list of :class:`Change`
 
         .. versionadded:: 0.1
         """
@@ -194,12 +202,12 @@ class Domain(DotDict):
 
 
 class Export(DotDict):
-    """A BIND Zone Export."""
+    """A CloudDNS BIND Zone Export."""
     pass
 
 
 class Nameserver(DotDict):
-    """A DNS Nameserver."""
+    """A CloudDNS Nameserver."""
     def __repr__(self):
         if 'name' in self:
             return '<Nameserver %s>' % self['name']
@@ -252,9 +260,10 @@ class Record(DotDict):
                    comment=comment)
 
     def reload(self):
-        """Reload a Record (an implicit ``get``).
+        """Reload a Record.
 
-        :returns: A :class:`Record`
+        :returns: A Record
+        :rtype: :class:`Record`
 
         .. versionadded:: 0.1
         """
@@ -342,7 +351,8 @@ class Subdomain(DotDict):
         :type comment: str
         :param email_address: An e-mail address associated with the subdomain
         :type email_address: str
-        :returns: A :class:`Subdomain`
+        :returns: A Subdomain
+        :rtype: :class:`Subdomain`
 
         .. versionadded:: 0.1
         """
@@ -358,8 +368,8 @@ def list(limit=None, offset=None, filter=None):
     :type offset: int
     :param filter: Filter results by a domain name
     :type filter: str
-    :returns: List of Domains
-    :rtype: :class:`Domain`
+    :returns: A list of Domains
+    :rtype: A list of :class:`Domain`
 
     .. versionadded:: 0.1
     """
@@ -379,7 +389,8 @@ def get(id, records=False, subdomains=False):
     :type records: bool
     :param subdomains: Include the Domain's Subdomainsi n the result
     :type subdomains: bool
-    :returns: A :class:`Domain`
+    :returns: A Domain with the specified ID.
+    :rtype: :class:`Domain`
 
     .. versionadded:: 0.1
     """
@@ -399,10 +410,10 @@ def create(name, ttl=300, records=None, subdomains=None, comment=None,
     :type name: str
     :param ttl: Time-To-Live (TTL) in seconds
     :type ttl: int
-    :param records: A list of :class:`Record` to create
-    :type records: list
-    :param subdomains: A list of :class:`Subdomain` to create
-    :type subdomains: list
+    :param records: A list of Records to create
+    :type records: list of :class:`Record`
+    :param subdomains: A list of Subdomains to create
+    :type subdomains: list of :class:`Subdomain`
     :param comment: An optional comment to associated with the domain
     :type comment: str
     :param email_address: An e-mail address to associated with the domain
