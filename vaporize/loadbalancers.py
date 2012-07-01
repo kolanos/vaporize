@@ -18,7 +18,9 @@ class AccessRule(DotDict):
         """Create an Access Rule.
 
         :param type: ``ACCEPT`` or ``DENY``
+        :type type: str
         :param address: The IP address in which to apply the rule.
+        :type address: str
         :returns: A shiny new Access Rule.
         :rtype: :class:`AccessRule`
 
@@ -113,7 +115,7 @@ class LoadBalancer(DotDict):
             value = [VirtualIP(v) for v in value]
         elif key in ['created', 'updated']:
             value = convert_datetime(value['time'])
-        super(HealthMonitor, self).__setitem__(key, value)
+        super(LoadBalancer, self).__setitem__(key, value)
 
     def reload(self):
         """Reload this Load Balancer (an implicit :func:`get`).
@@ -191,7 +193,8 @@ class LoadBalancer(DotDict):
     def nodes(self):
         """Returns a list of Nodes for this Load Balancer.
 
-        :returns: A list of :class:`Node`.
+        :returns: A list of Nodes.
+        :rtype: list of :class:`Node`
 
         .. versionadded:: 0.1
         """
@@ -205,6 +208,16 @@ class LoadBalancer(DotDict):
 
     def add_nodes(self, *nodes):
         """Add Nodes to this Load Balancer.
+
+            >>> loadbalancer = vaporize.loadbalancers.create(...)
+            >>> node1 = vaporize.loadbalancers.Node.create(....)
+            >>> node2 = vaporize.loadbalancers.Node.crete(....)
+            >>> loadbalancer.add_nodes(node1, node2)
+
+        :param nodes: Nodes to add to the Load Balancer.
+        :type nodes: :class:`Node`
+        :returns: A list of Nodes.
+        :rtype: list of :class:`Node`
 
         .. versionadded:: 0.1
         """
@@ -229,10 +242,13 @@ class LoadBalancer(DotDict):
     def remove_node(self, node):
         """Remove a Node from this Load Balancer.
 
+        :param node: ``id`` or :class:`Node` to remove from Load Balancer
+        :type node: int or :class:`Node`
+
         .. versionadded:: 0.1
         """
-        node = node.id if isinstance(node, Node) else int(node)
         assert 'id' in self
+        node = node.id if isinstance(node, Node) else int(node)
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
                         str(self['id']), 'nodes', str(node)])
         handle_request('delete', url)
@@ -241,7 +257,7 @@ class LoadBalancer(DotDict):
         """Returns a list of VirtualIPs for this Load Balancer.
 
         :returns: A list of Virtual IPs on this Load Balancer.
-        :rtype: A list of :class:`VirtualIP`
+        :rtype: list of :class:`VirtualIP`
 
         .. versionadded:: 0.1
         """
@@ -256,6 +272,16 @@ class LoadBalancer(DotDict):
 
     def add_virtual_ips(self, *virtual_ips):
         """Add Virtual IPs to this Load Balancer.
+
+            >>> loadbalancer = vaporize.loadbalancers.create(...)
+            >>> virtual_ip1 = vaporize.loadbalancers.VirtualIP.create(...)
+            >>> virtual_ip2 = vaporize.loadbalancers.VirtualIP.create(...)
+            >>> loadbalancer.add_virtual_ips(virtual_ip1, virtual_ip2)
+
+            :param virtual_ips: Virtual IPs to add to thisLoad Balancer
+            :type virtual_ips: :class:`VirtualIP`
+            :returns: A list of Virtual IPs on the Load Balancer
+            :rtype: list of :class:`VirtualIP`
 
         .. versionadded:: 0.1
         """
@@ -278,13 +304,15 @@ class LoadBalancer(DotDict):
     def remove_virtual_ip(self, virtual_ip):
         """Remove a VirtualIP from this Load Balancer.
 
+        :param virtual_ip: ``id`` or Virtual IP to remove from Load Balancer
+        :type virtual_ip: int or :class:`VirtualIP`
+
         .. versionadded:: 0.1
         """
         assert 'id' in self
         if isinstance(virtual_ip, VirtualIP):
             virtual_ip = virtual_ip.id
-        else:
-            virtual_ip = int(virtual_ip)
+        virtual_ip = int(virtual_ip)
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
                         str(self['id']), 'virtualips', str(virtual_ip)])
         handle_request('delete', url)
@@ -293,7 +321,7 @@ class LoadBalancer(DotDict):
         """Returns a list of AccessRules for this Load Balancer.
 
         :returns: A list of Access List Rules for this Load Balancer.
-        :rtype: A list of :class:`AccessRule`.
+        :rtype: list of :class:`AccessRule`.
 
         .. versionadded:: 0.1
         """
@@ -309,8 +337,19 @@ class LoadBalancer(DotDict):
     def add_access_rules(self, *access_rules):
         """Add AccessRules to this Load Balancer.
 
+            >>> loadbalancer = vaporize.loadbalancers.create(...)
+            >>> access_rule1 = vaporize.loadbalancers.AccessRule.create(...)
+            >>> access_rule2 = vaporize.loadbalancers.AccessRule.create(....)
+            >>> loadbalancer.add_access_rules(access_rule1, access_rule2)
+
+            :param access_rules: Access Rules to add to this Load Balancer.
+            :type access_rules: :class:`AccessRule`
+            :returns: A list of Access Rules.
+            :rtype: list of :class:`AccessRule`
+
         .. versionadded:: 0.1
         """
+        assert 'id' in self
         data = {'accessList': []}
         for access_rule in access_rules:
             if isinstance(access_rule, AccessRule):
@@ -329,13 +368,15 @@ class LoadBalancer(DotDict):
     def remove_access_rule(self, access_rule):
         """Remove an AccessRule from this Load Balancer.
 
+        :param access_rule: ``id`` or Access Rule to remove from Load Balancer
+        :type access_rule: int or :class:`AccessRule`
+
         .. versionadded:: 0.1
         """
         assert 'id' in self
         if isinstance(access_rule, AccessRule):
             access_rule = access_rule.id
-        else:
-            access_rule = int(access_rule)
+        access_rule = int(access_rule)
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
                         str(self['id']), 'accesslist', str(access_rule)])
         handle_request('delete', url)
@@ -359,8 +400,8 @@ class LoadBalancer(DotDict):
     def enable_connection_logging(self):
         """Enable Connection Logging for this Load Balancer.
 
-        :returns: A Health Monitor setting.
-        :rtype: :class:`HealthMonitor`
+        :returns: This Load Balancer's Connection Logging setting.
+        :rtype: :class:`ConnectionLogging`
 
         .. versionadded:: 0.1
         """
@@ -386,7 +427,7 @@ class LoadBalancer(DotDict):
     def content_caching(self):
         """Returns the Connection Caching setting for this Load Balancer.
 
-        :returns: A Content Caching setting.
+        :returns: This Load Balancer's Content Caching setting.
         :rtype: :class:`ContentCaching`
 
         .. versionadded:: 0.1
@@ -426,7 +467,7 @@ class LoadBalancer(DotDict):
     def connection_throttle(self):
         """Return the Connection Throttle setting for this Load Balancer.
 
-        :returns: A Connection Throttle setting.
+        :returns: This Load Balancer's Connection Throttle setting.
         :rtype: :class:`ConnectionThrottle`
 
         .. versionadded:: 0.1
@@ -442,6 +483,17 @@ class LoadBalancer(DotDict):
     def enable_connection_throttle(self, max_connections, min_connections,
                                    max_connection_rate, rate_interval):
         """Enable Connection Throttle setting for this Load Balancer.
+
+        :param max_connections: Max connections.
+        :type max_connections: int
+        :param min_connections: Minimum connections required to throttle.
+        :type min_connections: int
+        :param max_connection_rate: Maximum rate of connections.
+        :type max_connection_rate: int
+        :param rate_interval: Rate interval in seconds.
+        :type rate_interval: int
+        :returns: This Load Balancer's Connection Throttle
+        :rtype: :class:`ConnectionThrottle`
 
         .. versionadded:: 0.1
         """
@@ -478,7 +530,7 @@ class LoadBalancer(DotDict):
     def health_monitor(self):
         """Returns the Health Monitor setting for this Load Balancer.
 
-        :returns: A Health Monitor setting.
+        :returns: This Load Balancer's Health Monitor setting.
         :rtype: :class:`HealthMonitor`
 
         .. versionadded:: 0.1
@@ -523,7 +575,7 @@ class LoadBalancer(DotDict):
     def session_persistence(self):
         """Return Session Persistence setting for this Load Balancer.
 
-        :returns: A Session Persistence setting.
+        :returns: This Load Balancer's Session Persistence setting.
         :rtype: :class:`SessionPersistence`
 
         .. versionadded:: 0.1
@@ -558,7 +610,7 @@ class LoadBalancer(DotDict):
     def error_page(self):
         """Returns the Error Page for this Load Balancer.
 
-        :returns: A Error Page setting.
+        :returns: This Load Balancer's Error Page setting.
         :rtype: :class:`ErrorPage`
 
         .. versionadded:: 0.1
@@ -610,9 +662,9 @@ class LoadBalancer(DotDict):
         """Returns Usage Report for this Load Balancer.
 
         :param start_time: A datetime string as a starting point.
-        :type start_time: str
+        :type start_time: str or datetime
         :param end_time: A datetime string as an ending point.
-        :type end_time: str
+        :type end_time: str or datetime
         :returns: A usage report for this Load Balancer.
         :rtype: :class:`UsageReport`
 
@@ -622,7 +674,7 @@ class LoadBalancer(DotDict):
                str(self['id']), 'usage']
         if start_time is not None and end_time is not None:
             url = '/'.join(url)
-            url = query(url, startTime=start_time, endTime=end_time)
+            url = query(url, startTime=str(start_time), endTime=str(end_time))
         else:
             url.append('current')
             url = '/'.join(url)

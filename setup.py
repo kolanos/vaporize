@@ -9,7 +9,7 @@ except ImportError:
 
 setup(
     name=vaporize.__title__,
-    description='A clean and consistent library for Rackspace Cloud.',
+    description='A clean and consistent library for the Rackspace Cloud / OpenStack',
     long_description=open('README.rst').read(),
     author=vaporize.__author__,
     author_email=vaporize.__email__,
