@@ -48,7 +48,7 @@ list.
 Creating a Server
 -----------------
 
-Shall we create a CLoudServer? It'll cost you. But for the sake of this guide,
+Shall we create a CloudServer? It'll cost you. But for the sake of this guide,
 you'll only be charged a small pro-rated fee.
 
 Before we create a server we need to know what kind of server we want to create.
@@ -108,7 +108,7 @@ Wow! So many to choose from!
     with the word "Windows" cost extra. Check the Rackspace 
     Cloud website for details.
 
-I'm partial to UBuntu Server myself, so let's choose option 22:
+I'm partial to Ubuntu Server myself, so let's choose option 22:
 
     >>> image = images[22]
 
