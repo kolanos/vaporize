@@ -168,8 +168,7 @@
 <dt id="vaporize.loadbalancers.LoadBalancer.add_access_rules">
 <tt class="descname">add_access_rules</tt><big>(</big><em>*access_rules</em><big>)</big><a class="headerlink" href="#vaporize.loadbalancers.LoadBalancer.add_access_rules" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add AccessRules to this Load Balancer.</p>
-<blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">loadbalancer</span> <span class="o">=</span> <span class="n">vaporize</span><span class="o">.</span><span class="n">loadbalancers</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">loadbalancer</span> <span class="o">=</span> <span class="n">vaporize</span><span class="o">.</span><span class="n">loadbalancers</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">access_rule1</span> <span class="o">=</span> <span class="n">vaporize</span><span class="o">.</span><span class="n">loadbalancers</span><span class="o">.</span><span class="n">AccessRule</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">access_rule2</span> <span class="o">=</span> <span class="n">vaporize</span><span class="o">.</span><span class="n">loadbalancers</span><span class="o">.</span><span class="n">AccessRule</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="o">....</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">loadbalancer</span><span class="o">.</span><span class="n">add_access_rules</span><span class="p">(</span><span class="n">access_rule1</span><span class="p">,</span> <span class="n">access_rule2</span><span class="p">)</span>
@@ -179,19 +178,14 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">param access_rules:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">Access Rules to add to this Load Balancer.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>access_rules</strong> (<a class="reference internal" href="#vaporize.loadbalancers.AccessRule" title="vaporize.loadbalancers.AccessRule"><tt class="xref py py-class docutils literal"><span class="pre">AccessRule</span></tt></a>) &#8211; Access Rules to add to this Load Balancer.</td>
 </tr>
-<tr class="field-even field"><th class="field-name" colspan="2">type access_rules:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><a class="reference internal" href="#vaporize.loadbalancers.AccessRule" title="vaporize.loadbalancers.AccessRule"><tt class="xref py py-class docutils literal"><span class="pre">AccessRule</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of Access Rules.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">returns:</th><td class="field-body">A list of Access Rules.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">rtype:</th><td class="field-body">list of <a class="reference internal" href="#vaporize.loadbalancers.AccessRule" title="vaporize.loadbalancers.AccessRule"><tt class="xref py py-class docutils literal"><span class="pre">AccessRule</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list of <a class="reference internal" href="#vaporize.loadbalancers.AccessRule" title="vaporize.loadbalancers.AccessRule"><tt class="xref py py-class docutils literal"><span class="pre">AccessRule</span></tt></a></td>
 </tr>
 </tbody>
 </table>
-</div></blockquote>
 <p class="versionadded">
 <span class="versionmodified">New in version 0.1.</span></p>
 </dd></dl>
