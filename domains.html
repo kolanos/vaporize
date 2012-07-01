@@ -70,6 +70,12 @@
 <dt id="vaporize.domains.Domain.add_records">
 <tt class="descname">add_records</tt><big>(</big><em>*records</em><big>)</big><a class="headerlink" href="#vaporize.domains.Domain.add_records" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add Records to a Domain.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">domain</span> <span class="o">=</span> <span class="n">vaporize</span><span class="o">.</span><span class="n">domains</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record1</span> <span class="o">=</span> <span class="n">vaporize</span><span class="o">.</span><span class="n">domains</span><span class="o">.</span><span class="n">Record</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="o">....</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">record2</span> <span class="o">=</span> <span class="n">vaporize</span><span class="o">.</span><span class="n">domains</span><span class="o">.</span><span class="n">Record</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">domain</span><span class="o">.</span><span class="n">add_recrods</span><span class="p">(</span><span class="n">record1</span><span class="p">,</span> <span class="n">record2</span><span class="p">)</span>
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -94,9 +100,11 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>since</strong> (<em>str</em>) &#8211; A datetime as a starting point.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>since</strong> (<em>str or datetime</em>) &#8211; A datetime as a starting point.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of <a class="reference internal" href="#vaporize.domains.Change" title="vaporize.domains.Change"><tt class="xref py py-class docutils literal"><span class="pre">Change</span></tt></a></td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of Changes</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">A list of <a class="reference internal" href="#vaporize.domains.Change" title="vaporize.domains.Change"><tt class="xref py py-class docutils literal"><span class="pre">Change</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -174,7 +182,9 @@ zone (<a class="reference internal" href="#vaporize.domains.Domain.export_zone" 
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of <a class="reference internal" href="#vaporize.domains.Record" title="vaporize.domains.Record"><tt class="xref py py-class docutils literal"><span class="pre">Record</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of Records.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">A list of <a class="reference internal" href="#vaporize.domains.Record" title="vaporize.domains.Record"><tt class="xref py py-class docutils literal"><span class="pre">Record</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -190,7 +200,9 @@ zone (<a class="reference internal" href="#vaporize.domains.Domain.export_zone" 
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a <a class="reference internal" href="#vaporize.domains.Domain" title="vaporize.domains.Domain"><tt class="xref py py-class docutils literal"><span class="pre">Domain</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">An updated Domain.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#vaporize.domains.Domain" title="vaporize.domains.Domain"><tt class="xref py py-class docutils literal"><span class="pre">Domain</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -218,7 +230,8 @@ zone (<a class="reference internal" href="#vaporize.domains.Domain.export_zone" 
 <dt id="vaporize.domains.Domain.subdomains">
 <tt class="descname">subdomains</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.domains.Domain.subdomains" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of Subdomains.</p>
-<p>:returns; A list of <a class="reference internal" href="#vaporize.domains.Subdomain" title="vaporize.domains.Subdomain"><tt class="xref py py-class docutils literal"><span class="pre">Subdomain</span></tt></a></p>
+<p>:returns; A list of Subdomains.
+:rtype: A list of <a class="reference internal" href="#vaporize.domains.Subdomain" title="vaporize.domains.Subdomain"><tt class="xref py py-class docutils literal"><span class="pre">Subdomain</span></tt></a></p>
 <p class="versionadded">
 <span class="versionmodified">New in version 0.1.</span></p>
 </dd></dl>
@@ -228,13 +241,13 @@ zone (<a class="reference internal" href="#vaporize.domains.Domain.export_zone" 
 <dl class="class">
 <dt id="vaporize.domains.Export">
 <em class="property">class </em><tt class="descclassname">vaporize.domains.</tt><tt class="descname">Export</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.domains.Export" title="Permalink to this definition">¶</a></dt>
-<dd><p>A BIND Zone Export.</p>
+<dd><p>A CloudDNS BIND Zone Export.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="vaporize.domains.Nameserver">
 <em class="property">class </em><tt class="descclassname">vaporize.domains.</tt><tt class="descname">Nameserver</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.domains.Nameserver" title="Permalink to this definition">¶</a></dt>
-<dd><p>A DNS Nameserver.</p>
+<dd><p>A CloudDNS Nameserver.</p>
 </dd></dl>
 
 <dl class="class">
@@ -318,12 +331,14 @@ zone (<a class="reference internal" href="#vaporize.domains.Domain.export_zone" 
 <dl class="method">
 <dt id="vaporize.domains.Record.reload">
 <tt class="descname">reload</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.domains.Record.reload" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reload a Record (an implicit <tt class="docutils literal"><span class="pre">get</span></tt>).</p>
+<dd><p>Reload a Record.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A <a class="reference internal" href="#vaporize.domains.Record" title="vaporize.domains.Record"><tt class="xref py py-class docutils literal"><span class="pre">Record</span></tt></a></td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Record</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#vaporize.domains.Record" title="vaporize.domains.Record"><tt class="xref py py-class docutils literal"><span class="pre">Record</span></tt></a></td>
 </tr>
 </tbody>
 </table>
@@ -358,7 +373,10 @@ added to an existing CloudDNS <a class="reference internal" href="#vaporize.doma
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A <a class="reference internal" href="#vaporize.domains.Subdomain" title="vaporize.domains.Subdomain"><tt class="xref py py-class docutils literal"><span class="pre">Subdomain</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A Subdomain</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#vaporize.domains.Subdomain" title="vaporize.domains.Subdomain"><tt class="xref py py-class docutils literal"><span class="pre">Subdomain</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -380,8 +398,8 @@ added to an existing CloudDNS <a class="reference internal" href="#vaporize.doma
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>name</strong> (<em>str</em>) &#8211; A domain name such as <tt class="docutils literal"><span class="pre">yourname.com</span></tt></li>
 <li><strong>ttl</strong> (<em>int</em>) &#8211; Time-To-Live (TTL) in seconds</li>
-<li><strong>records</strong> (<em>list</em>) &#8211; A list of <a class="reference internal" href="#vaporize.domains.Record" title="vaporize.domains.Record"><tt class="xref py py-class docutils literal"><span class="pre">Record</span></tt></a> to create</li>
-<li><strong>subdomains</strong> (<em>list</em>) &#8211; A list of <a class="reference internal" href="#vaporize.domains.Subdomain" title="vaporize.domains.Subdomain"><tt class="xref py py-class docutils literal"><span class="pre">Subdomain</span></tt></a> to create</li>
+<li><strong>records</strong> (list of <a class="reference internal" href="#vaporize.domains.Record" title="vaporize.domains.Record"><tt class="xref py py-class docutils literal"><span class="pre">Record</span></tt></a>) &#8211; A list of Records to create</li>
+<li><strong>subdomains</strong> (list of <a class="reference internal" href="#vaporize.domains.Subdomain" title="vaporize.domains.Subdomain"><tt class="xref py py-class docutils literal"><span class="pre">Subdomain</span></tt></a>) &#8211; A list of Subdomains to create</li>
 <li><strong>comment</strong> (<em>str</em>) &#8211; An optional comment to associated with the domain</li>
 <li><strong>email_address</strong> (<em>str</em>) &#8211; An e-mail address to associated with the domain</li>
 </ul>
@@ -413,7 +431,10 @@ added to an existing CloudDNS <a class="reference internal" href="#vaporize.doma
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A <a class="reference internal" href="#vaporize.domains.Domain" title="vaporize.domains.Domain"><tt class="xref py py-class docutils literal"><span class="pre">Domain</span></tt></a></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A Domain with the specified ID.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#vaporize.domains.Domain" title="vaporize.domains.Domain"><tt class="xref py py-class docutils literal"><span class="pre">Domain</span></tt></a></p>
 </td>
 </tr>
 </tbody>
@@ -460,10 +481,10 @@ added to an existing CloudDNS <a class="reference internal" href="#vaporize.doma
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of Domains</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of Domains</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#vaporize.domains.Domain" title="vaporize.domains.Domain"><tt class="xref py py-class docutils literal"><span class="pre">Domain</span></tt></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">A list of <a class="reference internal" href="#vaporize.domains.Domain" title="vaporize.domains.Domain"><tt class="xref py py-class docutils literal"><span class="pre">Domain</span></tt></a></p>
 </td>
 </tr>
 </tbody>
