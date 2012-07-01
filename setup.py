@@ -1,22 +1,21 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 from distutils.core import setup
 
-try:
-    readme = open('README.rst', 'r').read()
-except IOError:
-    readme = ''
+VERSION = '0.1.6'
 
 setup(
     name='vaporize',
     description='A clean and consistent library for the Rackspace Cloud / OpenStack',
-    long_description=readme,
+    long_description=open('README.rst').read(),
     author='Michael Lavers',
     author_email='kolanos@gmail.com',
     url='https://github.com/kolanos/vaporize',
-    version='0.1.6',
+    version=VERSION,
     license='MIT',
-    install_requires=['requests', 'python-dateutil'],
+    install_requires=open('requirements.txt').readlines(),
+    data_files=['README.rst', 'requirements.txt', 'LICENSE'],
     packages=['vaporize'],
     classifiers=[
         'Development Status :: 4 - Beta',
