@@ -342,10 +342,10 @@ class LoadBalancer(DotDict):
             >>> access_rule2 = vaporize.loadbalancers.AccessRule.create(....)
             >>> loadbalancer.add_access_rules(access_rule1, access_rule2)
 
-            :param access_rules: Access Rules to add to this Load Balancer.
-            :type access_rules: :class:`AccessRule`
-            :returns: A list of Access Rules.
-            :rtype: list of :class:`AccessRule`
+        :param access_rules: Access Rules to add to this Load Balancer.
+        :type access_rules: :class:`AccessRule`
+        :returns: A list of Access Rules.
+        :rtype: list of :class:`AccessRule`
 
         .. versionadded:: 0.1
         """
