@@ -8,7 +8,7 @@ be consistent enough that you won't need to rely upon it.
 Connecting
 ----------
 
-First things first, lets connect to the Rackspace Cloud.
+First things first, let's connect to the Rackspace Cloud.
 
     >>> import vaporize
     >>> vaporize.connect('username', 'apikey')
@@ -35,8 +35,8 @@ three options: ``DFW`` (Dallas/Fort Worth), ``ORD`` (Chicago) or ``LON``
 First Request
 -------------
 
-There are many interfaces available on the Rackspace Cloud, but lets start with a
-simple one. Lets get a list of all your CloudServers:
+There are many interfaces available on the Rackspace Cloud, but let's start with a
+simple one. Let's get a list of all your CloudServers:
 
     >>> vaporize.servers.list()
     [<Server ...>, <Server ...>, ...]
@@ -48,7 +48,7 @@ list.
 Creating a Server
 -----------------
 
-Shall we create a CLoudServer? It'll cost you. But for the sake of this guide,
+Shall we create a CloudServer? It'll cost you. But for the sake of this guide,
 you'll only be charged a small pro-rated fee.
 
 Before we create a server we need to know what kind of server we want to create.
@@ -66,7 +66,7 @@ The next two questions can be determined using two separate interfaces. On the
 Rackspace Cloud operating systems are called "Images" (as in .iso images) and
 server specifications care called "Flavors".
 
-Lets get a list of Images available on the Rackspace Cloud (as of this writing):
+Let's get a list of Images available on the Rackspace Cloud (as of this writing):
 
     >>> images = vaporize.images.list()
     >>> for i, image in enumerate(images):
@@ -108,7 +108,7 @@ Wow! So many to choose from!
     with the word "Windows" cost extra. Check the Rackspace 
     Cloud website for details.
 
-I'm partial to UBuntu Server myself, so lets choose option 22:
+I'm partial to Ubuntu Server myself, so let's choose option 22:
 
     >>> image = images[22]
 
@@ -133,7 +133,7 @@ That was easy, huh?
 
     In case you're confused, the 256 and 512 servers are in MBs.
 
-For the sake of this example lets choose the smallest server, option 0 (256MB):
+For the sake of this example let's choose the smallest server, option 0 (256MB):
 
     >>> flavor = flavors[0]
 
@@ -175,7 +175,7 @@ When it is done it will look like this:
 Until it is ``ACTIVE`` you wont be able to perform any additional operations on
 your server. So sit tight until it is done.
 
-Done? Great! Lets take a look at the server we've just built:
+Done? Great! Let's take a look at the server we've just built:
 
     >>> server.name
     u'foo'
@@ -194,7 +194,7 @@ password for this server:
     This is an optional step. By default Rackspace will generate a root password
     and e-mail it to you.
 
-Now lets check the status:
+Now let's check the status:
 
     >>> server.reload()
     >>> server.status
@@ -220,3 +220,15 @@ And just like that the server is torn back down again.
 
     If you don't delete it, Rackspace will start to bill you for it. Spare me
     the angry e-mails please!
+
+That sums up the server creation process. Of course there are a number of other
+opertions you can perform on your server, such as:
+
+* Rebooting
+* Resizing (change Flavor)
+* Rebuilding (change Image)
+* Share IP with other servers (failover)
+* Scheduled backups (weekly, daily or both)
+* and more!
+
+And that's just some of the features available under ``vaporize.servers``!

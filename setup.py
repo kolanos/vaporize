@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 
-import vaporize
+from distutils.core import setup
 
 try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+    readme = open('README.rst', 'r').read()
+except IOError:
+    readme = ''
 
 setup(
-    name=vaporize.__title__,
+    name='vaporize',
     description='A clean and consistent library for the Rackspace Cloud / OpenStack',
-    long_description=open('README.rst').read(),
-    author=vaporize.__author__,
-    author_email=vaporize.__email__,
+    long_description=readme,
+    author='Michael Lavers',
+    author_email='kolanos@gmail.com',
     url='https://github.com/kolanos/vaporize',
-    version=vaporize.__version__,
-    license=vaporize.__license__,
-    install_requires=open('requirements.txt').readlines(),
+    version='0.1.6',
+    license='MIT',
+    install_requires=['requests', 'python-dateutil'],
     packages=['vaporize'],
-    classifiers = [
+    classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
         'Intended Audience :: Developers',
