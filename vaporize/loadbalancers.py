@@ -278,10 +278,10 @@ class LoadBalancer(DotDict):
             >>> virtual_ip2 = vaporize.loadbalancers.VirtualIP.create(...)
             >>> loadbalancer.add_virtual_ips(virtual_ip1, virtual_ip2)
 
-            :param virtual_ips: Virtual IPs to add to thisLoad Balancer
-            :type virtual_ips: :class:`VirtualIP`
-            :returns: A list of Virtual IPs on the Load Balancer
-            :rtype: list of :class:`VirtualIP`
+        :param virtual_ips: Virtual IPs to add to thisLoad Balancer
+        :type virtual_ips: :class:`VirtualIP`
+        :returns: A list of Virtual IPs on the Load Balancer
+        :rtype: list of :class:`VirtualIP`
 
         .. versionadded:: 0.1
         """
