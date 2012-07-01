@@ -61,7 +61,7 @@ provided as a reference, but hopefully once you begin using Vaporize it should
 be consistent enough that you won&#8217;t need to rely upon it.</p>
 <div class="section" id="connecting">
 <h2>Connecting<a class="headerlink" href="#connecting" title="Permalink to this headline">¶</a></h2>
-<p>First things first, lets connect to the Rackspace Cloud.</p>
+<p>First things first, let&#8217;s connect to the Rackspace Cloud.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">vaporize</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">vaporize</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&#39;username&#39;</span><span class="p">,</span> <span class="s">&#39;apikey&#39;</span><span class="p">)</span>
 </pre></div>
@@ -85,8 +85,8 @@ default.</p>
 </div>
 <div class="section" id="first-request">
 <h2>First Request<a class="headerlink" href="#first-request" title="Permalink to this headline">¶</a></h2>
-<p>There are many interfaces available on the Rackspace Cloud, but lets start with a
-simple one. Lets get a list of all your CloudServers:</p>
+<p>There are many interfaces available on the Rackspace Cloud, but let&#8217;s start with a
+simple one. Let&#8217;s get a list of all your CloudServers:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">vaporize</span><span class="o">.</span><span class="n">servers</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
 <span class="go">[&lt;Server ...&gt;, &lt;Server ...&gt;, ...]</span>
 </pre></div>
@@ -112,7 +112,7 @@ hostname of the server, but for the sake of this example we&#8217;ll just use th
 <p>The next two questions can be determined using two separate interfaces. On the
 Rackspace Cloud operating systems are called &#8220;Images&#8221; (as in .iso images) and
 server specifications care called &#8220;Flavors&#8221;.</p>
-<p>Lets get a list of Images available on the Rackspace Cloud (as of this writing):</p>
+<p>Let&#8217;s get a list of Images available on the Rackspace Cloud (as of this writing):</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">images</span> <span class="o">=</span> <span class="n">vaporize</span><span class="o">.</span><span class="n">images</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">image</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
 <span class="gp">... </span>  <span class="k">print</span> <span class="n">i</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">name</span>
@@ -153,7 +153,7 @@ server specifications care called &#8220;Flavors&#8221;.</p>
 with the word &#8220;Windows&#8221; cost extra. Check the Rackspace
 Cloud website for details.</p>
 </div>
-<p>I&#8217;m partial to UBuntu Server myself, so lets choose option 22:</p>
+<p>I&#8217;m partial to UBuntu Server myself, so let&#8217;s choose option 22:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">image</span> <span class="o">=</span> <span class="n">images</span><span class="p">[</span><span class="mi">22</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -177,7 +177,7 @@ Cloud website for details.</p>
 <p class="first admonition-title">Note</p>
 <p class="last">In case you&#8217;re confused, the 256 and 512 servers are in MBs.</p>
 </div>
-<p>For the sake of this example lets choose the smallest server, option 0 (256MB):</p>
+<p>For the sake of this example let&#8217;s choose the smallest server, option 0 (256MB):</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">flavor</span> <span class="o">=</span> <span class="n">flavors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -212,7 +212,7 @@ us.</p>
 </div>
 <p>Until it is <tt class="docutils literal"><span class="pre">ACTIVE</span></tt> you wont be able to perform any additional operations on
 your server. So sit tight until it is done.</p>
-<p>Done? Great! Lets take a look at the server we&#8217;ve just built:</p>
+<p>Done? Great! Let&#8217;s take a look at the server we&#8217;ve just built:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">server</span><span class="o">.</span><span class="n">name</span>
 <span class="go">u&#39;foo&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">server</span><span class="o">.</span><span class="n">id</span>
@@ -231,7 +231,7 @@ password for this server:</p>
 <p class="last">This is an optional step. By default Rackspace will generate a root password
 and e-mail it to you.</p>
 </div>
-<p>Now lets check the status:</p>
+<p>Now let&#8217;s check the status:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">server</span><span class="o">.</span><span class="n">reload</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">server</span><span class="o">.</span><span class="n">status</span>
 <span class="go">u&#39;PASSWORD&#39;</span>
@@ -254,6 +254,17 @@ This was just an example, afterall.</p>
 <p class="last">If you don&#8217;t delete it, Rackspace will start to bill you for it. Spare me
 the angry e-mails please!</p>
 </div>
+<p>That sums up the server creation process. Of course there are a number of other
+opertions you can perform on your server, such as:</p>
+<ul class="simple">
+<li>Rebooting</li>
+<li>Resizing (change Flavor)</li>
+<li>Rebuilding (change Image)</li>
+<li>Share IP with other servers (failover)</li>
+<li>Scheduled backups (weekly, daily or both)</li>
+<li>and more!</li>
+</ul>
+<p>And that&#8217;s just some of the features available under <tt class="docutils literal"><span class="pre">vaporize.servers</span></tt>!</p>
 </div>
 </div>
 
@@ -278,7 +289,7 @@ the angry e-mails please!</p>
                         title="previous chapter">Welcome to Vaporize&#8217;s documentation!</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="core.html"
-                        title="next chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">core</span></tt> &#8212; Core</a></p>
+                        title="next chapter"><tt class="docutils literal"><span class="pre">core</span></tt> &#8212; Core</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="sources/gettingstarted.txt"
