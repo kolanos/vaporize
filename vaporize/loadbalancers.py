@@ -73,8 +73,49 @@ class ConnectionLogging(DotDict):
 
 
 class ConnectionThrottle(DotDict):
-    """A CloudLoadBalancer Connection Throttle."""
-    pass
+    """A CloudLoadBalancer Connection Throttle. 
+
+    The connection throttling feature imposes limits on the number of
+    connections per IP address to help mitigate malicious or abusive traffic to
+    your applications. The attributes in the table that follows can be
+    configured based on the traffic patterns for your sites.
+    """
+    @classmethod
+    def create(cls, max_connections, min_connections, max_connection_rate,
+               rate_interval):
+        """Create a Connection Throttle setting.
+
+        :param max_connections: Maximum number of connections to allow for a
+            single IP address. Setting a value of 0 will allow unlimited
+            simultaneous connections; otherwise set a value between 1 and
+            100000.
+        :type max_connections: int
+        :param min_connections: Allow at least this number of connections per IP
+            address before applying throttling restrictions. Setting a value of
+            0 allows unlimited simultaneous connections; otherwise, set a value
+            between 1 and 1000.
+        :type min_connections: int
+        :param max_connection_rate: Maximum number of connections allowed from a
+            single IP address in the defined rateInterval. Setting a value of 0
+            allows an unlimited connection rate; otherwise, set a value between
+            1 and 100000.
+        :type max_connection_rate: int
+        :param rate_interval: Frequency (in seconds) at which the
+            maxConnectionRate is assessed. For example, a maxConnectionRate of
+            30 with a rateInterval of 60 would allow a maximum of 30 connections
+            per minute for a single IP address. This value must be between 1 and
+            3600.
+        :type rate_interval: int
+
+        :returns: A Load Balancer Connection Throttle setting.
+        :rtype: :class:`ConnectionThrottle`
+
+        .. versionadded:: 0.1.7
+        """
+        return cls(max_connections=int(max_connections),
+                   min_connections=int(min_connections),
+                   max_connection_rate=int(max_connection_rate),
+                   rate_interval=int(rate_interval))
 
 
 class ErrorPage(DotDict):
@@ -84,7 +125,46 @@ class ErrorPage(DotDict):
 
 class HealthMonitor(DotDict):
     """A CloudLoadBalancer Health Monitor."""
-    pass
+    @classmethod
+    def create(cls, type, delay, timeout, attempts_before_deactivation,
+               body_regex=None, path=None, status_regex=None):
+        """Create a Health Monitor setting.
+
+        :param type: Type of health monitor to create (``CONNECT``, ``HTTP`` or
+            ``HTTPS``).
+        :type type: str
+        :param delay: The minimum number of seconds to wait before executing the
+            health monitor. Must be a number between 1 and 3600.
+        :type delay: int
+        :param timeout: Maximum number of seconds to wait for a connection to be
+            established before timing out. Must be a number between 1 and 300.
+        :type timeout: int
+        :param attempts_before_deactivation: Number of permissible monitor
+            failures before removing a node from rotation. Must be a number
+            between 1 and 10.
+        :type attempts_before_deactivation: int
+        :param body_regex: A regular expression that will be used to evaluate
+            the contents of the body of the response (required for ``HTTP`` and
+            ``HTTP``).
+        :type body_regex: str
+    :param path: The HTTP path that will be used in the sample request.
+    :type path: str
+    :param status_regex: A regular expression that will be used to evaluate the
+        HTTP status code returned in the response.
+    :type status_regex: str
+
+        :returns: A Health Monitor setting.
+        :rtype: :class:`HealthMonitor`
+
+        .. versionadded:: 0.1.7
+        """
+        if type in ['HTTP', 'HTTPS']:
+            assert body_regex is not None
+            assert path is not None
+            assert status_regex is not None
+        return cls(type=type, delay=int(delay), timeout=int(timeout),
+                   attempts_before_deactivation=int(attempts_before_deactivation,
+                   body_regex=body_regex, path=path, status_regex=status_regex)
 
 
 class LoadBalancer(DotDict):
@@ -128,25 +208,37 @@ class LoadBalancer(DotDict):
         return self
 
     def modify(self, name=None, protocol=None, port=None, algorithm=None,
-               connection_logging=False):
+               connection_logging=None):
         """Modify this Load Balancer's properties.
 
         :param name: The Load Balancer's name.
         :type name: str
         :param protocol: A Load Balancer protocol, see: :func:`protocols`.
-        :type protocol: str
+        :type protocol: str or :class:`Protocol`
         :param port: A Load Balancer port, see :func:`protocols`.
         :type port: int
         :param algorithm: A Load Balancer Algorithm, see :func:`algorithms`.
-        :type algorithm: str
+        :type algorithm: str or :class:`Algorithm`
         :param connection_logging: Enable or disable Connection Logging.
         :type connection_logging: bool
         :returns: An updated Load Balancer.
         :rtype: :class:`LoadBalancer`
 
+        .. note::
+
+            If you pass a :class:`Protocol` to the ``protocol`` argument, it
+            will set ``port`` to the default for that protocol if ``port`` is
+            unset.
+
         .. versionadded:: 0.1
         """
         assert 'id' in self
+        if isinstance(algorithm, Algorithm):
+            algorithm = algorithm.name
+        if isinstance(protocol, Protocol):
+            if port is None:
+                port = protocol.port
+            protocol = protocol.name
         data = {'loadBalancer': {}}
         if name is not None:
             data['loadBalancer']['name'] = name
@@ -589,6 +681,10 @@ class LoadBalancer(DotDict):
     def enable_session_persistence(self, type):
         """Enable Session Persistence for this Load Balancer.
 
+        :param type: Session persistence type (``HTTP_COOKIE`` or
+        ``SOURCE_IP``).
+        :type type: str
+
         .. versionadded:: 0.1
         """
         assert 'id' in self
@@ -873,34 +969,113 @@ def get(id):
                           container='loadBalancer')
 
 
-def create(name, protocol, port, virtual_ips, nodes, algorithm=None,
+def create(name, protocol, virtual_ips, nodes, port=None, algorithm=None,
            access_list=None, connection_logging=None, connection_throttle=None,
            health_monitor=None, session_persistence=None, metadata=None):
     """Create a Load Balancer.
 
+    :param name: Name of the Load Balancer to create.
+    :type name: str
+    :param protocol: The Load Balancer's protocol (see: :class:`Protocol`).
+    :type protocol: str or :class:`Protocol`
+    :param virtual_ips: A list of Virtual IPs (see: :class:`VirtualIP`).
+    :type virtual_ips: list of :class:`VirtualIP`
+    :param nodes: A list of Nodes to add to add (see: :class:`Node`).
+    :type nodes: list of :class:`Node`
+    :param port: The port the Load Balancer should listen on.
+    :type port: int
+    :param algorithm: The Load Balancer's Algorithm (see: :class:`Algorithm`).
+    :type algorithm: :class:`Algorithm`
+    :param access_list: A list of Access Rules (see: :class:`AccessRule`).
+    :type access_list: list of :class:`AccessRule`
+    :param access_list: A list of Access Rules (see: :class:`AccessRule`).
+    :type access_list: list of :class:`AccessRule`
+    :param connection_logging: Enable or disable connection logging.
+    :type connection_logging: bool
+    :param connection_throttle: Connection Throttling settings (see:
+        :class:`ConnectionThrottle`).
+    :type connection_throttle: :class:`ConnectionThrottle`
+    :param health_monitor: Health Monitor settings (see:
+        :class:`HealthMonitor`).
+    :type health_monitor: :class:`HealthMonitor`
+    :param session_persistence: Session persistence type (``HTTP_COOKIE`` or
+        ``SOURCE_IP``).
+    :type session_persistence: str
+    :param metadata: Meta data to store with the Load Balancer record.
+    :type metadata: dict
+
     :returns: A shiny new CloudLoadBalancer Load Balancer.
     :rtype: :class:`LoadBalancer`
 
+    .. note::
+
+        If you pass a :class:`Protocol` to the ``protocol`` argument, it
+        will set ``port`` to the default for that protocol if ``port`` is
+        unset.
+
     .. versionadded:: 0.1
     """
+    if isinstance(algorithm, Algorithm):
+        algorithm = algorithm.name
+    if isinstance(protocol, Protocol):
+        if port is None:
+            port = protocol.port
+        protocol = protocol.name
+    assert port is not None
     data = {'loadBalancer': {'name': name,
                              'protocol': protocol,
-                             'port': int(port),
+                             'port': port,
                              'virtualIps': [],
                              'nodes': [],
                              'metadata': metadata or {}}}
-    for virtual_ip in virtual_ips:
-        data['loadBalancer']['virtualIps'].append({
-            'ipVersion': virtual_ip.version,
-            'type': virtual_ip.type
-            })
-    for node in nodes:
-        data['loadBalancer']['nodes'].append({'address': node.address,
-                                              'port': int(node.port),
-                                              'condition': node.condition})
+    if isinstance(virtual_ips, (list, tuple)):
+        for virtual_ip in virtual_ips:
+            if isinstance(virtual_ip, VirtualIP):
+                data['loadBalancer']['virtualIps'].append({
+                    'ipVersion': virtual_ip.version,
+                    'type': virtual_ip.type
+                    })
+    if isinstance(nodes, (list, tuple)):
+        for node in nodes:
+            if isinstance(node, Node):
+                data['loadBalancer']['nodes'].append({
+                    'address': node.address,
+                    'port': int(node.port),
+                    'condition': node.condition
+                    })
     if connection_logging is not None:
         data['loadBalancer']['connectionLogging'] = {
                 'enabled': bool(connection_logging)
+                }
+    if access_list is not None:
+        data['loadBalancer']['accessList'] = []
+        for access_rule in access_list:
+            if isinstance(access_rule, AccessRule):
+                data['loadBalancer']['accessList'].append({
+                    'type': access_rule.type,
+                    'address': access_rule.address
+                    })
+    if connection_throttle is not None \
+            and isintance(connection_throtle, ConnectionThrottle):
+        data['loadBalancer']['connectionThrottle'] = {
+                'maxConnections': connection_throttle.max_connections,
+                'minConnections': connection_throttle.min_connections,
+                'maxConnectionRate': connection_throttle.max_connection_rate,
+                'rateInterval': connection_throttle.rate_interval
+                }
+    if health_monitor is not None and isinstance(health_monitor, HealthMonitor):
+        data['loadBalancer']['healthMonitor'] = {
+                'type': health_monitor.type,
+                'delay': health_monitor.delay,
+                'timeout': health_monitor.timeout,
+                'attemptsBeforeDeactivation': health_monitor.attempts_before_deactivation,
+                'bodyRegex': health_monitor.body_regex,
+                'path': health_monitor.path,
+                'statusRegex': health_monitor.status_regex
+                }
+    if session_persistence is not None:
+        data['loadBalancer']['sessionPersistence'] = {
+                'persistenceType': session_persistence
                 }
     data = json.dumps(data)
     url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers'])
