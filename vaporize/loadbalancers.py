@@ -7,7 +7,16 @@ from vaporize.utils import DotDict
 
 
 class AccessRule(DotDict):
-    """A CloudLoadBalancer Access List Rule."""
+    """A CloudLoadBalancer Access List Rule.
+
+    The access list management feature allows fine-grained network access
+    controls to be applied to the load balancer's virtual IP address. A single
+    IP address, multiple IP addresses, or entire network subnets can be added as
+    anetworkItem. Items that are configured with the ALLOW type will always take
+    precedence over items with the DENY type. To reject traffic from all items
+    except for those with the ALLOW type, add a networkItem with an address of
+    "0.0.0.0/0" and a DENY type.
+    """
     def __repr__(self):
         if 'type' in self and 'address' in self:
             return '<AccessRule %s %s>' % (self['type'], self['address'])
@@ -46,7 +55,18 @@ class AccessRule(DotDict):
 
 
 class Algorithm(DotDict):
-    """A CloudLoadBalancer Algorithm."""
+    """A CloudLoadBalancer Algorithm.
+
+    All load balancers utilize an algorithm that defines how traffic should be
+    directed between back-end nodes. The default algorithm for newly created
+    load balancers is RANDOM, which can be overridden at creation time or
+    changed after the load balancer has been initially provisioned. The
+    algorithm name is to be constant within a major revision of the load
+    balancing API, though new algorithms may be created with a unique algorithm
+    name within a given major revision of the service API.
+
+    `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Algorithms-d1e4367.html>`_
+    """
     def __repr__(self):
         if 'name' in self:
             return '<Algorithm %s>' % self['name']
@@ -54,7 +74,17 @@ class Algorithm(DotDict):
 
 
 class AllowedDomain(DotDict):
-    """A CloudLoadBalancer Allowed Domains."""
+    """A CloudLoadBalancer Allowed Domains.
+
+    The allowed domains are restrictions set for the allowed domain names used
+    for adding load balancer nodes. In order to submit a domain name as an
+    address for the load balancer node to add, the user must verify that the
+    domain is valid by using the List Allowed Domains call. Once verified,
+    simply supply the domain name in place of the node's address in the Add
+    Nodes call.
+
+    `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/AllowedDomains-d2f002e.html>`_
+    """
     def __setitem__(self, key, value):
         if key == 'allowedDomain':
             key = 'name'
@@ -63,12 +93,18 @@ class AllowedDomain(DotDict):
 
 
 class ContentCaching(DotDict):
-    """A CloudLoadBalancer Content Caching."""
+    """A CloudLoadBalancer Content Caching.
+
+    `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/ContentCaching-d1e3358.html>`_
+    """
     pass
 
 
 class ConnectionLogging(DotDict):
-    """A CloudLoadBalancer Connection Logging."""
+    """A CloudLoadBalancer Connection Logging.
+
+    `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Log_Connections-d1e3924.html>`_
+    """
     pass
 
 
@@ -79,6 +115,8 @@ class ConnectionThrottle(DotDict):
     connections per IP address to help mitigate malicious or abusive traffic to
     your applications. The attributes in the table that follows can be
     configured based on the traffic patterns for your sites.
+
+    `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Throttle_Connections-d1e4057.html>`_
     """
     @classmethod
     def create(cls, max_connections, min_connections, max_connection_rate,
@@ -124,7 +162,26 @@ class ErrorPage(DotDict):
 
 
 class HealthMonitor(DotDict):
-    """A CloudLoadBalancer Health Monitor."""
+    """A CloudLoadBalancer Health Monitor.
+
+    The load balancing service includes a health monitoring operation which
+    periodically checks your back-end nodes to ensure they are responding
+    correctly. If a node is not responding, it is removed from rotation until
+    the health monitor determines that the node is functional. In addition to
+    being performed periodically, the health check also is performed against
+    every node that is added to ensure that the node is operating properly
+    before allowing it to service traffic. Only one health monitor is allowed to
+    be enabled on a load balancer at a time.
+
+    Every health monitor has a ``type`` attribute to signify what kind of
+    monitor it is.
+
+    * ``CONNECT``: Health monitor is a connect monitor.
+    * ``HTTP``: Health monitor is an HTTP monitor.
+    * ``HTTPS``: Health monitor is an HTTPS monitor.
+
+    `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Monitors-d1e3370.html>`_
+    """
     @classmethod
     def create(cls, type, delay, timeout, attempts_before_deactivation,
                body_regex=None, path=None, status_regex=None):
@@ -145,13 +202,15 @@ class HealthMonitor(DotDict):
         :type attempts_before_deactivation: int
         :param body_regex: A regular expression that will be used to evaluate
             the contents of the body of the response (required for ``HTTP`` and
-            ``HTTP``).
+            ``HTTPS``).
         :type body_regex: str
-    :param path: The HTTP path that will be used in the sample request.
-    :type path: str
-    :param status_regex: A regular expression that will be used to evaluate the
-        HTTP status code returned in the response.
-    :type status_regex: str
+        :param path: The HTTP path that will be used in the sample request
+            (required for ``HTTP`` and ``HTTPS``).
+        :type path: str
+        :param status_regex: A regular expression that will be used to evaluate
+            the HTTP status code returned in the response (required for ``HTTP``
+            and ``HTTPS``).
+        :type status_regex: str
 
         :returns: A Health Monitor setting.
         :rtype: :class:`HealthMonitor`
@@ -163,7 +222,7 @@ class HealthMonitor(DotDict):
             assert path is not None
             assert status_regex is not None
         return cls(type=type, delay=int(delay), timeout=int(timeout),
-                   attempts_before_deactivation=int(attempts_before_deactivation,
+                   attempts_before_deactivation=int(attempts_before_deactivation),
                    body_regex=body_regex, path=path, status_regex=status_regex)
 
 
@@ -210,6 +269,12 @@ class LoadBalancer(DotDict):
     def modify(self, name=None, protocol=None, port=None, algorithm=None,
                connection_logging=None):
         """Modify this Load Balancer's properties.
+
+        This operation asynchronously updates the attributes of the specified
+        load balancer. Upon successful validation of the request, the service
+        will return a 202 (Accepted) response code. A caller can poll the load
+        balancer with its ID to wait for the changes to be applied and the load
+        balancer to return to an ACTIVE status.
 
         :param name: The Load Balancer's name.
         :type name: str
@@ -269,6 +334,10 @@ class LoadBalancer(DotDict):
 
     def delete(self):
         """Delete this Load Balancer.
+
+        The remove load balancer function removes the specified load balancer
+        and its associated configuration from the account. Any and all
+        configuration data is immediately purged and is not recoverable.
 
         .. warning::
 
@@ -476,8 +545,13 @@ class LoadBalancer(DotDict):
     def connection_logging(self):
         """Returns the ConnectionLogging setting for this Load Balancer.
 
+        This operation allows the user to view the current connection logging
+        configuration, enable connection logging, or disable connection logging.
+
         :returns: This Load Balancer's Content Logging setting.
         :rtype: :class:`ConnectionLogging`
+
+        `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Log_Connections-d1e3924.html>`_
 
         .. versionadded:: 0.1
         """
@@ -534,6 +608,17 @@ class LoadBalancer(DotDict):
 
     def enable_content_caching(self):
         """Enable Content Caching for this Load Balancer.
+
+        This operation allows the user to view the current content caching
+        configuration, enable content caching, or disable content caching.
+
+        When content caching is enabled, recently-accessed files are stored on
+        the load balancer for easy retrieval by web clients. Content caching
+        improves the performance of a web site by temporarily storing data that
+        was recently accessed. While it's cached, requests for that data will be
+        served by the load balancer instead of making another query to a web
+        server behind it. The result is improved response times for those
+        requests and less load on the web server.
 
         .. versionadded:: 0.1
         """
@@ -706,8 +791,13 @@ class LoadBalancer(DotDict):
     def error_page(self):
         """Returns the Error Page for this Load Balancer.
 
+        An error page is the html file that is shown to an end user who is
+        attempting to access a load balancer node that is offline/unavailable.
+
         :returns: This Load Balancer's Error Page setting.
         :rtype: :class:`ErrorPage`
+
+        `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Erropage-d1e666.html>`_
 
         .. versionadded:: 0.1
         """
@@ -720,7 +810,13 @@ class LoadBalancer(DotDict):
     def set_error_page(self, content):
         """Set a Custom Error Page for this Load Balancer.
 
-        :param content: Contents of the custom error page.
+        A single custom error page may be added per account load balancer with
+        an HTTP protocol. Page updates will override existing content. If a
+        custom error page is deleted, or the load balancer is changed to a
+        non-HTTP protocol, the default error page will be restored.
+
+        :param content: Specifies the HTML content for the custom error page.
+            Must be 65536 characters or less.
         :type content: str
 
         .. versionadded:: 0.1
@@ -744,6 +840,23 @@ class LoadBalancer(DotDict):
     def stats(self):
         """Returns stats for this Load Balancer.
 
+        This operation provides detailed stats output, including the following
+        information, for a specific load balancer configured and associated with
+        the user's account:
+
+        * ``connect_timeOut``: Connections closed by this load balancer because
+            the 'connect_timeout' interval was exceeded.
+        * ``connectError``: Number of transaction or protocol errors in this
+            load balancer.
+        * ``connect_failure``: Number of connection failures in this load
+            balancer.
+        * ``data_timed_out``: Connections closed by this load balancer because
+            the 'timeout' interval was exceeded.
+        * ``keep_alive_timed_out``: Connections closed by this load balancer
+            because the 'keepalive_timeout' interval was exceeded.
+        * ``max_conn``: Maximum number of simultaneous TCP connections this load
+            balancer has processed at any one time.
+ 
         :returns: Stats for this Load Balancer.
         :rtype: :class:`Stat`
 
@@ -779,7 +892,43 @@ class LoadBalancer(DotDict):
 
 
 class Node(DotDict):
-    """A CloudLoadBalancer Node."""
+    """A CloudLoadBalancer Node.
+
+    The nodes defined by the load balancer are responsible for servicing the
+    requests received through the load balancer's virtual IP. By default, the
+    load balancer employs a basic health check that ensures the node is
+    listening on its defined port. The node is checked at the time of addition
+    and at regular intervals as defined by the load balancer health check
+    configuration. If a back-end node is not listening on its port or does not
+    meet the conditions of the defined active health check for the load
+    balancer, then the load balancer will not forward connections and its status
+    will be listed as OFFLINE. Only nodes that are in an ONLINE status will
+    receive and be able to service traffic from the load balancer.
+
+    All nodes have an associated status that indicates whether the node is
+    ONLINE, OFFLINE, or DRAINING. Only nodes that are in ONLINE status will
+    receive and be able to service traffic from the load balancer. The OFFLINE
+    status represents a node that cannot accept or service traffic. A node in
+    DRAINING status represents a node that stops the traffic manager from
+    sending any additional new connections to the node, but honors established
+    sessions. If the traffic manager receives a request and session persistence
+    requires that the node is used, the traffic manager will use it. The status
+    is determined by the passive or active health monitors.
+
+    If the WEIGHTED_ROUND_ROBIN load balancer algorithm mode is selected, then
+    the caller should assign the relevant weights to the node as part of the
+    weight attribute of the node element. When the algorithm of the load
+    balancer is changed to WEIGHTED_ROUND_ROBIN and the nodes do not already
+    have an assigned weight, the service will automatically set the weight to
+    "1" for all nodes.
+
+    One or more secondary nodes can be added to a specified load balancer so
+    that if all the primary nodes fail, traffic can be redirected to secondary
+    nodes. The type attribute allows configuring the node as either PRIMARY or
+    SECONDARY.
+
+    `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Nodes-d1e2173.html>`_
+    """
     def __repr__(self):
         if 'address' in self:
             return '<Node %s>' % self['address']
@@ -788,6 +937,43 @@ class Node(DotDict):
     @classmethod
     def create(cls, address, port, condition, type, weight):
         """Create a Load Balancer Node.
+
+        When a node is added, it is assigned a unique identifier that can be
+        used for management operations such as changing the condition or
+        removing it. Every load balancer is dual-homed on both the public
+        Internet and ServiceNet. As a result, nodes can either be internal
+        ServiceNet addresses or addresses on the public Internet.
+
+        One or more secondary nodes can be added to a specified load balancer so
+        that if all the primary nodes fail, traffic can be redirected to
+        secondary nodes. The type attribute allows configuring the node as
+        either PRIMARY or SECONDARY.
+
+        Domain names are also accepted with certain restrictions.
+
+        :param address: IP address or domain name for the node. Refer to the
+            request examples in this section for the required xml/json format.
+        :type address: str
+        :param port: Port number for the service you are load balancing.
+        :type port: int
+        :param condition: Condition for the node, which determines its role
+            within the load balancer.
+        :type condition: str
+        :param type: Type of node to add (``PRIMARY`` or ``SECONDARY``).
+        :type type: str
+        :param weight: Weight of node to add. If the WEIGHTED_ROUND_ROBIN load
+            balancer algorithm mode is selected, then the user should assign the
+            relevant weight to the node using the weight attribute for the node.
+            Must be an integer from 1 to 100.
+        :type weight: int
+
+        :returns: A shiny new Node.
+        :rtype: :class:`Node`
+
+        Node types:
+
+        * ``PRIMARY``: Nodes defined as PRIMARY are in the normal rotation to receive traffic from the load balancer.
+        * ``SECONDARY``: Nodes defined as SECONDARY are only in the rotation to receive traffic from the load balancer when all the primary nodes fail.
 
         .. versionadded:: 0.1
         """
@@ -866,7 +1052,15 @@ class Node(DotDict):
 
 
 class Protocol(DotDict):
-    """A CloudLoadBalancer Protocol."""
+    """A CloudLoadBalancer Protocol.
+
+    All load balancers must define the protocol of the service which is being
+    load balanced. The protocol selection should be based on the protocol of the
+    back-end nodes. When configuring a load balancer, the default port for the
+    given protocol will be selected unless otherwise specified.
+
+    `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Protocols-d1e4264.html>`_
+    """
     def __repr__(self):
         if 'name' in self:
             return '<Protocol %s>' % self['name']
@@ -874,7 +1068,24 @@ class Protocol(DotDict):
 
 
 class SessionPersistence(DotDict):
-    """A CloudLoadBalancer Session Persistence."""
+    """A CloudLoadBalancer Session Persistence.
+
+    Session persistence is a feature of the load balancing service that forces
+    multiple requests from clients to be directed to the same node. This is
+    common with many web applications that do not inherently share application
+    state between back-end servers. Two session persistence modes are available,
+    as described in the following table:
+
+    * ``HTTP_COOKIE``: A session persistence mechanism that inserts an HTTP
+        cookie and is used to determine the destination back-end node. This is
+        supported for HTTP load balancing only.
+    * ``SOURCE_IP``: A session persistence mechanism that will keep track of the
+        source IP address that is mapped and is able to determine the destination
+        back-end node. This is supported for HTTP pass-through (SSL termination)
+        and non-HTTP load balancing only.
+
+    `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Sessions-d1e3728.html>`_
+    """
     def __repr__(self):
         if 'persistenceType' in self:
             return '<SessionPersistence %s>' % self['persistenceType']
@@ -892,11 +1103,21 @@ class UsageReport(DotDict):
 
 
 class Stat(DotDict):
+    """CloudLoadBalancers Load Balancer Stats.
+
+    `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/List_Load_Balancer_Stats-d1e1524.html>`_
+    """
     pass
 
 
 class VirtualIP(DotDict):
-    """A CloudLoadBalancer Virtual IP."""
+    """A CloudLoadBalancer Virtual IP.
+ 
+    A virtual IP (VIP) makes a load balancer accessible by clients. The load
+    balancing service supports either a public VIP, routable on the public
+    Internet, or a ServiceNet address, routable only within the region in which
+    the load balancer resides. 
+    """
     def __repr__(self):
         if 'address' in self:
             return '<VirtualIP %s>' % self['address']
@@ -938,6 +1159,9 @@ class VirtualIP(DotDict):
 def list(limit=None, offset=None, marker=None, node=None, deleted=False):
     """Returns a list of Load Balancers.
 
+    This operation provides a list of all load balancers configured and
+    associated with your account.
+
     :returns: A list of CloudLoadBalancer Load Balancers.
     :rtype: A list of :class:`LoadBalancer`.
 
@@ -973,6 +1197,30 @@ def create(name, protocol, virtual_ips, nodes, port=None, algorithm=None,
            access_list=None, connection_logging=None, connection_throttle=None,
            health_monitor=None, session_persistence=None, metadata=None):
     """Create a Load Balancer.
+
+    This operation asynchronously provisions a new load balancer based on the
+    configuration defined in the request object. Once the request is validated
+    and progress has started on the provisioning process, a response object will
+    be returned. The object will contain a unique identifier and status of the
+    request. Using the identifier, the caller can check on the progress of the
+    operation by performing a GET on loadbalancers/id. If the corresponding
+    request cannot be fulfilled due to insufficient or invalid data, an HTTP 400
+    (Bad Request) error response will be returned with information regarding the
+    nature of the failure in the body of the response. Failures in the
+    validation process are non-recoverable and require the caller to correct the
+    cause of the failure and POST the request again.
+
+    An HTTP load balancer will have the X-Forwarded-For (XFF) HTTP header set by
+    default. This header will contain the actual originating IP address of a
+    client connecting to a web server through an HTTP proxy or load balancer,
+    which many web applications are already designed to use when determining the
+    source address for a request. (This header is also included on the Modify
+    Load Balancer request if the protocol changes to reenable it.)
+
+    An HTTP load balancer will also include the X-Forwarded-Proto (XFP) HTTP
+    header, which has been added for identifying the originating protocol of an
+    HTTP request as "http" or "https" depending on what protocol the client
+    requested. This is specially useful when using SSL termination.
 
     :param name: Name of the Load Balancer to create.
     :type name: str
