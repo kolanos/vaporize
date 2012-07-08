@@ -1,30 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+import os
+from setuptools import setup
 
 VERSION = '0.1.9'
 
-try:
-    readme = open('README.rst').read()
-except IOError:
-    readme = ''
+def read(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
     name='vaporize',
     description='A clean and consistent library for the Rackspace Cloud / OpenStack',
-    long_description=readme,
+    long_description=read('README.rst'),
     author='Michael Lavers',
     author_email='kolanos@gmail.com',
     url='https://github.com/kolanos/vaporize',
     version=VERSION,
     license='MIT',
     install_requires=['python-dateutil', 'requests'],
-    #data_files=['README.rst', 'requirements.txt', 'LICENSE'],
     packages=['vaporize'],
+    keywords="rackspace openstack cloudservers cloudloadblancers clouddns",
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
