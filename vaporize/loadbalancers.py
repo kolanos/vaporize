@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import datetime
 import json
 
 from vaporize.core import convert_datetime, get_url, handle_request, query
@@ -253,7 +254,8 @@ class LoadBalancer(DotDict):
         elif key == 'virtualIps':
             value = [VirtualIP(v) for v in value]
         elif key in ['created', 'updated']:
-            value = convert_datetime(value['time'])
+            if not isinstance(value, datetime.datetime):
+                value = convert_datetime(value['time'])
         super(LoadBalancer, self).__setitem__(key, value)
 
     def reload(self):
@@ -1050,6 +1052,11 @@ class Node(DotDict):
                         str(self['id'])])
         handle_request('delete', url)
 
+    def to_dict(self):
+        """Create a Rackspace formatted dict."""
+        return dict([(k, self[k]) for k in ['address', 'condition', 'port',
+                                            'type', 'weight'] if k in self])
+
 
 class Protocol(DotDict):
     """A CloudLoadBalancer Protocol.
@@ -1155,6 +1162,15 @@ class VirtualIP(DotDict):
                         str(self['id'])])
         handle_request('delete', url)
 
+    def to_dict(self):
+        """Create a Rackspace formatted dict."""
+        if 'id' in self:
+            ret = {'id': self['id']}
+        else:
+            ret = {'ipVersion': self['version'],
+                   'type': self['type']}
+        return ret
+
 
 def list(limit=None, offset=None, marker=None, node=None, deleted=False):
     """Returns a list of Load Balancers.
@@ -1188,7 +1204,7 @@ def get(id):
 
     .. versionadded:: 0.1
     """
-    url = '/'.join([get_url('cloudloadbalancers'), 'flavors', str(id)])
+    url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers', str(id)])
     return handle_request('get', url, wrapper=LoadBalancer,
                           container='loadBalancer')
 
@@ -1274,23 +1290,15 @@ def create(name, protocol, virtual_ips, nodes, port=None, algorithm=None,
                              'protocol': protocol,
                              'port': port,
                              'virtualIps': [],
-                             'nodes': [],
-                             'metadata': metadata or {}}}
-    if isinstance(virtual_ips, (list, tuple)):
-        for virtual_ip in virtual_ips:
-            if isinstance(virtual_ip, VirtualIP):
-                data['loadBalancer']['virtualIps'].append({
-                    'ipVersion': virtual_ip.version,
-                    'type': virtual_ip.type
-                    })
-    if isinstance(nodes, (list, tuple)):
-        for node in nodes:
-            if isinstance(node, Node):
-                data['loadBalancer']['nodes'].append({
-                    'address': node.address,
-                    'port': int(node.port),
-                    'condition': node.condition
-                    })
+                             'nodes': []}}
+    for virtual_ip in virtual_ips:
+        if isinstance(virtual_ip, VirtualIP):
+            data['loadBalancer']['virtualIps'].append(virtual_ip.to_dict())
+    for node in nodes:
+        if isinstance(node, Node):
+            data['loadBalancer']['nodes'].append(node.to_dict())
+    if algorithm is not None:
+        data['loadBalancer']['algorithm'] = algorithm
     if connection_logging is not None:
         data['loadBalancer']['connectionLogging'] = {
                 'enabled': bool(connection_logging)
@@ -1327,7 +1335,8 @@ def create(name, protocol, virtual_ips, nodes, port=None, algorithm=None,
                 }
     data = json.dumps(data)
     url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers'])
-    return handle_request('post', url, data, LoadBalancer, 'loadBalancer')
+    return handle_request('post', url, data, wrapper=LoadBalancer,
+                          container='loadBalancer')
 
 
 def algorithms(limit=None, offset=None, marker=None):
