@@ -6,19 +6,24 @@ try:
 except ImportError:
     from distutils.core import setup
 
-VERSION = '0.1.6'
+VERSION = '0.1.9'
+
+try:
+    readme = open('README.rst').read()
+except IOError:
+    readme = ''
 
 setup(
     name='vaporize',
     description='A clean and consistent library for the Rackspace Cloud / OpenStack',
-    long_description=open('README.rst').read(),
+    long_description=readme,
     author='Michael Lavers',
     author_email='kolanos@gmail.com',
     url='https://github.com/kolanos/vaporize',
     version=VERSION,
     license='MIT',
-    install_requires=open('requirements.txt').readlines(),
-    data_files=['README.rst', 'requirements.txt', 'LICENSE'],
+    install_requires=['python-dateutil', 'requests'],
+    #data_files=['README.rst', 'requirements.txt', 'LICENSE'],
     packages=['vaporize'],
     classifiers=[
         'Development Status :: 4 - Beta',
