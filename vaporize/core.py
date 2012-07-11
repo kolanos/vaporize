@@ -87,6 +87,8 @@ def connect(user, apikey, region='DFW'):
 
 
 def handle_request(verb, url, data=None, wrapper=None, container=None, **kwargs):
+    if not isinstance(_session, requests.sessions.Session):
+        raise ConnectionError('Not connected to the Rackspace Cloud API.')
     if verb == 'get':
         request = _session.get
         url = munge_url(url)
