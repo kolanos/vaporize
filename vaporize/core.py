@@ -13,6 +13,7 @@ except ImportError:
 import dateutil.parser
 import requests
 
+from vaporize import __version__
 from vaporize.exceptions import ConnectionError, handle_exception
 
 US_AUTH_URL = "https://identity.api.rackspacecloud.com/v2.0/tokens"
@@ -44,9 +45,9 @@ def connect(user, apikey, region='DFW'):
     :type apikey: str
     :param region: A Rackspace Cloud region, such as ``DFW``, ``ORD`` or ``LON``.
     :type region: str
+    :raises: ConnectionError
 
-    Raises::
-        ConnectionError: An error occured while creating the connection/session.
+    .. versionadded:: 0.1
     """
     global _settings, _session
     if region in ['DFW', 'ORD']:
@@ -56,7 +57,8 @@ def connect(user, apikey, region='DFW'):
     else:
         raise ConnectionError("Unrecognized region %s" % region)
     headers = {'Content-Type': 'application/json',
-               'Accept': 'application/json'}
+               'Accept': 'application/json',
+               'User-Agent': 'vaporize/%s' % __version__}
     data = json.dumps({'auth': {
         'RAX-KSKEY:apiKeyCredentials': {
             'username': user,
@@ -67,7 +69,7 @@ def connect(user, apikey, region='DFW'):
     if response.status_code in [200, 203]:
         data = json.loads(response.content)['access']
         _settings['token'] = data['token']['id']
-        _settings['expires'] = dateutil.parser.parse(data['token']['expires'])
+        _settings['expires'] = convert_datetime(data['token']['expires'])
         for service in data['serviceCatalog']:
             name = service['name'].lower()
             if len(service['endpoints']) == 1:
@@ -78,8 +80,6 @@ def connect(user, apikey, region='DFW'):
                         url = endpoint['publicURL']
             _settings[name + '_url'] = url
         auth = Auth(_settings['token'])
-        headers = {'Content-Type': 'application/json',
-                   'Accept': 'application/json'}
         _session = requests.session(auth=auth, headers=headers)
     else:
         raise ConnectionError("HTTP %d: %s" % (response.status_code,
@@ -87,17 +87,15 @@ def connect(user, apikey, region='DFW'):
 
 
 def handle_request(verb, url, data=None, wrapper=None, container=None, **kwargs):
-    """Handle a request/response in a consistent way."""
-    session = get_session()
     if verb == 'get':
-        request = session.get
+        request = _session.get
         url = munge_url(url)
     elif verb == 'post':
-        request = session.post
+        request = _session.post
     elif verb == 'put':
-        request = session.put
+        request = _session.put
     elif verb == 'delete':
-        request = session.delete
+        request = _session.delete
     response = request(url, data=data)
     if response.status_code not in [200, 201, 202, 203, 204]:
         handle_exception(response.status_code, response.content)
@@ -114,12 +112,10 @@ def handle_request(verb, url, data=None, wrapper=None, container=None, **kwargs)
 
 
 def get_session():
-    """Return the requests session."""
     return _session
 
 
 def get_url(service):
-    """Return the URL for the specific Rackspace Cloud service."""
     service = '%s_url' % service
     if service in _settings:
         return _settings[service]
@@ -128,7 +124,6 @@ def get_url(service):
 
 
 def query(url, **kwargs):
-    """Append to the URL's query string."""
     scheme, netloc, path, query, fragment = urlsplit(url)
     query = parse_qsl(query)
     for k, v in list(kwargs.items()):
@@ -139,7 +134,6 @@ def query(url, **kwargs):
 
 
 def munge_url(url):
-    """Prevent GET responses from being aggressively cached."""
     scheme, netloc, path, query, fragment = urlsplit(url)
     query = parse_qsl(query)
     query.append(('fresh', str(time.time())))

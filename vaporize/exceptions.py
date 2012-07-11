@@ -47,7 +47,6 @@ class UnknownError(Exception):
 
 
 def handle_exception(code, msg):
-    msg = json.loads(msg)
     if code == 400:
         raise BadRequest(msg)
     elif code == 401:
