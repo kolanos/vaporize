@@ -64,3 +64,19 @@ def test_get():
     assert image.name == 'Ubuntu 10.04 LTS'
     assert hasattr(image, 'status')
     assert image.status == 'ACTIVE'
+
+
+def test_create():
+    expected = '{"image":{"id":12345,"status":"QUEUED","updated":"2012-07-13T17:26:24-05:00","name":"testing","serverId":54321}}'
+    handle_mock = partial(handle_request_mock, expected)
+    with mock(vaporize.images, handle_request=handle_mock):
+        image = vaporize.images.create('testing', 54321)
+    assert isinstance(image, vaporize.images.Image)
+    assert hasattr(image, 'id')
+    assert image.id == 12345
+    assert hasattr(image, 'name')
+    assert image.name == 'testing'
+    assert hasattr(image, 'server_id')
+    assert image.server_id == 54321
+    assert hasattr(image, 'status')
+    assert image.status == 'QUEUED'

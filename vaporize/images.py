@@ -21,6 +21,19 @@ class Image(DotDict):
             value = convert_datetime(value)
         super(Image, self).__setitem__(key, value)
 
+    def reload(self):
+        """Reload this Image (an implicit :func:`get`).
+
+        :returns: An updated CloudServers Image.
+        :rtype: :class:`Image`
+
+        .. versionadded:: 0.1.9
+        """
+        assert 'id' in self
+        response = get(self['id'])
+        self.update(response)
+        return self
+
     def delete(self):
         """Delete this Image.
 
