@@ -80,3 +80,14 @@ def test_create():
     assert image.server_id == 54321
     assert hasattr(image, 'status')
     assert image.status == 'QUEUED'
+
+
+def test_reload():
+    expected = '{"image":{"progress":100,"id":12345,"status":"ACTIVE","created":"2012-07-13T17:26:23-05:00","updated":"2012-07-13T17:29:10-05:00","name":"testing"}}'
+    handle_mock = partial(handle_request_mock, expected)
+    with mock(vaporize.images, handle_request=handle_mock):
+        image = vaporize.images.get(12345)
+        image.reload()
+    assert isinstance(image, vaporize.images.Image)
+    assert hasattr(image, 'id')
+    assert image.id == 12345

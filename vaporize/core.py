@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import datetime
 import json
 import time
 try:
@@ -144,4 +145,6 @@ def munge_url(url):
 
 
 def convert_datetime(value):
-    return dateutil.parser.parse(value)
+    if not isinstance(value, datetime.datetime):
+        value = dateutil.parser.parse(value)
+    return value
