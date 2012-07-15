@@ -19,6 +19,8 @@ setup(
     version=VERSION,
     license='MIT',
     install_requires=['python-dateutil', 'requests'],
+    tests_require=['nose'],
+    test_suite='nose.collector',
     packages=['vaporize'],
     keywords="rackspace openstack cloudservers cloudloadblancers clouddns",
     classifiers=[
