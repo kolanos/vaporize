@@ -544,6 +544,7 @@ class LoadBalancer(DotDict):
                         str(self['id']), 'accesslist', str(access_rule)])
         handle_request('delete', url)
 
+    @property
     def connection_logging(self):
         """Returns the ConnectionLogging setting for this Load Balancer.
 
@@ -565,8 +566,19 @@ class LoadBalancer(DotDict):
         self['connection_logging'] = response
         return self['connection_logging']
 
-    def enable_connection_logging(self):
-        """Enable Connection Logging for this Load Balancer.
+    @connection_logging.setter
+    def connection_logging(self, enabled):
+        """Enable/disable Connection Logging for this Load Balancer.
+
+        To enable::
+
+            >>> lb = vaporie.loadbalancers.get(12345)
+            >>> lb.connection_logging = True
+
+        To disable::
+
+            >>> lb = vaporize.loadbalancers.get(12345)
+            >>> lb.connection_logging = False
 
         :returns: This Load Balancer's Connection Logging setting.
         :rtype: :class:`ConnectionLogging`
@@ -574,24 +586,13 @@ class LoadBalancer(DotDict):
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        data = json.dumps({'connectionLogging': {'enabled': True}})
+        data = json.dumps({'connectionLogging': {'enabled': bool(enabled)}})
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
                         str(self['id']), 'connectionlogging'])
         handle_request('put', url, data)
         self['connection_logging']['enabled'] = True
 
-    def disable_connection_logging(self):
-        """Disable Connection Logging for this Load Balancer.
-
-        .. versionadded:: 0.1
-        """
-        assert 'id' in self
-        data = json.dumps({'connectionLogging': {'enabled': False}})
-        url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
-                        str(self['id']), 'connectionlogging'])
-        handle_request('put', url, data)
-        self['connection_logging']['enabled'] = False
-
+    @property
     def content_caching(self):
         """Returns the Connection Caching setting for this Load Balancer.
 
@@ -608,8 +609,9 @@ class LoadBalancer(DotDict):
                                                  container='contentCaching')
         return self['content_caching']
 
-    def enable_content_caching(self):
-        """Enable Content Caching for this Load Balancer.
+    @content_caching.setter
+    def content_caching(self, enabled):
+        """Enable/disable Content Caching for this Load Balancer.
 
         This operation allows the user to view the current content caching
         configuration, enable content caching, or disable content caching.
@@ -622,27 +624,26 @@ class LoadBalancer(DotDict):
         server behind it. The result is improved response times for those
         requests and less load on the web server.
 
+        To enable::
+
+            >>> lb = vaporize.loadbalancers.get(12345)
+            >>> lb.content_caching = True
+
+        To disable::
+
+            >>> lb = vaporize.loadbalancers.get(12345)
+            >>> lb.content_caching = False
+
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        data = json.dumps({'contentCaching': {'enabled': True}})
+        data = json.dumps({'contentCaching': {'enabled': bool(enabled)}})
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
                         str(self['id']), 'contentCaching'])
         handle_request('put', url, data)
-        self['content_caching']['enabled'] = True
+        self['content_caching']['enabled'] = bool(enabled)
 
-    def disable_content_caching(self):
-        """Disable Content Caching for this Load Balancer.
-
-        .. versionadded:: 0.1
-        """
-        assert 'id' in self
-        data = json.dumps({'contentCaching': {'enabled': False}})
-        url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
-                        str(self['id']), 'contentcaching'])
-        handle_request('put', url, data)
-        self['content_caching']['enabled'] = False
-
+    @property
     def connection_throttle(self):
         """Return the Connection Throttle setting for this Load Balancer.
 
@@ -659,29 +660,30 @@ class LoadBalancer(DotDict):
         self['connection_throttle'] = response
         return self['connection_throttle']
 
-    def enable_connection_throttle(self, max_connections, min_connections,
-                                   max_connection_rate, rate_interval):
+    @connection_throttle.setter
+    def connection_throttle(self, connection_throttle):
         """Enable Connection Throttle setting for this Load Balancer.
 
-        :param max_connections: Max connections.
-        :type max_connections: int
-        :param min_connections: Minimum connections required to throttle.
-        :type min_connections: int
-        :param max_connection_rate: Maximum rate of connections.
-        :type max_connection_rate: int
-        :param rate_interval: Rate interval in seconds.
-        :type rate_interval: int
-        :returns: This Load Balancer's Connection Throttle
+        :param connection_throttle: A Connection Throttle instance.
+        :type connection_throttle: :class:`ConnectionThrottle`
+        :returns: This Load Balancer's Connection Throttle setting.
         :rtype: :class:`ConnectionThrottle`
+
+        To enable::
+
+            >>> ct = vaporize.loadbalancers.ConnectionThrottle.create(...)
+            >>> lb = vaporize.loadbalancers.get(12345)
+            >>> lb.connection_throttle = ct
 
         .. versionadded:: 0.1
         """
         assert 'id' in self
+        assert isinstance(connection_throttle, ConnectionThrottle)
         data = {'connectionThrottle': {
-            'maxConnections': int(max_connections),
-            'minConnections': int(min_connections),
-            'maxConnectionRate': int(max_connection_rate),
-            'rateInterval': int(rate_interval)
+            'maxConnections': connection_throttle.max_connections,
+            'minConnections': connection_throttle.min_connections,
+            'maxConnectionRate': connection_throttle.max_connection_rate,
+            'rateInterval': connection_throttle.rate_interval
             }}
         data = json.dumps(data)
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
@@ -695,8 +697,14 @@ class LoadBalancer(DotDict):
                 })
         return self['connection_throttle']
 
-    def disable_connection_throttle(self):
+    @connection_throttle.deleter
+    def connection_throttle(self):
         """Disable Connection Throttle for this Load Balancer.
+
+        To disable::
+
+            >>> lb = vaporize.loadbalancers.get(12345)
+            >>> del lb.connection_throttle
 
         .. versionadded:: 0.1
         """
@@ -706,6 +714,7 @@ class LoadBalancer(DotDict):
         handle_request('delete', url)
         self['connection_throttle'] = {}
 
+    @property
     def health_monitor(self):
         """Returns the Health Monitor setting for this Load Balancer.
 
@@ -717,32 +726,49 @@ class LoadBalancer(DotDict):
         assert 'id' in self
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
                         str(self['id']), 'healthmonitor'])
-        return handle_request('get', url, wrapper=HealthMonitor,
-                              container='healthMonitor')
+        response = handle_request('get', url, wrapper=HealthMonitor,
+                                  container='healthMonitor')
+        self['health_monitor'] = response
+        return self['health_monitor']
 
-    def enable_health_monitor(self, type, delay, timeout,
-                              attempts_before_deactivation):
+    @health_monitor.setter
+    def health_monitor(self, health_monitor):
         """Enable Health Monitor for this Load Balancer.
 
         :returns: A Health Monitor setting.
         :rtype: :class:`HealthMonitor`
 
+        To enable::
+
+            >>> hm = vaporize.loadbalancers.HealthMonitor.create(...)
+            >>> lb = vaporize.loadbalancers.get(12345)
+            >>> lb.health_monitor = hm
+
         .. versionadded:: 0.1
         """
         assert 'id' in self
+        assert isinstance(health_monitor, HealthMonitor)
         data = {'healthMonitor': {
-            'type': type,
-            'delay': int(delay),
-            'timeout': int(timeout),
-            'attemptsBeforeDeactivation': int(attempts_before_deactivation)
+            'type': health_monitor.type,
+            'delay': health_monitor.delay,
+            'timeout': health_monitor.timeout,
+            'attemptsBeforeDeactivation': health_monitor.attempts_before_deactivation
             }}
         data = json.dumps(data)
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
                         str(self['id']), 'healthmonitor'])
-        return handle_request('put', url, data, HealthMonitor, 'healthMonitor')
+        response = handle_request('put', url, data, HealthMonitor,
+                                  'healthMonitor')
+        self['health_monitor'] = response
 
-    def disable_health_monitor(self):
+    @health_monitor.deleter
+    def health_monitor(self):
         """Disable Health Monitor for this Load Balancer.
+
+        To disable::
+
+            >>> lb = vaporize.loadbalancers.get(12345)
+            >>> del lb.health_monitor
 
         .. versionadded:: 0.1
         """
@@ -750,6 +776,7 @@ class LoadBalancer(DotDict):
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
                         str(self['id']), 'healthmonitor'])
         handle_request('delete', url)
+        del self['health_monitor']
 
     def session_persistence(self):
         """Return Session Persistence setting for this Load Balancer.
