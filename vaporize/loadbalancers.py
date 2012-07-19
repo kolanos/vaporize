@@ -559,11 +559,12 @@ class LoadBalancer(DotDict):
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
-                        str(self['id']), 'connectionlogging'])
-        response = handle_request('get', url, wrapper=ConnectionLogging,
-                                  container='connectionLogging')
-        self['connection_logging'] = response
+        if 'connection_logging' not in self:
+            url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
+                            str(self['id']), 'connectionlogging'])
+            response = handle_request('get', url, wrapper=ConnectionLogging,
+                                      container='connectionLogging')
+            self['connection_logging'] = response
         return self['connection_logging']
 
     @connection_logging.setter
@@ -602,11 +603,12 @@ class LoadBalancer(DotDict):
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
-                        str(self['id']), 'contentcaching'])
-        self['content_caching'] = handle_request('get', url,
-                                                 wrapper=ContentCaching,
-                                                 container='contentCaching')
+        if 'content_caching' not in self:
+            url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
+                            str(self['id']), 'contentcaching'])
+            response = handle_request('get', url, wrapper=ContentCaching,
+                                      container='contentCaching')
+            self['content_caching'] = response
         return self['content_caching']
 
     @content_caching.setter
@@ -653,11 +655,12 @@ class LoadBalancer(DotDict):
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
-                        str(self['id']), 'connectionthrottle'])
-        response = handle_request('get', url, wrapper=ConnectionThrottle,
-                                  container='connectionThrottle')
-        self['connection_throttle'] = response
+        if 'connection_throttle' not in self:
+            url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
+                            str(self['id']), 'connectionthrottle'])
+            response = handle_request('get', url, wrapper=ConnectionThrottle,
+                                      container='connectionThrottle')
+            self['connection_throttle'] = response
         return self['connection_throttle']
 
     @connection_throttle.setter
@@ -689,12 +692,7 @@ class LoadBalancer(DotDict):
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
                         str(self['id']), 'connectionthrottle'])
         handle_request('put', url, data)
-        self['connection_throttle'].update({
-                'max_connections': int(max_connections),
-                'min_connections': int(min_connections),
-                'max_connection_rate': int(max_connection_rate),
-                'rate_interval': int(rate_interval)
-                })
+        self['connection_throttle'] = connection_throttle
         return self['connection_throttle']
 
     @connection_throttle.deleter
@@ -712,7 +710,7 @@ class LoadBalancer(DotDict):
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
                         str(self['id']), 'connectionthrottle'])
         handle_request('delete', url)
-        self['connection_throttle'] = {}
+        del self['connection_throttle']
 
     @property
     def health_monitor(self):
@@ -724,11 +722,12 @@ class LoadBalancer(DotDict):
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
-                        str(self['id']), 'healthmonitor'])
-        response = handle_request('get', url, wrapper=HealthMonitor,
-                                  container='healthMonitor')
-        self['health_monitor'] = response
+        if 'health_monitor' not in self:
+            url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
+                            str(self['id']), 'healthmonitor'])
+            response = handle_request('get', url, wrapper=HealthMonitor,
+                                      container='healthMonitor')
+            self['health_monitor'] = response
         return self['health_monitor']
 
     @health_monitor.setter
@@ -778,6 +777,7 @@ class LoadBalancer(DotDict):
         handle_request('delete', url)
         del self['health_monitor']
 
+    @property
     def session_persistence(self):
         """Return Session Persistence setting for this Load Balancer.
 
@@ -787,27 +787,38 @@ class LoadBalancer(DotDict):
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
-                        str(self['id']), 'sessionpersistence'])
-        return handle_request('get', url, wrapper=SessionPersistence,
-                              container='sessionPersistence')
+        if 'session_persistence' not in self:
+            url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
+                            str(self['id']), 'sessionpersistence'])
+            response = handle_request('get', url, wrapper=SessionPersistence,
+                                      container='sessionPersistence')
+            self['session_persistence'] = response
+        return self['session_persistence']
 
-    def enable_session_persistence(self, type):
+    @session_persistence.setter
+    def session_persistence(self, persistence_type):
         """Enable Session Persistence for this Load Balancer.
 
-        :param type: Session persistence type (``HTTP_COOKIE`` or
-        ``SOURCE_IP``).
-        :type type: str
+        :param persistence_type: Session persistence type (``HTTP_COOKIE`` or
+            ``SOURCE_IP``).
+        :type persistence_type: str
 
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        data = json.dumps({'sessionPersistence': {'persistenceType': type}})
+        assert persistence_type in ['HTTP_COOKIE', 'SOURCE_IP']
+        data = json.dumps({'sessionPersistence': {
+            'persistenceType': persistence_type
+            }})
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
                         str(self['id']), 'sessionpersistence'])
         handle_request('put', url, data)
+        self['session_persistence'] = SessionPersistence(
+                persistence_type=persistence_type
+                )
 
-    def disable_session_persistence(self):
+    @session_persistence.deleter
+    def session_persistence(self):
         """Disable Session Persistance for this Load Balancer.
 
         .. versionadded:: 0.1
@@ -816,7 +827,9 @@ class LoadBalancer(DotDict):
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
                         str(self['id']), 'sessionpersistence'])
         handle_request('delete', url)
+        del self['session_persistence']
 
+    @property
     def error_page(self):
         """Returns the Error Page for this Load Balancer.
 
@@ -831,12 +844,16 @@ class LoadBalancer(DotDict):
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
-                        str(self['id']), 'errorpage'])
-        return handle_request('get', url, wrapper=ErrorPage,
-                              container='errorpage')
+        if 'error_page' not in self:
+            url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
+                            str(self['id']), 'errorpage'])
+            response = handle_request('get', url, wrapper=ErrorPage,
+                                      container='errorpage')
+            self['error_page'] = response
+        return self['error_page']
 
-    def set_error_page(self, content):
+    @error_page.setter
+    def error_page(self, content):
         """Set a Custom Error Page for this Load Balancer.
 
         A single custom error page may be added per account load balancer with
@@ -855,8 +872,10 @@ class LoadBalancer(DotDict):
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
                         str(self['id']), 'errorpage'])
         handle_request('put', url, data)
+        self['error_page'] = ErrorPage(content=content)
 
-    def reset_error_page(self):
+    @error_page.deleter
+    def error_page(self):
         """Reset the Error Page for this Load Balancer.
 
         .. versionadded:: 0.1
@@ -865,7 +884,9 @@ class LoadBalancer(DotDict):
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
                         str(self['id']), 'errorpage'])
         handle_request('delete', url)
+        del self['error_page']
 
+    @property
     def stats(self):
         """Returns stats for this Load Balancer.
 
@@ -1046,7 +1067,7 @@ class Node(DotDict):
         assert 'loadbalancer_id' in self
         data = {'node': {}}
         if condition is not None and condition in ['ENABLED', 'DISABLED',
-                'DRAINING']:
+                                                   'DRAINING']:
             data['node']['condition'] = condition
         if type is not None and type in ['PRIMARY', 'SECONDARY']:
             data['node']['type'] = type
@@ -1056,15 +1077,14 @@ class Node(DotDict):
         url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
                         str(self['loadbalancer_id']), 'nodes',
                         str(self['id'])])
-        response = handle_request('put', url, data)
-        if response:
-            if condition is not None and condition in ['ENABLED', 'DISABLED',
-                    'DRAINING']:
-                self['condition'] = condition
-            if type is not None and type in ['PRIMARY', 'SECONDARY']:
-                self['type'] = type
-            if weight is None:
-                self['weight'] = int(weight)
+        handle_request('put', url, data)
+        if condition is not None and condition in ['ENABLED', 'DISABLED',
+                                                   'DRAINING']:
+            self['condition'] = condition
+        if type is not None and type in ['PRIMARY', 'SECONDARY']:
+            self['type'] = type
+        if weight is None:
+            self['weight'] = int(weight)
         return self
 
     def delete(self):
