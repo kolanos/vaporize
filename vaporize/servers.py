@@ -2,7 +2,7 @@
 
 import json
 
-from vaporize.core import get_url, handle_request, query
+from vaporize.core import convert_datetime, get_url, handle_request, query
 from vaporize.utils import DotDict
 
 BACKUP_WEEKLY_DISABLED  = 'DISABLED'
@@ -107,7 +107,7 @@ class Image(DotDict):
         .. versionadded:: 0.1.9
         """
         assert 'id' in self
-        response = get(self['id'])
+        response = Image.get(self['id'])
         self.update(response)
         return self
 
@@ -220,7 +220,7 @@ class Server(DotDict):
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        response = get(self['id'])
+        response = Server.get(self['id'])
         self.update(response)
         return self
 
