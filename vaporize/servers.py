@@ -3,9 +3,6 @@
 import json
 
 from vaporize.core import get_url, handle_request, query
-import vaporize.flavors
-import vaporize.images
-import vaporize.ipgroups
 from vaporize.utils import DotDict
 
 BACKUP_WEEKLY_DISABLED  = 'DISABLED'
@@ -40,6 +37,156 @@ class BackupSchedule(DotDict):
         if 'weekly' in self:
             return '<BackupSchedule %s>' % self['weekly']
         return super(BackupSchedule, self).__repr__()
+
+
+class Flavor(DotDict):
+    """A CloudServers Flavor."""
+    def __repr__(self):
+        if 'name' in self:
+            return '<Flavor %s>' % self['name']
+        return super(Flavor, self).__repr__()
+
+    @classmethod
+    def list(cls, limit=None, offset=None, detail=False):
+        """Returns a list of Flavors.
+
+        :param limit: Limit the result set by a number
+        :type limit: int
+        :param offset: Offset the result set by a number
+        :type offset: int
+        :param detail: Return additional details about each Flavor
+        :type: bool
+        :returns: A list of CloudServers Flavors.
+        :rtype: :class:`Flavor`
+
+        .. versionadded:: 0.1
+        """
+        url = [get_url('cloudservers'), 'flavors']
+        if detail:
+            url.append('detail')
+        url = '/'.join(url)
+        if limit is not None or offset is not None:
+            url = query(url, limit=limit, offset=offset)
+        return handle_request('get', url, wrapper=cls, container='flavors')
+
+    @classmethod
+    def get(cls, id):
+        """Returns a Flavor by ID.
+
+        :param id: The ID of the Flavor to retrieve
+        :type id: int
+        :returns: A CloudServers Flavor matching the ID.
+        :rtype: :class:`Flavor`
+
+        .. versionadded:: 0.1
+        """
+        url = '/'.join([get_url('cloudservers'), 'flavors', str(id)])
+        return handle_request('get', url, wrapper=cls, container='flavor')
+
+
+class Image(DotDict):
+    """A CloudServers Image."""
+    def __repr__(self):
+        if 'name' in self:
+            return '<Image %s>' % self['name']
+        return super(Image, self).__repr__()
+
+    def __setitem__(self, key, value):
+        if key == 'serverId':
+            key = 'server_id'
+        elif key in ['created', 'updated']:
+            value = convert_datetime(value)
+        super(Image, self).__setitem__(key, value)
+
+    def reload(self):
+        """Reload this Image (an implicit :func:`get`).
+
+        :returns: An updated CloudServers Image.
+        :rtype: :class:`Image`
+
+        .. versionadded:: 0.1.9
+        """
+        assert 'id' in self
+        response = get(self['id'])
+        self.update(response)
+        return self
+
+    def delete(self):
+        """Delete this Image.
+
+        .. note::
+
+            You can only delete Images you create.
+
+        .. warning::
+
+            There is not confirmation step for this operation. Deleting an
+            image is permanent.
+
+        .. versionadded:: 0.1
+        """
+        assert 'id' in self
+        url = '/'.join([get_url('cloudservers'), 'images', str(self['id'])])
+        handle_request('delete', url)
+
+    @classmethod
+    def list(cls, limit=None, offset=None, detail=False):
+        """Returns a list of CloudServers Images.
+
+        :param limit: Limit the result set by a cetain number
+        :type limit: int
+        :param offset: Offset the result set by a certain number
+        :type offset: int
+        :param detail: Return additional details about each Image
+        :type detail: bool
+        :returns: A list of CloudServers Images.
+        :rtype: A list of :class:`Image`
+
+        .. versionadded:: 0.1
+        """
+        url = [get_url('cloudservers'), 'images']
+        if detail:
+            url.append('detail')
+        url = '/'.join(url)
+        if limit is not None or offset is not None:
+            url = query(url, limit=limit, offset=offset)
+        return handle_request('get', url, wrapper=Image, container='images')
+
+    @classmethod
+    def get(cls, id):
+        """Return an Image by ID.
+
+        :param id: The ID of the Image to retrieve
+        :type id: int
+        :returns: A CloudServer Image matching the ID.
+        :rtype: :class:`Image`
+
+        .. versionadded:: 0.1
+        """
+        url = '/'.join([get_url('cloudservers'), 'images', str(id)])
+        return handle_request('get', url, wrapper=cls, container='image')
+
+    @classmethod
+    def create(cls, name, server):
+        """Create an Image.
+
+        :param name: Name of the Image
+        :type name: str
+        :param server: Server or ``id`` to base the Image upon
+        :type server: int or :class:`Server`
+        :returns: A shiny new CloudServers Image.
+        :rtype: :class:`Image`
+
+        .. versionadded:: 0.1
+        """
+        if isinstance(server, Server):
+            server = server.id
+        server = int(server)
+        data = {'image': {'serverId': server,
+                          'name': name}}
+        data = json.dumps(data)
+        url = '/'.join([get_url('cloudservers'), 'images'])
+        return handle_request('post', url, data, cls, 'image')
 
 
 class IP(DotDict):
@@ -118,6 +265,7 @@ class Server(DotDict):
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id'])])
         handle_request('delete', url)
 
+    @property
     def ips(self):
         """
         Returns a list of public and private IPs for this Server.
@@ -166,17 +314,17 @@ class Server(DotDict):
 
         :param address: IP to share in the Shared IP Group
         :type address: str
-        :param ipgroup: A :class:`vaporize.ipgroups.SharedIPGroup` or ``id``
-        :type ipgroup: int or :class:`vaporize.ipgroups.SharedIPGroup`
+        :param ipgroup: A :class:`SharedIPGroup` or ``id``
+        :type ipgroup: int or :class:`SharedIPGroup`
         :param configure: Configure the shared IP on the Server
         :type configure: bool
         :returns: The Shared IP Group associated with this Server.
-        :rtype: :class:`vaporize.ipgroups.SharedIPGroup`
+        :rtype: :class:`SharedIPGroup`
 
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        if isinstance(ipgroup, vaporize.ipgroups.SharedIPGroup):
+        if isinstance(ipgroup, SharedIPGroup):
             ipgroup = ipgroup.id
         ipgroup = int(ipgroup)
         data = json.dumps({'shareIp': {'sharedIpGroup': ipgroup,
@@ -221,12 +369,12 @@ class Server(DotDict):
         """Rebuild this Server using a specified Image
 
         :param image: The Image or ``id``
-        :type image: int or :class:`vaporize.images.Image`
+        :type image: int or :class:`Image`
 
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        if isinstance(image, vaporize.images.Image):
+        if isinstance(image, Image):
             image = image.id
         image = int(image)
         data = json.dumps({'rebuild': {'imageId': int(image)}})
@@ -238,12 +386,12 @@ class Server(DotDict):
         """Resize this Server to a specific Flavor size
 
         :param flavor: The Flavor or ``id``
-        :type flavor: int or :class:`vaporize.flavors.Flavor`
+        :type flavor: int or :class:`Flavor`
 
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        if isinstance(flavor, vaporize.flavors.Flavor):
+        if isinstance(flavor, Flavor):
             flavor = flavor.id
         flavor = int(flavor)
         data = json.dumps({'resize': {'flavorId': flavor}})
@@ -273,6 +421,7 @@ class Server(DotDict):
                         str(self['id']), 'action'])
         handle_request('post', url, data)
 
+    @property
     def backup_schedule(self):
         """Return this Server's backup schedule
 
@@ -316,76 +465,161 @@ class Server(DotDict):
                         'backup_schedule'])
         handle_request('delete', url)
 
+    @classmethod
+    def list(cls, limit=None, offset=None, detail=False):
+        """
+        List of CloudServer Servers
 
-def list(limit=None, offset=None, detail=False):
-    """
-    List of CloudServer Servers
+        :param limit: Limit the result set to a certain number
+        :type limit: int
+        :param offset: Offset the result set by a certain number
+        :type offset: int
+        :param detail: Return detailed information about each Server
+        :type detail: bool
+        :returns: A list of CloudServers Servers.
+        :rtype: List of :class:`Server`
 
-    :param limit: Limit the result set to a certain number
-    :type limit: int
-    :param offset: Offset the result set by a certain number
-    :type offset: int
-    :param detail: Return detailed information about each Server
-    :type detail: bool
-    :returns: A list of CloudServers Servers.
-    :rtype: List of :class:`Server`
+        .. versionadded:: 0.1
+        """
+        url = [get_url('cloudservers'), 'servers']
+        if detail:
+            url.append('detail')
+        url = '/'.join(url)
+        if limit is not None or offset is not None:
+            url = query(url, limit=limit, offset=offset)
+        return handle_request('get', url, wrapper=cls, container='servers')
 
-    .. versionadded:: 0.1
-    """
-    url = [get_url('cloudservers'), 'servers']
-    if detail:
-        url.append('detail')
-    url = '/'.join(url)
-    if limit is not None or offset is not None:
-        url = query(url, limit=limit, offset=offset)
-    return handle_request('get', url, wrapper=Server, container='servers')
+    @classmethod
+    def get(cls, id):
+        """Return a Server using an ID
+
+        :param id: The ``id`` of the Server to be retrieved
+        :type id: int
+        :return: A :class:`Server`
+
+        .. versionadded:: 0.1
+        """
+        url = '/'.join([get_url('cloudservers'), 'servers', str(id)])
+        return handle_request('get', url, wrapper=cls, container='server')
+
+    @classmethod
+    def create(cls, name, image, flavor, metadata=None, files=None):
+        """Create a CloudServers Server
+
+        :param name: A Server's name
+        :type name: str
+        :param image: An Image or ``id``
+        :type image: int or :class:`Image`
+        :param flavor: A Flavor or ``id``
+        :type flavor: int or :class:`Flavor`
+        :param metadata: Optional meta data to include with Server
+        :type metadata: dict
+        :param files: A list of files to load on Server
+        :type files: dict
+        :returns: A shiny new CloudServers Server.
+        :rtype: :class:`Server`
+
+        .. versionadded:: 0.1
+        """
+        if isinstance(image, Image):
+            image = image.id
+        image = int(image)
+        if isinstance(flavor, Flavor):
+            flavor = flavor.id
+        flavor = int(flavor)
+        data = {'server': {'name': name,
+                           'imageId': image,
+                           'flavorId': flavor,
+                           'metadata': metadata or {},
+                           'personality': []}}
+        if isinstance(files, dict):
+            for path, contents in list(files.items()):
+                data['personality'].append({'path': path, 'contents': contents})
+        data = json.dumps(data)
+        url = '/'.join([get_url('cloudservers'), 'servers'])
+        return handle_request('post', url, data, cls, 'server')
 
 
-def get(id):
-    """Return a Server using an ID
+class SharedIPGroup(DotDict):
+    """A Cloudservers Shared IP Group."""
+    def __repr__(self):
+        if 'name' in self:
+            return '<SharedIPGroup %s>' % self['name']
+        return super(SharedIPGroup, self).__repr__()
 
-    :param id: The ``id`` of the Server to be retrieved
-    :type id: int
-    :return: A :class:`Server`
+    def __setitem__(self, key, value):
+        if key == 'sharedIpGroupId':
+            key = 'id'
+        elif key == 'configuredServer':
+            key = 'configured'
+        super(SharedIPGroup, self).__setitem__(key, value)
 
-    .. versionadded:: 0.1
-    """
-    url = '/'.join([get_url('cloudservers'), 'servers', str(id)])
-    return handle_request('get', url, wrapper=Server, container='server')
+    def delete(self):
+        """Delete this Shared IP Group.
 
+        .. versionadded:: 0.1
+        """
+        assert 'id' in self
+        url = '/'.join([get_url('cloudservers'), 'shared_ip_groups',
+                        str(self['id'])])
+        handle_request('delete', url)
 
-def create(name, image, flavor, metadata=None, files=None):
-    """Create a CloudServers Server
+    @classmethod
+    def list(cls, limit=None, offset=None, detail=False):
+        """Returns a list of Shared IP Groups.
 
-    :param name: A Server's name
-    :type name: str
-    :param image: An Image or ``id``
-    :type image: int or :class:`vaporize.images.Image`
-    :param flavor: A Flavor or ``id``
-    :type flavor: int or :class:`vaporize.flavors.Flavor`
-    :param metadata: Optional meta data to include with Server
-    :type metadata: dict
-    :param files: A list of files to load on Server
-    :type files: dict
-    :returns: A shiny new CloudServers Server.
-    :rtype: :class:`Server`
+        :param limit: Limit the result set by a certain number
+        :type limit: int
+        :param offset: Offset the result set by a certain number
+        :type offset: int
+        :param detail: Return additional details about each Shared IP Group
+        :type detail: bool
+        :returns: A list of Shared IP Groups.
+        :rtype: A list of :class:`SharedIPGroup`
 
-    .. versionadded:: 0.1
-    """
-    if isinstance(image, vaporize.images.Image):
-        image = image.id
-    image = int(image)
-    if isinstance(flavor, vaporize.flavors.Flavor):
-        flavor = flavor.id
-    flavor = int(flavor)
-    data = {'server': {'name': name,
-                       'imageId': image,
-                       'flavorId': flavor,
-                       'metadata': metadata or {},
-                       'personality': []}}
-    if isinstance(files, dict):
-        for path, contents in list(files.items()):
-            data['personality'].append({'path': path, 'contents': contents})
-    data = json.dumps(data)
-    url = '/'.join([get_url('cloudservers'), 'servers'])
-    return handle_request('post', url, data, Server, 'server')
+        .. versionadded:: 0.1
+        """
+        url = [get_url('cloudservers'), 'shared_ip_groups']
+        if detail:
+            url.append('detail')
+        url = '/'.join(url)
+        if limit is not None or offset is not None:
+            url = query(url, limit=limit, offset=offset)
+        return handle_request('get', url, wrapper=cls,
+                              container='sharedIpGroups')
+
+    @classmethod
+    def get(cls, id):
+        """Return a Shared IP Group by ID.
+
+        :param id: The ID of the Shared IP Group to retrieve
+        :type id: int
+        :returns: A :class:`SharedIPGroup`
+
+        .. versionadded:: 0.1
+        """
+        url = '/'.join([get_url('cloudservers'), 'shared_ip_groups', str(id)])
+        return handle_request('get', url, wrapper=cls,
+                              container='sharedIpGroup')
+
+    @classmethod
+    def create(cls, name, server):
+        """Create a Shared IP Group.
+
+        :param name: Name of the Shared IP Group
+        :type name: str
+        :param server: The Server or ``id`` to add to group
+        :type server: int or :class:`Server`
+        :returns: A shiny new CloudServers Shared IP Group.
+        :rtype: :class:`SharedIPGroup`
+
+        .. versionadded:: 0.1
+        """
+        if isinstance(server, Server):
+            server = server.id
+        server = int(server)
+        data = {'sharedIpGroup': {'name': name,
+                                  'server': server}}
+        data = json.dumps(data)
+        url = '/'.join([get_url('cloudservers'), 'server_ip_groups'])
+        return handle_request('post', url, data, cls, 'sharedIpGroup')
