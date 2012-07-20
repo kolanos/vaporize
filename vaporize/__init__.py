@@ -7,5 +7,5 @@ __version__ = '0.1.9'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2012 Michael Lavers'
 
-from . import domains, flavors, images, ipgroups, loadbalancers, servers
+from . import databases, domains, flavors, images, ipgroups, loadbalancers, servers
 from .core import connect

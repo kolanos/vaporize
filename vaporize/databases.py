@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import datetime
 import json
 
 from vaporize.core import convert_datetime, get_url, handle_request, query
@@ -12,13 +11,38 @@ class Database(DotDict):
     pass
 
 
-class Instance(DotDict):
-    """A CloudDatabase Instance."""
+class Flavor(DotDict):
+    """A CloudDatabase Flavor"""
     pass
 
 
+class Instance(DotDict):
+    """A CloudDatabase Instance."""
+    def __repr__(self):
+        if 'name' in self:
+            return '<Instance %s>' % self['name']
+        return super(Instance, self).__repr__()
+
+    def __setitem__(self, key, value):
+        if key in ['created', 'updated']:
+            value = convert_datetime(value)
+        elif key == 'flavor':
+            value = Flavor(value)
+        elif key == 'volume':
+            value = Volume(value)
+        super(Instance, self).__setitem__(key, value)
+
+
+class Volume(DotDict):
+    """A CloudDatabase Volume."""
+    def __repr__(self):
+        if 'used' in self and 'size' in self:
+            return '<Volume %.2f%%>' % ((self['used'] / self['size']) * 100.0)
+        return super(Volume, self).__repr__()
+
+
 def list():
-    """Returns a list of database instances.
+    """Returns a list of CloudDatabase instances.
 
     :returns: A list of CloudDatabase instances.
     :rtype: :class:`Instance`
