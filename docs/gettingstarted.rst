@@ -38,12 +38,28 @@ First Request
 There are many interfaces available on the Rackspace Cloud, but let's start with a
 simple one. Let's get a list of all your CloudServers:
 
-    >>> vaporize.servers.list()
+    >>> vaporize.servers.Server.list()
     [<Server ...>, <Server ...>, ...]
 
 Assuming you have some CloudServers already created you should see a list like
 the one above. If you don't have any CloudServers yet, you'll just see an empty
 list.
+
+Alternatively, if you don't like accessing the Vaporize API this way you could
+do it the following ways:
+
+    >>> from vaporize import connect, servers
+    >>> connect('username', 'apikey')
+    >>> servers.Server.list()
+
+Or...
+
+    >>> from vaporize import connect
+    >>> From vaporize.servers import Server
+    >>> connect('username', 'apikey')
+    >>> Server.list()
+
+It's up to you.
 
 Creating a Server
 -----------------
@@ -68,7 +84,7 @@ server specifications care called "Flavors".
 
 Let's get a list of Images available on the Rackspace Cloud (as of this writing):
 
-    >>> images = vaporize.images.list()
+    >>> images = vaporize.servers.Image.list()
     >>> for i, image in enumerate(images):
     ...   print i, image.name
     ... 
@@ -114,7 +130,7 @@ I'm partial to Ubuntu Server myself, so let's choose option 22:
 
 Now, what about those Flavors?
 
-    >>> flavors = vaporize.flavors.list()
+    >>> flavors = vaporize.servers.Flavor.list()
     >>> for i, flavor in enumerate(flavors):
     ...   print i, flavor.name
     ... 
@@ -139,7 +155,7 @@ For the sake of this example let's choose the smallest server, option 0 (256MB):
 
 That's pretty much all we need to create a server. So without further ado...
 
-    >>> server = vaporize.servers.create('foo', image, flavor)
+    >>> server = vaporize.servers.Server.create('foo', image, flavor)
 
 Are we done? No, not quite yet. Rackspace still needs to build the server for
 us.
@@ -227,8 +243,10 @@ opertions you can perform on your server, such as:
 * Rebooting
 * Resizing (change Flavor)
 * Rebuilding (change Image)
-* Share IP with other servers (failover)
-* Scheduled backups (weekly, daily or both)
+* Share an IP with other servers (failover)
+* Scheduled automatic backups (weekly, daily or both)
+* Create backup images of your server(s)
+* Clone a server using a backup image
 * and more!
 
 And that's just some of the features available under ``vaporize.servers``!
