@@ -12,11 +12,11 @@ class AccessRule(DotDict):
 
     The access list management feature allows fine-grained network access
     controls to be applied to the load balancer's virtual IP address. A single
-    IP address, multiple IP addresses, or entire network subnets can be added as
-    anetworkItem. Items that are configured with the ALLOW type will always take
-    precedence over items with the DENY type. To reject traffic from all items
-    except for those with the ALLOW type, add a networkItem with an address of
-    "0.0.0.0/0" and a DENY type.
+    IP address, multiple IP addresses, or entire network subnets can be added
+    as anetworkItem. Items that are configured with the ALLOW type will always
+    take precedence over items with the DENY type. To reject traffic from all
+    items except for those with the ALLOW type, add a networkItem with an
+    address of "0.0.0.0/0" and a DENY type.
     """
     def __repr__(self):
         if 'type' in self and 'address' in self:
@@ -73,6 +73,28 @@ class Algorithm(DotDict):
             return '<Algorithm %s>' % self['name']
         return super(Algorithm, self).__repr__()
 
+    @classmethod
+    def list(cls, limit=None, offset=None, marker=None):
+        """Return a list of supported algorithms.
+
+        :param limit: Limit the result set by a certain amount.
+        :type limit: int
+        :param offset: Offset the result set by a certain amount.
+        :type offset: int
+        :param marker: Start result set at a specific marker (ID).
+        :type marker: int
+        :returns: A list of supported CloudLoadBalancer algorithms.
+        :rtype: A list of :class:`Algorithm`.
+
+        .. versionadded:: 0.1
+        """
+        url = [get_url('cloudloadbalancers'), 'loadbalancers', 'algorithms']
+        url = '/'.join(url)
+        if limit is not None or offset is not None or marker is not None:
+            url = query(url, limit=limit, offset=offset, marker=marker)
+        return handle_request('get', url, wrapper=cls,
+                              container='algorithms')
+
 
 class AllowedDomain(DotDict):
     """A CloudLoadBalancer Allowed Domains.
@@ -92,6 +114,29 @@ class AllowedDomain(DotDict):
             value = value['name']
         super(AllowedDomain, self).__setitem__(key, value)
 
+    @classmethod
+    def list(cls, limit=None, offset=None, marker=None):
+        """Return a list of allowed domains.
+
+        :param limit: Limit the result set by a certain amount.
+        :type limit: int
+        :param offset: Offset the result set by a certain amount.
+        :type offset: int
+        :param marker: Start result set at a specific marker (ID).
+        :type marker: int
+        :returns: A list of CloudLoadBalancer allowed domains.
+        :rtype: A list of :class:`AllowedDomain`.
+
+        .. versionadded:: 0.1
+        """
+        url = [get_url('cloudloadbalancers'), 'loadbalancers',
+               'alloweddomains']
+        url = '/'.join(url)
+        if limit is not None or offset is not None or marker is not None:
+            url = query(url, limit=limit, offset=offset, marker=marker)
+        return handle_request('get', url, wrapper=cls,
+                              container='allowedDomains')
+
 
 class ContentCaching(DotDict):
     """A CloudLoadBalancer Content Caching.
@@ -110,7 +155,7 @@ class ConnectionLogging(DotDict):
 
 
 class ConnectionThrottle(DotDict):
-    """A CloudLoadBalancer Connection Throttle. 
+    """A CloudLoadBalancer Connection Throttle.
 
     The connection throttling feature imposes limits on the number of
     connections per IP address to help mitigate malicious or abusive traffic to
@@ -129,21 +174,21 @@ class ConnectionThrottle(DotDict):
             simultaneous connections; otherwise set a value between 1 and
             100000.
         :type max_connections: int
-        :param min_connections: Allow at least this number of connections per IP
+        :param min_connections: Allow this number of connections per IP
             address before applying throttling restrictions. Setting a value of
             0 allows unlimited simultaneous connections; otherwise, set a value
             between 1 and 1000.
         :type min_connections: int
-        :param max_connection_rate: Maximum number of connections allowed from a
-            single IP address in the defined rateInterval. Setting a value of 0
-            allows an unlimited connection rate; otherwise, set a value between
-            1 and 100000.
+        :param max_connection_rate: Maximum number of connections allowed from
+            a single IP address in the defined rateInterval. Setting a value of
+            0 allows an unlimited connection rate; otherwise, set a value
+            between 1 and 100000.
         :type max_connection_rate: int
         :param rate_interval: Frequency (in seconds) at which the
             maxConnectionRate is assessed. For example, a maxConnectionRate of
-            30 with a rateInterval of 60 would allow a maximum of 30 connections
-            per minute for a single IP address. This value must be between 1 and
-            3600.
+            30 with a rateInterval of 60 would allow a maximum of 30
+            connections per minute for a single IP address. This value must be
+            between 1 and 3600.
         :type rate_interval: int
 
         :returns: A Load Balancer Connection Throttle setting.
@@ -171,8 +216,8 @@ class HealthMonitor(DotDict):
     the health monitor determines that the node is functional. In addition to
     being performed periodically, the health check also is performed against
     every node that is added to ensure that the node is operating properly
-    before allowing it to service traffic. Only one health monitor is allowed to
-    be enabled on a load balancer at a time.
+    before allowing it to service traffic. Only one health monitor is allowed
+    to be enabled on a load balancer at a time.
 
     Every health monitor has a ``type`` attribute to signify what kind of
     monitor it is.
@@ -191,11 +236,12 @@ class HealthMonitor(DotDict):
         :param type: Type of health monitor to create (``CONNECT``, ``HTTP`` or
             ``HTTPS``).
         :type type: str
-        :param delay: The minimum number of seconds to wait before executing the
-            health monitor. Must be a number between 1 and 3600.
+        :param delay: The minimum number of seconds to wait before executing
+            the health monitor. Must be a number between 1 and 3600.
         :type delay: int
-        :param timeout: Maximum number of seconds to wait for a connection to be
-            established before timing out. Must be a number between 1 and 300.
+        :param timeout: Maximum number of seconds to wait for a connection to
+            be established before timing out. Must be a number between 1 and
+            300.
         :type timeout: int
         :param attempts_before_deactivation: Number of permissible monitor
             failures before removing a node from rotation. Must be a number
@@ -264,7 +310,7 @@ class LoadBalancer(DotDict):
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        response = get(self['id'])
+        response = LoadBalancer.get(self['id'])
         self.update(response)
         return self
 
@@ -549,7 +595,8 @@ class LoadBalancer(DotDict):
         """Returns the ConnectionLogging setting for this Load Balancer.
 
         This operation allows the user to view the current connection logging
-        configuration, enable connection logging, or disable connection logging.
+        configuration, enable connection logging, or disable connection
+        logging.
 
         :returns: This Load Balancer's Content Logging setting.
         :rtype: :class:`ConnectionLogging`
@@ -621,8 +668,8 @@ class LoadBalancer(DotDict):
         When content caching is enabled, recently-accessed files are stored on
         the load balancer for easy retrieval by web clients. Content caching
         improves the performance of a web site by temporarily storing data that
-        was recently accessed. While it's cached, requests for that data will be
-        served by the load balancer instead of making another query to a web
+        was recently accessed. While it's cached, requests for that data will
+        be served by the load balancer instead of making another query to a web
         server behind it. The result is improved response times for those
         requests and less load on the web server.
 
@@ -906,7 +953,7 @@ class LoadBalancer(DotDict):
             because the 'keepalive_timeout' interval was exceeded.
         * ``max_conn``: Maximum number of simultaneous TCP connections this load
             balancer has processed at any one time.
- 
+
         :returns: Stats for this Load Balancer.
         :rtype: :class:`Stat`
 
@@ -939,6 +986,174 @@ class LoadBalancer(DotDict):
             url = '/'.join(url)
         return handle_request('get', url, wrapper=UsageReport,
                               container='loadBalancerUsage')
+
+    @classmethod
+    def list(cls, limit=None, offset=None, marker=None, node=None,
+             deleted=False):
+        """Returns a list of Load Balancers.
+
+        This operation provides a list of all load balancers configured and
+        associated with your account.
+
+        :returns: A list of CloudLoadBalancer Load Balancers.
+        :rtype: A list of :class:`LoadBalancer`.
+
+        .. versionadded:: 0.1
+        """
+        url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers'])
+        if limit is not None or offset is not None or marker is not None:
+            url = query(url, limit=limit, offset=offset, marker=marker)
+        if deleted:
+            url = query(url, status='DELETED')
+        if node is not None:
+            url = query(url, nodeaddress=node)
+        return handle_request('get', url, wrapper=cls,
+                              container='loadBalancers')
+
+    @classmethod
+    def get(cls, id):
+        """Return a Load Balancer by ID.
+
+        :param id: A Load Balancer ID.
+        :type id: int
+        :returns: A CloudLoadBalancer Load Balancer with this ID.
+        :rtype: :class:`LoadBalancer`
+
+        .. versionadded:: 0.1
+        """
+        url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers', str(id)])
+        return handle_request('get', url, wrapper=cls,
+                              container='loadBalancer')
+
+    @classmethod
+    def create(cls, name, protocol, virtual_ips, nodes, port=None, algorithm=None,
+               access_list=None, connection_logging=None, connection_throttle=None,
+               health_monitor=None, session_persistence=None, metadata=None):
+        """Create a Load Balancer.
+
+        This operation asynchronously provisions a new load balancer based on the
+        configuration defined in the request object. Once the request is validated
+        and progress has started on the provisioning process, a response object will
+        be returned. The object will contain a unique identifier and status of the
+        request. Using the identifier, the caller can check on the progress of the
+        operation by performing a GET on loadbalancers/id. If the corresponding
+        request cannot be fulfilled due to insufficient or invalid data, an HTTP 400
+        (Bad Request) error response will be returned with information regarding the
+        nature of the failure in the body of the response. Failures in the
+        validation process are non-recoverable and require the caller to correct the
+        cause of the failure and POST the request again.
+
+        An HTTP load balancer will have the X-Forwarded-For (XFF) HTTP header set by
+        default. This header will contain the actual originating IP address of a
+        client connecting to a web server through an HTTP proxy or load balancer,
+        which many web applications are already designed to use when determining the
+        source address for a request. (This header is also included on the Modify
+        Load Balancer request if the protocol changes to reenable it.)
+
+        An HTTP load balancer will also include the X-Forwarded-Proto (XFP) HTTP
+        header, which has been added for identifying the originating protocol of an
+        HTTP request as "http" or "https" depending on what protocol the client
+        requested. This is specially useful when using SSL termination.
+
+        :param name: Name of the Load Balancer to create.
+        :type name: str
+        :param protocol: The Load Balancer's protocol (see: :class:`Protocol`).
+        :type protocol: str or :class:`Protocol`
+        :param virtual_ips: A list of Virtual IPs (see: :class:`VirtualIP`).
+        :type virtual_ips: list of :class:`VirtualIP`
+        :param nodes: A list of Nodes to add to add (see: :class:`Node`).
+        :type nodes: list of :class:`Node`
+        :param port: The port the Load Balancer should listen on.
+        :type port: int
+        :param algorithm: The Load Balancer's Algorithm (see: :class:`Algorithm`).
+        :type algorithm: :class:`Algorithm`
+        :param access_list: A list of Access Rules (see: :class:`AccessRule`).
+        :type access_list: list of :class:`AccessRule`
+        :param access_list: A list of Access Rules (see: :class:`AccessRule`).
+        :type access_list: list of :class:`AccessRule`
+        :param connection_logging: Enable or disable connection logging.
+        :type connection_logging: bool
+        :param connection_throttle: Connection Throttling settings (see:
+            :class:`ConnectionThrottle`).
+        :type connection_throttle: :class:`ConnectionThrottle`
+        :param health_monitor: Health Monitor settings (see:
+            :class:`HealthMonitor`).
+        :type health_monitor: :class:`HealthMonitor`
+        :param session_persistence: Session persistence type (``HTTP_COOKIE`` or
+            ``SOURCE_IP``).
+        :type session_persistence: str
+        :param metadata: Meta data to store with the Load Balancer record.
+        :type metadata: dict
+
+        :returns: A shiny new CloudLoadBalancer Load Balancer.
+        :rtype: :class:`LoadBalancer`
+
+        .. note::
+
+            If you pass a :class:`Protocol` to the ``protocol`` argument, it
+            will set ``port`` to the default for that protocol if ``port`` is
+            unset.
+
+        .. versionadded:: 0.1
+        """
+        if isinstance(algorithm, Algorithm):
+            algorithm = algorithm.name
+        if isinstance(protocol, Protocol):
+            if port is None:
+                port = protocol.port
+            protocol = protocol.name
+        assert port is not None
+        data = {'loadBalancer': {'name': name,
+                                 'protocol': protocol,
+                                 'port': port,
+                                 'virtualIps': [],
+                                 'nodes': []}}
+        for virtual_ip in virtual_ips:
+            if isinstance(virtual_ip, VirtualIP):
+                data['loadBalancer']['virtualIps'].append(virtual_ip.to_dict())
+        for node in nodes:
+            if isinstance(node, Node):
+                data['loadBalancer']['nodes'].append(node.to_dict())
+        if algorithm is not None:
+            data['loadBalancer']['algorithm'] = algorithm
+        if connection_logging is not None:
+            data['loadBalancer']['connectionLogging'] = {
+                    'enabled': bool(connection_logging)
+                    }
+        if access_list is not None:
+            data['loadBalancer']['accessList'] = []
+            for access_rule in access_list:
+                if isinstance(access_rule, AccessRule):
+                    data['loadBalancer']['accessList'].append({
+                        'type': access_rule.type,
+                        'address': access_rule.address
+                        })
+        if connection_throttle is not None \
+                and isintance(connection_throtle, ConnectionThrottle):
+            data['loadBalancer']['connectionThrottle'] = {
+                    'maxConnections': connection_throttle.max_connections,
+                    'minConnections': connection_throttle.min_connections,
+                    'maxConnectionRate': connection_throttle.max_connection_rate,
+                    'rateInterval': connection_throttle.rate_interval
+                    }
+        if health_monitor is not None and isinstance(health_monitor, HealthMonitor):
+            data['loadBalancer']['healthMonitor'] = {
+                    'type': health_monitor.type,
+                    'delay': health_monitor.delay,
+                    'timeout': health_monitor.timeout,
+                    'attemptsBeforeDeactivation': health_monitor.attempts_before_deactivation,
+                    'bodyRegex': health_monitor.body_regex,
+                    'path': health_monitor.path,
+                    'statusRegex': health_monitor.status_regex
+                    }
+        if session_persistence is not None:
+            data['loadBalancer']['sessionPersistence'] = {
+                    'persistenceType': session_persistence
+                    }
+        data = json.dumps(data)
+        url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers'])
+        return handle_request('post', url, data, wrapper=cls,
+                              container='loadBalancer')
 
 
 class Node(DotDict):
@@ -1120,6 +1335,27 @@ class Protocol(DotDict):
             return '<Protocol %s>' % self['name']
         return super(Protocol, self).__repr__()
 
+    @classmethod
+    def list(cls, limit=None, offset=None, marker=None):
+        """Return a list of supported protocols.
+
+        :param limit: Limit the result set by a certain amount.
+        :type limit: int
+        :param offset: Offset the result set by a certain amount.
+        :type offset: int
+        :param marker: Start result set at a specific marker (ID).
+        :type marker: int
+        :returns: A list of supported CloudLoadBalancer protocols.
+        :rtype: A list of :class:`Protocol`.
+
+        .. versionadded:: 0.1
+        """
+        url = [get_url('cloudloadbalancers'), 'loadbalancers', 'protocols']
+        url = '/'.join(url)
+        if limit is not None or offset is not None or marker is not None:
+            url = query(url, limit=limit, offset=offset, marker=marker)
+        return handle_request('get', url, wrapper=cls, container='protocols')
+
 
 class SessionPersistence(DotDict):
     """A CloudLoadBalancer Session Persistence.
@@ -1217,235 +1453,3 @@ class VirtualIP(DotDict):
             ret = {'ipVersion': self['version'],
                    'type': self['type']}
         return ret
-
-
-def list(limit=None, offset=None, marker=None, node=None, deleted=False):
-    """Returns a list of Load Balancers.
-
-    This operation provides a list of all load balancers configured and
-    associated with your account.
-
-    :returns: A list of CloudLoadBalancer Load Balancers.
-    :rtype: A list of :class:`LoadBalancer`.
-
-    .. versionadded:: 0.1
-    """
-    url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers'])
-    if limit is not None or offset is not None or marker is not None:
-        url = query(url, limit=limit, offset=offset, marker=marker)
-    if deleted:
-        url = query(url, status='DELETED')
-    if node is not None:
-        url = query(url, nodeaddress=node)
-    return handle_request('get', url, wrapper=LoadBalancer,
-                          container='loadBalancers')
-
-
-def get(id):
-    """Return a Load Balancer by ID.
-
-    :param id: A Load Balancer ID.
-    :type id: int
-    :returns: A CloudLoadBalancer Load Balancer with this ID.
-    :rtype: :class:`LoadBalancer`
-
-    .. versionadded:: 0.1
-    """
-    url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers', str(id)])
-    return handle_request('get', url, wrapper=LoadBalancer,
-                          container='loadBalancer')
-
-
-def create(name, protocol, virtual_ips, nodes, port=None, algorithm=None,
-           access_list=None, connection_logging=None, connection_throttle=None,
-           health_monitor=None, session_persistence=None, metadata=None):
-    """Create a Load Balancer.
-
-    This operation asynchronously provisions a new load balancer based on the
-    configuration defined in the request object. Once the request is validated
-    and progress has started on the provisioning process, a response object will
-    be returned. The object will contain a unique identifier and status of the
-    request. Using the identifier, the caller can check on the progress of the
-    operation by performing a GET on loadbalancers/id. If the corresponding
-    request cannot be fulfilled due to insufficient or invalid data, an HTTP 400
-    (Bad Request) error response will be returned with information regarding the
-    nature of the failure in the body of the response. Failures in the
-    validation process are non-recoverable and require the caller to correct the
-    cause of the failure and POST the request again.
-
-    An HTTP load balancer will have the X-Forwarded-For (XFF) HTTP header set by
-    default. This header will contain the actual originating IP address of a
-    client connecting to a web server through an HTTP proxy or load balancer,
-    which many web applications are already designed to use when determining the
-    source address for a request. (This header is also included on the Modify
-    Load Balancer request if the protocol changes to reenable it.)
-
-    An HTTP load balancer will also include the X-Forwarded-Proto (XFP) HTTP
-    header, which has been added for identifying the originating protocol of an
-    HTTP request as "http" or "https" depending on what protocol the client
-    requested. This is specially useful when using SSL termination.
-
-    :param name: Name of the Load Balancer to create.
-    :type name: str
-    :param protocol: The Load Balancer's protocol (see: :class:`Protocol`).
-    :type protocol: str or :class:`Protocol`
-    :param virtual_ips: A list of Virtual IPs (see: :class:`VirtualIP`).
-    :type virtual_ips: list of :class:`VirtualIP`
-    :param nodes: A list of Nodes to add to add (see: :class:`Node`).
-    :type nodes: list of :class:`Node`
-    :param port: The port the Load Balancer should listen on.
-    :type port: int
-    :param algorithm: The Load Balancer's Algorithm (see: :class:`Algorithm`).
-    :type algorithm: :class:`Algorithm`
-    :param access_list: A list of Access Rules (see: :class:`AccessRule`).
-    :type access_list: list of :class:`AccessRule`
-    :param access_list: A list of Access Rules (see: :class:`AccessRule`).
-    :type access_list: list of :class:`AccessRule`
-    :param connection_logging: Enable or disable connection logging.
-    :type connection_logging: bool
-    :param connection_throttle: Connection Throttling settings (see:
-        :class:`ConnectionThrottle`).
-    :type connection_throttle: :class:`ConnectionThrottle`
-    :param health_monitor: Health Monitor settings (see:
-        :class:`HealthMonitor`).
-    :type health_monitor: :class:`HealthMonitor`
-    :param session_persistence: Session persistence type (``HTTP_COOKIE`` or
-        ``SOURCE_IP``).
-    :type session_persistence: str
-    :param metadata: Meta data to store with the Load Balancer record.
-    :type metadata: dict
-
-    :returns: A shiny new CloudLoadBalancer Load Balancer.
-    :rtype: :class:`LoadBalancer`
-
-    .. note::
-
-        If you pass a :class:`Protocol` to the ``protocol`` argument, it
-        will set ``port`` to the default for that protocol if ``port`` is
-        unset.
-
-    .. versionadded:: 0.1
-    """
-    if isinstance(algorithm, Algorithm):
-        algorithm = algorithm.name
-    if isinstance(protocol, Protocol):
-        if port is None:
-            port = protocol.port
-        protocol = protocol.name
-    assert port is not None
-    data = {'loadBalancer': {'name': name,
-                             'protocol': protocol,
-                             'port': port,
-                             'virtualIps': [],
-                             'nodes': []}}
-    for virtual_ip in virtual_ips:
-        if isinstance(virtual_ip, VirtualIP):
-            data['loadBalancer']['virtualIps'].append(virtual_ip.to_dict())
-    for node in nodes:
-        if isinstance(node, Node):
-            data['loadBalancer']['nodes'].append(node.to_dict())
-    if algorithm is not None:
-        data['loadBalancer']['algorithm'] = algorithm
-    if connection_logging is not None:
-        data['loadBalancer']['connectionLogging'] = {
-                'enabled': bool(connection_logging)
-                }
-    if access_list is not None:
-        data['loadBalancer']['accessList'] = []
-        for access_rule in access_list:
-            if isinstance(access_rule, AccessRule):
-                data['loadBalancer']['accessList'].append({
-                    'type': access_rule.type,
-                    'address': access_rule.address
-                    })
-    if connection_throttle is not None \
-            and isintance(connection_throtle, ConnectionThrottle):
-        data['loadBalancer']['connectionThrottle'] = {
-                'maxConnections': connection_throttle.max_connections,
-                'minConnections': connection_throttle.min_connections,
-                'maxConnectionRate': connection_throttle.max_connection_rate,
-                'rateInterval': connection_throttle.rate_interval
-                }
-    if health_monitor is not None and isinstance(health_monitor, HealthMonitor):
-        data['loadBalancer']['healthMonitor'] = {
-                'type': health_monitor.type,
-                'delay': health_monitor.delay,
-                'timeout': health_monitor.timeout,
-                'attemptsBeforeDeactivation': health_monitor.attempts_before_deactivation,
-                'bodyRegex': health_monitor.body_regex,
-                'path': health_monitor.path,
-                'statusRegex': health_monitor.status_regex
-                }
-    if session_persistence is not None:
-        data['loadBalancer']['sessionPersistence'] = {
-                'persistenceType': session_persistence
-                }
-    data = json.dumps(data)
-    url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers'])
-    return handle_request('post', url, data, wrapper=LoadBalancer,
-                          container='loadBalancer')
-
-
-def algorithms(limit=None, offset=None, marker=None):
-    """Return a list of supported algorithms.
-
-    :param limit: Limit the result set by a certain amount.
-    :type limit: int
-    :param offset: Offset the result set by a certain amount.
-    :type offset: int
-    :param marker: Start result set at a specific marker (ID).
-    :type marker: int
-    :returns: A list of supported CloudLoadBalancer algorithms.
-    :rtype: A list of :class:`Algorithm`.
-
-    .. versionadded:: 0.1
-    """
-    url = [get_url('cloudloadbalancers'), 'loadbalancers', 'algorithms']
-    url = '/'.join(url)
-    if limit is not None or offset is not None or marker is not None:
-        url = query(url, limit=limit, offset=offset, marker=marker)
-    return handle_request('get', url, wrapper=Algorithm,
-                          container='algorithms')
-
-
-def allowed_domains(limit=None, offset=None, marker=None):
-    """Return a list of allowed domains.
-
-    :param limit: Limit the result set by a certain amount.
-    :type limit: int
-    :param offset: Offset the result set by a certain amount.
-    :type offset: int
-    :param marker: Start result set at a specific marker (ID).
-    :type marker: int
-    :returns: A list of CloudLoadBalancer allowed domains.
-    :rtype: A list of :class:`AllowedDomain`.
-
-    .. versionadded:: 0.1
-    """
-    url = [get_url('cloudloadbalancers'), 'loadbalancers', 'alloweddomains']
-    url = '/'.join(url)
-    if limit is not None or offset is not None or marker is not None:
-        url = query(url, limit=limit, offset=offset, marker=marker)
-    return handle_request('get', url, wrapper=AllowedDomain,
-                          container='allowedDomains')
-
-
-def protocols(limit=None, offset=None, marker=None):
-    """Return a list of supported protocols.
-
-    :param limit: Limit the result set by a certain amount.
-    :type limit: int
-    :param offset: Offset the result set by a certain amount.
-    :type offset: int
-    :param marker: Start result set at a specific marker (ID).
-    :type marker: int
-    :returns: A list of supported CloudLoadBalancer protocols.
-    :rtype: A list of :class:`Protocol`.
-
-    .. versionadded:: 0.1
-    """
-    url = [get_url('cloudloadbalancers'), 'loadbalancers', 'protocols']
-    url = '/'.join(url)
-    if limit is not None or offset is not None or marker is not None:
-        url = query(url, limit=limit, offset=offset, marker=marker)
-    return handle_request('get', url, wrapper=Protocol, container='protocols')

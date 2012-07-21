@@ -200,6 +200,136 @@ class Domain(DotDict):
                         'export'])
         return handle_request('get', url, wrapper=Export)
 
+    @classmethod
+    def list(cls, limit=None, offset=None, filter=None):
+        """List of Domains.
+
+        :param limit: Limit the number of results returned
+        :type limit: int
+        :param offset: Offset the result set by a certain amount
+        :type offset: int
+        :param filter: Filter results by a domain name
+        :type filter: str
+        :returns: A list of Domains
+        :rtype: A list of :class:`Domain`
+
+        .. versionadded:: 0.1
+        """
+        url = [get_url('clouddns'), 'domains']
+        url = '/'.join(url)
+        if limit is not None or offset is not None:
+            url = query(url, limit=limit, offset=offset)
+        if filter is not None:
+            url = query(url, name=filter)
+        return handle_request('get', url, wrapper=cls, container='domains')
+
+    @classmethod
+    def get(cls, id, records=False, subdomains=False):
+        """Retrieve a Domain using an ID.
+
+        :param records: Include the Domain's Records in the result
+        :type records: bool
+        :param subdomains: Include the Domain's Subdomainsi n the result
+        :type subdomains: bool
+        :returns: A Domain with the specified ID.
+        :rtype: :class:`Domain`
+
+        .. versionadded:: 0.1
+        """
+        url = '/'.join([get_url('clouddns'), 'domains', str(id)])
+        if records is True:
+            url = query(url, showRecords='true')
+        if subdomains is True:
+            url = query(url, showSubdomains='true')
+        return handle_request('get', url, wrapper=cls)
+
+    @classmethod
+    def create(cls, name, ttl=300, records=None, subdomains=None, comment=None,
+               email_address=None):
+        """Create a CloudDNS Domain.
+
+        :param name: A domain name such as ``yourname.com``
+        :type name: str
+        :param ttl: Time-To-Live (TTL) in seconds
+        :type ttl: int
+        :param records: A list of Records to create
+        :type records: list of :class:`Record`
+        :param subdomains: A list of Subdomains to create
+        :type subdomains: list of :class:`Subdomain`
+        :param comment: An optional comment to associated with the domain
+        :type comment: str
+        :param email_address: An e-mail address to associated with the domain
+        :type email_address: str
+        :returns: A shiny new Domain.
+        :rtype: :class:`Domain`
+
+        .. versionadded:: 0.1
+        """
+        data = {'domains': [{'name': name,
+                             'ttl': int(ttl),
+                             'recordsList': {'records': []},
+                             'subDomains': {'domains': []}}]}
+        create_ns_records = True
+        if isinstance(records, (list, tuple)):
+            for record in records:
+                if isinstance(record, Record):
+                    if record.type == 'NS':
+                        create_ns_records = False
+                    data['domains'][0]['recordsList']['records'].append({
+                            'name': record.name,
+                            'type': record.type,
+                            'data': record.data,
+                            'ttl': record.ttl,
+                            'priority': record.priority,
+                            'comment': record.comment
+                            })
+        if create_ns_records:
+                data['domains'][0]['recordsList']['records'].append({
+                        'name': name,
+                        'type': 'NS',
+                        'data': 'dns1.stabletransit.com',
+                        'ttl': 3600
+                        })
+                data['domains'][0]['recordsList']['records'].append({
+                        'name': name,
+                        'type': 'NS',
+                        'data': 'dns2.stabletransit.com',
+                        'ttl': 3600
+                        })
+        if isinstance(subdomains, (list, tuple)):
+            for subdomain in subdomains:
+                if isinstance(subdomain, Subdomain):
+                    data['domains'][0]['subdomains']['domains'].append({
+                            'name': subdomain.name,
+                            'emailAddress': subdomain.email_address,
+                            'comment': subdomain.comment
+                            })
+        if comment is not None:
+            data['domains'][0]['comment'] = comment
+        if email_address is not None:
+            data['domains'][0]['email_address'] = email_address
+        data = json.dumps(data)
+        url = '/'.join([get_url('clouddns'), 'domains'])
+        return handle_request('post', url, data, cls, 'domains')
+
+    @classmethod
+    def import_zone(cls, contents, type='BIND_9'):
+        """Import a raw BIND zone into CloudDNS.
+
+        :param contents: Contents of the BIND zone
+        :type contents: str
+        :param type: The BIND format type being used, such as ``BIND_9``
+        :type type: str
+        :returns: A list of :class:`Domain`
+
+        .. versionadded:: 0.1
+        """
+        data = {'domains': [{'contentType': type,
+                             'contents': contents}]}
+        data = json.dumps(data)
+        url = '/'.join([get_url('clouddns'), 'import'])
+        return handle_request('post', url, data, cls, 'domains')
+
 
 class Export(DotDict):
     """A CloudDNS BIND Zone Export."""
@@ -358,132 +488,3 @@ class Subdomain(DotDict):
         """
         return cls(name=name, comment=comment, email_address=None)
 
-
-def list(limit=None, offset=None, filter=None):
-    """List of Domains.
-
-    :param limit: Limit the number of results returned
-    :type limit: int
-    :param offset: Offset the result set by a certain amount
-    :type offset: int
-    :param filter: Filter results by a domain name
-    :type filter: str
-    :returns: A list of Domains
-    :rtype: A list of :class:`Domain`
-
-    .. versionadded:: 0.1
-    """
-    url = [get_url('clouddns'), 'domains']
-    url = '/'.join(url)
-    if limit is not None or offset is not None:
-        url = query(url, limit=limit, offset=offset)
-    if filter is not None:
-        url = query(url, name=filter)
-    return handle_request('get', url, wrapper=Domain, container='domains')
-
-
-def get(id, records=False, subdomains=False):
-    """Retrieve a Domain using an ID.
-
-    :param records: Include the Domain's Records in the result
-    :type records: bool
-    :param subdomains: Include the Domain's Subdomainsi n the result
-    :type subdomains: bool
-    :returns: A Domain with the specified ID.
-    :rtype: :class:`Domain`
-
-    .. versionadded:: 0.1
-    """
-    url = '/'.join([get_url('clouddns'), 'domains', str(id)])
-    if records is True:
-        url = query(url, showRecords='true')
-    if subdomains is True:
-        url = query(url, showSubdomains='true')
-    return handle_request('get', url, wrapper=Domain)
-
-
-def create(name, ttl=300, records=None, subdomains=None, comment=None,
-           email_address=None):
-    """Create a CloudDNS Domain.
-
-    :param name: A domain name such as ``yourname.com``
-    :type name: str
-    :param ttl: Time-To-Live (TTL) in seconds
-    :type ttl: int
-    :param records: A list of Records to create
-    :type records: list of :class:`Record`
-    :param subdomains: A list of Subdomains to create
-    :type subdomains: list of :class:`Subdomain`
-    :param comment: An optional comment to associated with the domain
-    :type comment: str
-    :param email_address: An e-mail address to associated with the domain
-    :type email_address: str
-    :returns: A shiny new Domain.
-    :rtype: :class:`Domain`
-
-    .. versionadded:: 0.1
-    """
-    data = {'domains': [{'name': name,
-                         'ttl': int(ttl),
-                         'recordsList': {'records': []},
-                         'subDomains': {'domains': []}}]}
-    create_ns_records = True
-    if isinstance(records, (list, tuple)):
-        for record in records:
-            if isinstance(record, Record):
-                if record.type == 'NS':
-                    create_ns_records = False
-                data['domains'][0]['recordsList']['records'].append({
-                        'name': record.name,
-                        'type': record.type,
-                        'data': record.data,
-                        'ttl': record.ttl,
-                        'priority': record.priority,
-                        'comment': record.comment
-                        })
-    if create_ns_records:
-            data['domains'][0]['recordsList']['records'].append({
-                    'name': name,
-                    'type': 'NS',
-                    'data': 'dns1.stabletransit.com',
-                    'ttl': 3600
-                    })
-            data['domains'][0]['recordsList']['records'].append({
-                    'name': name,
-                    'type': 'NS',
-                    'data': 'dns2.stabletransit.com',
-                    'ttl': 3600
-                    })
-    if isinstance(subdomains, (list, tuple)):
-        for subdomain in subdomains:
-            if isinstance(subdomain, Subdomain):
-                data['domains'][0]['subdomains']['domains'].append({
-                        'name': subdomain.name,
-                        'emailAddress': subdomain.email_address,
-                        'comment': subdomain.comment
-                        })
-    if comment is not None:
-        data['domains'][0]['comment'] = comment
-    if email_address is not None:
-        data['domains'][0]['email_address'] = email_address
-    data = json.dumps(data)
-    url = '/'.join([get_url('clouddns'), 'domains'])
-    return handle_request('post', url, data, Domain, 'domains')
-
-
-def import_zone(contents, type='BIND_9'):
-    """Import a raw BIND zone into CloudDNS.
-
-    :param contents: Contents of the BIND zone
-    :type contents: str
-    :param type: The BIND format type being used, such as ``BIND_9``
-    :type type: str
-    :returns: A list of :class:`Domain`
-
-    .. versionadded:: 0.1
-    """
-    data = {'domains': [{'contentType': type,
-                         'contents': contents}]}
-    data = json.dumps(data)
-    url = '/'.join([get_url('clouddns'), 'import'])
-    return handle_request('post', url, data, Domain, 'domains')

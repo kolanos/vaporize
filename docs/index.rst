@@ -22,9 +22,6 @@ API
 
    core
    domains
-   flavors
-   images
-   ipgroups
    loadbalancers
    servers
 
