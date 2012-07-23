@@ -360,8 +360,9 @@ class Instance(DotDict):
         :param name: Name of the Instance.
         :type name: str
         :param flavor: The Flavor of the CloudDatabase instance.
-        :type server: :class:`Flavor`
-        :param size: The size of the instance in GBs (1 to 25).
+        :type flavor: :class:`Flavor`
+        :param size: Specifies the volume size in gigabytes (GB). The value
+            specified must be between 1 and 10.
         :type size: int
         :param databases: A list of Databases to create for the instance.
         :type databases: list of :class:`Database`

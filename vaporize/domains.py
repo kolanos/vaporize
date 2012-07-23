@@ -93,6 +93,7 @@ class Domain(DotDict):
         url = query(url, deleteSubdomains=subdomains)
         handle_request('delete', url)
 
+    @property
     def records(self):
         """Returns a list of CloudDNS Records.
 
@@ -101,12 +102,14 @@ class Domain(DotDict):
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
-        url = '/'.join([get_url('clouddns'), 'domains', str(self['id']),
-                        'records'])
-        response = handle_request('get', url, wrapper=Record,
-                                  container='records', domain_id=self['id'])
-        self['records'] = response
+        if 'records' not in self:
+            assert 'id' in self
+            url = '/'.join([get_url('clouddns'), 'domains', str(self['id']),
+                            'records'])
+            response = handle_request('get', url, wrapper=Record,
+                                      container='records',
+                                      domain_id=self['id'])
+            self['records'] = response
         return self['records']
 
     def add_records(self, *records):
@@ -157,6 +160,7 @@ class Domain(DotDict):
                         'records', str(record)])
         handle_request('delete', url)
 
+    @property
     def subdomains(self):
         """Returns a list of Subdomains.
 
@@ -165,12 +169,14 @@ class Domain(DotDict):
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
-        url = '/'.join([get_url('clouddns'), 'domains', str(self['id']),
-                        'subdomains'])
-        self['subdomains'] = handle_request('get', url, wrapper=Subdomain,
-                                            container='domains',
-                                            domain_id=self['id'])
+        if 'subdomins' not in self:
+            assert 'id' in self
+            url = '/'.join([get_url('clouddns'), 'domains', str(self['id']),
+                            'subdomains'])
+            response = handle_request('get', url, wrapper=Subdomain,
+                                      container='domains',
+                                      domain_id=self['id'])
+            self['subdomains'] = response
         return self['subdomains']
 
     def changes(self, since):
@@ -189,6 +195,7 @@ class Domain(DotDict):
         url = query(url, since=str(since))
         return handle_request('get', url, wrapper=Change, container='changes')
 
+    @property
     def export_zone(self):
         """Export the raw BIND zone for this Domain.
 
