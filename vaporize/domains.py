@@ -487,4 +487,3 @@ class Subdomain(DotDict):
         .. versionadded:: 0.1
         """
         return cls(name=name, comment=comment, email_address=None)
-
