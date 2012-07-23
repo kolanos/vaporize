@@ -6,12 +6,26 @@ from vaporize.core import convert_datetime, get_url, handle_request, query
 from vaporize.utils import DotDict
 
 
+STATUSES = {
+    "BUILD": "The database instance is being provisioned.",
+    "REBOOT": "The database instance is rebooting.",
+    "ACTIVE": ("The database instance is online and available to take "
+               "requests."),
+    "BLOCKED": "The database instance is unresponsive at the moment.",
+    "RESIZE": "The database instance is being resized at the moment.",
+    "SHUTDOWN": ("The database instance is terminating services. Also, "
+                 "SHUTDOWN is returned if for any reason the MySQL instance "
+                 "is shut down but not the actual server."),
+    "FAILED": "The database instance was not created due to an error."
+}
+
+
 class Database(DotDict):
     """A CloudDatabase Database."""
     def __repr__(self):
         if 'name' in self:
             return '<Database %s>' % self['name']
-    super(Database, self)__repr__()
+        return super(Database, self).__repr__()
 
     def delete(self):
         """Deletes the specified database.
@@ -26,8 +40,8 @@ class Database(DotDict):
 
         .. versionadded:: 0.2
         """
-        assert 'name' in self
-        assert 'instance_id' in self
+        assert 'name' in self, "missing Database Name"
+        assert 'instance_id' in self, "Missing Instance ID"
         url = '/'.join([get_url('clouddatabases'), 'instances',
                         str(self['instance_id']), 'databases',
                         str(self['name'])])
@@ -104,6 +118,10 @@ class Flavor(DotDict):
         url = '/'.join([get_url('clouddatabases'), 'flavors', str(id)])
         return handle_request('get', url, wrapper=cls, container='flavor')
 
+    @property
+    def ref(self):
+        """Returns the self link reference."""
+        return [l['href'] for l in self['links'] if l['rel'] == 'self'][0]
 
 class Instance(DotDict):
     """A CloudDatabase Instance."""
@@ -133,7 +151,7 @@ class Instance(DotDict):
 
         .. versionadded:: 0.2
         """
-        assert 'id' in self
+        assert 'id' in self, "Missing Instance ID"
         response = Instance.get(self['id'])
         self.update(response)
         return self
@@ -151,7 +169,7 @@ class Instance(DotDict):
 
         .. versionadded:: 0.2
         """
-        assert 'id' in self
+        assert 'id' in self, "Missing Instance ID"
         url = '/'.join([get_url('clouddatabases'), 'instances',
                         str(self['id'])])
         handle_request('delete', url)
@@ -168,7 +186,7 @@ class Instance(DotDict):
         .. versionadded:: 0.2
         """
         if 'databases' not in self:
-            assert 'id' in self
+            assert 'id' in self, "Missing Instance ID"
             url = '/'.join([get_url('clouddatabases'), 'insances',
                             str(self['id']), 'databases'])
             response = handle_request('get', url, data, Database, 'databases',
@@ -186,7 +204,7 @@ class Instance(DotDict):
 
         .. versionadded:: 0.2
         """
-        assert 'id' in self
+        assert 'id' in self, "Mising Instance ID"
         data = {'databases': []}
         for database in databases:
             if isinstance(database, Database):
@@ -209,7 +227,7 @@ class Instance(DotDict):
         .. versionadded:: 0.2
         """
         if 'users' not in self:
-            assert 'id' in self
+            assert 'id' in self, "Missing Instance ID"
             url = '/'.join([get_url('clouddatabases'), 'insances',
                             str(self['id']), 'users'])
             response = handle_request('get', url, data, User, 'users',
@@ -232,7 +250,7 @@ class Instance(DotDict):
 
         .. versionadded:: 0.2
         """
-        assert 'id' in self
+        assert 'id' in self, "Missing Instance ID"
         if 'root_enabled' not in self:
             url = '/'.join([get_url('clouddatabases'), 'instances',
                             str(self['id']), 'root'])
@@ -256,7 +274,7 @@ class Instance(DotDict):
                         str(self['id']), 'root'])
         return handle_request('post', url, wrapper=User, container='user')
 
-     def restart(self):
+    def restart(self):
         """Restart the database service on the instance.
 
         The restart operation will restart only the MySQL Instance. Restarting
@@ -271,7 +289,7 @@ class Instance(DotDict):
                         str(self['id']), 'action'])
         handle_request('post', url, dataa)
 
-      def resize(self, flavor=None, size=None):
+    def resize(self, flavor=None, size=None):
         """Resize the memory and/or volume of the instance.
 
         This operation changes the memory and/or volume size of the instance,
@@ -284,7 +302,7 @@ class Instance(DotDict):
 
         .. versionadded:: 0.2
         """
-        assert 'id' in self
+        assert 'id' in self, "Missing Instance ID"
         if isinstance(flavor, Flavor):
             flavor = flavor.ref
         data = {'resize': {}}
@@ -358,7 +376,7 @@ class Instance(DotDict):
             flavor = flavor.ref
         data = {'instance': {'name': name,
                              'flavorRe': flavor,
-                             'size': int(size)
+                             'size': int(size),
                              'databases': [],
                              'users': []}}
         data = json.dumps(data)
@@ -370,8 +388,8 @@ class User(DotDict):
     """A CloudDatabases User."""
     def __repr__(self):
         if 'name' in self:
-            return '<User %s>' % self['name']
-    super(User, self)__repr__()
+            return '<Instance %s>' % self['name']
+        return super(Instance, self).__repr__()
 
     def delete(self):
         """
@@ -387,8 +405,8 @@ class User(DotDict):
 
         .. versionadded:: 0.2
         """
-        assert 'name' in self
-        assert 'instance_id' in self
+        assert 'name' in self, "Missing User Name"
+        assert 'instance_id' in self, "Missing Instance ID"
         url = '/'.join([get_url('clouddatabases'), 'instances',
                         str(self['instance_id']), 'users',
                         str(self['name'])])
@@ -413,12 +431,13 @@ class User(DotDict):
 
         .. versionadded:: 0.2
         """
-        assert all([isinstance(d, Database) for d in databases])
+        assert all([isinstance(d, Database) for d in databases]), \
+            "Must be Database instance(s)"
         return cls(name=name, password=password, databases=list(databases))
 
     def to_dict(self):
         ret = {'name': self['name'], 'password': self['password']}
-        ret['databases'] = [{'name': d['name'] for d in self['databases']]
+        ret['databases'] = [{'name': d['name']} for d in self['databases']]
         return ret
 
 
