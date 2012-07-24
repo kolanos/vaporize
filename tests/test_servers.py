@@ -1,6 +1,5 @@
 from functools import partial
 
-from nose.tools import *
 from .mock import mock, handle_request_mock
 
 import vaporize
@@ -144,6 +143,23 @@ def test_image_create():
     assert image.status == 'QUEUED'
 
 
+def test_image_create_server_instance():
+    expected = '{"image":{"id":12345,"status":"QUEUED","updated":"2012-07-13T17:26:24-05:00","name":"testing","serverId":54321}}'
+    handle_mock = partial(handle_request_mock, 200, expected)
+    with mock(vaporize.servers, handle_request=handle_mock):
+        server = vaporize.servers.Server(id=54321)
+        image = vaporize.servers.Image.create('testing', server)
+    assert isinstance(image, vaporize.servers.Image)
+    assert hasattr(image, 'id')
+    assert image.id == 12345
+    assert hasattr(image, 'name')
+    assert image.name == 'testing'
+    assert hasattr(image, 'server_id')
+    assert image.server_id == 54321
+    assert hasattr(image, 'status')
+    assert image.status == 'QUEUED'
+
+
 def test_image_reload():
     expected = '{"image":{"progress":100,"id":12345,"status":"ACTIVE","created":"2012-07-13T17:26:23-05:00","updated":"2012-07-13T17:29:10-05:00","name":"testing"}}'
     handle_mock = partial(handle_request_mock, 200, expected)
@@ -153,6 +169,14 @@ def test_image_reload():
     assert isinstance(image, vaporize.servers.Image)
     assert hasattr(image, 'id')
     assert image.id == 12345
+
+
+def test_image_reload_without_id():
+    image = vaporize.servers.Image()
+    try:
+        image.reload()
+    except AssertionError, e:
+        assert str(e) == "Missing Image ID"
 
 
 def test_server_list():

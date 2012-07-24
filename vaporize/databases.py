@@ -235,6 +235,29 @@ class Instance(DotDict):
             self['users'] = response
         return self['users']
 
+    def add_users(self, *users):
+        """Creates a user for the specified database instance.
+
+        This operation asynchronously provisions a new user for the specified
+        database instance based on the configuration defined in the request
+        object. Once the request is validated and progress has started on the
+        provisioning process, a 202 Accepted response object is returned.
+
+        :param users: Users to add to CloudDatabases Instance.
+        :type databases: :class:`User`
+
+        .. versionadded:: 0.2
+        """
+        assert 'id' in self, "Mising Instance ID"
+        data = {'users': []}
+        for user in users:
+            if isinstance(user, User):
+                data['users'].append(user.to_dict())
+        data = json.dumps(data)
+        url = '/'.join([get_url('clouddatabases'), 'insances', str(self['id']),
+                        'users'])
+        handle_request('post', url, data)
+
     @property
     def root_enabled(self):
         """
@@ -380,6 +403,14 @@ class Instance(DotDict):
                              'size': int(size),
                              'databases': [],
                              'users': []}}
+        if isinstance(databases, (list, tuple)):
+            for database in databases:
+                if isinstance(database, Database):
+                    data['databases'].append(database.to_dict())
+        if isinstance(users, (list, tuple)):
+            for user in users:
+                if isinstance(user, User):
+                    data['users'].append(user.to_dict())
         data = json.dumps(data)
         url = '/'.join([get_url('clouddatabases'), 'instances'])
         return handle_request('post', url, data, cls, 'instance')

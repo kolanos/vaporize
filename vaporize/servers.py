@@ -106,7 +106,7 @@ class Image(DotDict):
 
         .. versionadded:: 0.1.9
         """
-        assert 'id' in self
+        assert 'id' in self, "Missing Image ID"
         response = Image.get(self['id'])
         self.update(response)
         return self
