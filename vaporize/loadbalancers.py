@@ -399,6 +399,7 @@ class LoadBalancer(DotDict):
                         str(self['id'])])
         handle_request('delete', url)
 
+    @property
     def nodes(self):
         """Returns a list of Nodes for this Load Balancer.
 
@@ -407,12 +408,13 @@ class LoadBalancer(DotDict):
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
-        url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
-                        str(self['id']), 'nodes'])
-        self['nodes'] = handle_request('get', url, wrapper=Node,
-                                       container='nodes',
-                                       loadbalancer_id=self['id'])
+        if 'nodes' not in self:
+            assert 'id' in self
+            url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
+                            str(self['id']), 'nodes'])
+            self['nodes'] = handle_request('get', url, wrapper=Node,
+                                           container='nodes',
+                                           loadbalancer_id=self['id'])
         return self['nodes']
 
     def add_nodes(self, *nodes):
@@ -462,6 +464,7 @@ class LoadBalancer(DotDict):
                         str(self['id']), 'nodes', str(node)])
         handle_request('delete', url)
 
+    @property
     def virtual_ips(self):
         """Returns a list of VirtualIPs for this Load Balancer.
 
@@ -470,13 +473,14 @@ class LoadBalancer(DotDict):
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
-        url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
-                        str(self['id']), 'virtualips'])
-        response = handle_request('get', url, wrapper=VirtualIP,
-                                  container='virtualIps',
-                                  loadbalancer_id=self['id'])
-        self['virtual_ips'] = response
+        if 'virtual_ips' not in self:
+            assert 'id' in self
+            url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
+                            str(self['id']), 'virtualips'])
+            response = handle_request('get', url, wrapper=VirtualIP,
+                                      container='virtualIps',
+                                      loadbalancer_id=self['id'])
+            self['virtual_ips'] = response
         return self['virtual_ips']
 
     def add_virtual_ips(self, *virtual_ips):
@@ -526,6 +530,7 @@ class LoadBalancer(DotDict):
                         str(self['id']), 'virtualips', str(virtual_ip)])
         handle_request('delete', url)
 
+    @property
     def access_list(self):
         """Returns a list of AccessRules for this Load Balancer.
 
@@ -534,13 +539,13 @@ class LoadBalancer(DotDict):
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
-        url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
-                        str(self['id']), 'accesslist'])
-        self['access_list'] = handle_request('get', url,
-                                             wrapper=AccessRule,
-                                             container='accessList',
-                                             loadbalancer_id=self['id'])
+        if 'access_list' not in self:
+            assert 'id' in self
+            url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
+                            str(self['id']), 'accesslist'])
+            self['access_list'] = handle_request('get', url, wrapper=AccessRule,
+                                                 container='accessList',
+                                                 loadbalancer_id=self['id'])
         return self['access_list']
 
     def add_access_rules(self, *access_rules):
