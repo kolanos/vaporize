@@ -610,8 +610,8 @@ class LoadBalancer(DotDict):
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
         if 'connection_logging' not in self:
+            assert 'id' in self
             url = '/'.join([get_url('cloudloadbalancers'), 'loadbalancers',
                             str(self['id']), 'connectionlogging'])
             response = handle_request('get', url, wrapper=ConnectionLogging,

@@ -275,12 +275,13 @@ class Server(DotDict):
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
-                        'ips'])
-        response = handle_request('get', url, wrapper=IP,
-                                  container='addresses')
-        self['addresses'] = response
+        if 'addresses' not in self:
+            assert 'id' in self
+            url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
+                            'ips'])
+            response = handle_request('get', url, wrapper=IP,
+                                      container='addresses')
+            self['addresses'] = response
         return self['addresses']
 
     @property
@@ -289,11 +290,14 @@ class Server(DotDict):
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
-                        'ips', 'public'])
-        response = handle_request('get', url, wrapper=IP)
-        self['addresses'].update(response)
+        if 'addresses' not in self:
+            self['addresses'] = IP()
+        if 'public' not in self['addresses']:
+            assert 'id' in self
+            url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
+                            'ips', 'public'])
+            response = handle_request('get', url, wrapper=IP)
+            self['addresses'].update(response)
         return self['addresses']['public']
 
     @property
@@ -302,11 +306,14 @@ class Server(DotDict):
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
-                        'ips', 'private'])
-        response = handle_request('get', url, wrapper=IP)
-        self['addresses'].update(response)
+        if 'addresses' not in self:
+            self['addresses'] = IP()
+        if 'private' not in self['addresses']:
+            assert 'id' in self
+            url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
+                            'ips', 'private'])
+            response = handle_request('get', url, wrapper=IP)
+            self['addresses'].update(response)
         return self['addresses']['private']
 
     def share_ip(self, address, ipgroup, configure=True):
