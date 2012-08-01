@@ -66,7 +66,7 @@ class Algorithm(DotDict):
     balancing API, though new algorithms may be created with a unique algorithm
     name within a given major revision of the service API.
 
-    `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Algorithms-d1e4367.html>`_
+    `Algorithm Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Algorithms-d1e4367.html>`_
     """
     def __repr__(self):
         if 'name' in self:
@@ -106,7 +106,7 @@ class AllowedDomain(DotDict):
     simply supply the domain name in place of the node's address in the Add
     Nodes call.
 
-    `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/AllowedDomains-d2f002e.html>`_
+    `Allowed Domains Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/AllowedDomains-d2f002e.html>`_
     """
     def __setitem__(self, key, value):
         if key == 'allowedDomain':
@@ -141,7 +141,7 @@ class AllowedDomain(DotDict):
 class ContentCaching(DotDict):
     """A CloudLoadBalancer Content Caching.
 
-    `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/ContentCaching-d1e3358.html>`_
+    `Content Caching Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/ContentCaching-d1e3358.html>`_
     """
     pass
 
@@ -149,7 +149,7 @@ class ContentCaching(DotDict):
 class ConnectionLogging(DotDict):
     """A CloudLoadBalancer Connection Logging.
 
-    `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Log_Connections-d1e3924.html>`_
+    `Connection Logging Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Log_Connections-d1e3924.html>`_
     """
     pass
 
@@ -162,7 +162,7 @@ class ConnectionThrottle(DotDict):
     your applications. The attributes in the table that follows can be
     configured based on the traffic patterns for your sites.
 
-    `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Throttle_Connections-d1e4057.html>`_
+    `Connection Throttle Refference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Throttle_Connections-d1e4057.html>`_
     """
     @classmethod
     def create(cls, max_connections, min_connections, max_connection_rate,
@@ -226,7 +226,7 @@ class HealthMonitor(DotDict):
     * ``HTTP``: Health monitor is an HTTP monitor.
     * ``HTTPS``: Health monitor is an HTTPS monitor.
 
-    `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Monitors-d1e3370.html>`_
+    `Health Monitor Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Monitors-d1e3370.html>`_
     """
     @classmethod
     def create(cls, type, delay, timeout, attempts_before_deactivation,
@@ -606,7 +606,7 @@ class LoadBalancer(DotDict):
         :returns: This Load Balancer's Content Logging setting.
         :rtype: :class:`ConnectionLogging`
 
-        `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Log_Connections-d1e3924.html>`_
+        `Connection Log Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Log_Connections-d1e3924.html>`_
 
         .. versionadded:: 0.1
         """
@@ -891,7 +891,7 @@ class LoadBalancer(DotDict):
         :returns: This Load Balancer's Error Page setting.
         :rtype: :class:`ErrorPage`
 
-        `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Erropage-d1e666.html>`_
+        `Error Page Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Erropage-d1e666.html>`_
 
         .. versionadded:: 0.1
         """
@@ -1197,7 +1197,7 @@ class Node(DotDict):
     nodes. The type attribute allows configuring the node as either PRIMARY or
     SECONDARY.
 
-    `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Nodes-d1e2173.html>`_
+    `Node Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Nodes-d1e2173.html>`_
     """
     def __repr__(self):
         if 'address' in self:
@@ -1333,7 +1333,7 @@ class Protocol(DotDict):
     back-end nodes. When configuring a load balancer, the default port for the
     given protocol will be selected unless otherwise specified.
 
-    `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Protocols-d1e4264.html>`_
+    `Protocol Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Protocols-d1e4264.html>`_
     """
     def __repr__(self):
         if 'name' in self:
@@ -1379,7 +1379,7 @@ class SessionPersistence(DotDict):
         back-end node. This is supported for HTTP pass-through (SSL termination)
         and non-HTTP load balancing only.
 
-    `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Sessions-d1e3728.html>`_
+    `Session Persistence Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Sessions-d1e3728.html>`_
     """
     def __repr__(self):
         if 'persistenceType' in self:
@@ -1400,7 +1400,7 @@ class UsageReport(DotDict):
 class Stat(DotDict):
     """CloudLoadBalancers Load Balancer Stats.
 
-    `Rackspace API Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/List_Load_Balancer_Stats-d1e1524.html>`_
+    `Load Balancer Status Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/List_Load_Balancer_Stats-d1e1524.html>`_
     """
     pass
 

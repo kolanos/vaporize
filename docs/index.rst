@@ -21,7 +21,9 @@ API
    :maxdepth: 2
 
    core
+   databases
    domains
+   exceptions
    loadbalancers
    servers
 
