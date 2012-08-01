@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -10,7 +9,7 @@
     
     <title>flavors — Flavors &mdash; Vaporize 0.1.9 documentation</title>
     
-    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -26,10 +25,15 @@
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="Vaporize 0.1.9 documentation" href="index.html" />
-    <link rel="next" title="images — Images" href="images.html" />
-    <link rel="prev" title="domains — Domains" href="domains.html" /> 
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
   </head>
   <body>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -39,12 +43,6 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="images.html" title="images — Images"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="domains.html" title="domains — Domains"
-             accesskey="P">previous</a> |</li>
         <li><a href="index.html">Vaporize 0.1.9 documentation</a> &raquo;</li> 
       </ul>
     </div>  
@@ -54,64 +52,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-vaporize.flavors">
-<span id="flavors-flavors"></span><h1><tt class="docutils literal"><span class="pre">flavors</span></tt> &#8212; Flavors<a class="headerlink" href="#module-vaporize.flavors" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="vaporize.flavors.Flavor">
-<em class="property">class </em><tt class="descclassname">vaporize.flavors.</tt><tt class="descname">Flavor</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.flavors.Flavor" title="Permalink to this definition">¶</a></dt>
-<dd><p>A CloudServers Flavor.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="vaporize.flavors.get">
-<tt class="descclassname">vaporize.flavors.</tt><tt class="descname">get</tt><big>(</big><em>id</em><big>)</big><a class="headerlink" href="#vaporize.flavors.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a Flavor by ID.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>int</em>) &#8211; The ID of the Flavor to retrieve</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A CloudServers Flavor matching the ID.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#vaporize.flavors.Flavor" title="vaporize.flavors.Flavor"><tt class="xref py py-class docutils literal"><span class="pre">Flavor</span></tt></a></td>
-</tr>
-</tbody>
-</table>
-<p class="versionadded">
-<span class="versionmodified">New in version 0.1.</span></p>
-</dd></dl>
-
-<dl class="function">
-<dt id="vaporize.flavors.list">
-<tt class="descclassname">vaporize.flavors.</tt><tt class="descname">list</tt><big>(</big><em>limit=None</em>, <em>offset=None</em>, <em>detail=False</em><big>)</big><a class="headerlink" href="#vaporize.flavors.list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of Flavors.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>limit</strong> (<em>int</em>) &#8211; Limit the result set by a number</li>
-<li><strong>offset</strong> (<em>int</em>) &#8211; Offset the result set by a number</li>
-<li><strong>detail</strong> &#8211; Return additional details about each Flavor</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Type :</th><td class="field-body"><p class="first">bool</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of CloudServers Flavors.</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#vaporize.flavors.Flavor" title="vaporize.flavors.Flavor"><tt class="xref py py-class docutils literal"><span class="pre">Flavor</span></tt></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-<p class="versionadded">
-<span class="versionmodified">New in version 0.1.</span></p>
-</dd></dl>
-
+  <div class="section" id="flavors-flavors">
+<h1><tt class="docutils literal"><span class="pre">flavors</span></tt> &#8212; Flavors<a class="headerlink" href="#flavors-flavors" title="Permalink to this headline">¶</a></h1>
 </div>
 
 
@@ -120,17 +62,6 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="domains.html"
-                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">domains</span></tt> &#8212; Domains</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="images.html"
-                        title="next chapter"><tt class="docutils literal"><span class="pre">images</span></tt> &#8212; Images</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="sources/flavors.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
@@ -157,12 +88,6 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="images.html" title="images — Images"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="domains.html" title="domains — Domains"
-             >previous</a> |</li>
         <li><a href="index.html">Vaporize 0.1.9 documentation</a> &raquo;</li> 
       </ul>
     </div>

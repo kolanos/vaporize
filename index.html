@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Welcome to Vaporize’s documentation! &mdash; Vaporize 0.1.9 documentation</title>
+    <title>Welcome to Vaporize’s documentation! &mdash; Vaporize 0.2.0 documentation</title>
     
     <link rel="stylesheet" href="static/default.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.1.9',
+        VERSION:     '0.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="Vaporize 0.1.9 documentation" href="#" />
+    <link rel="top" title="Vaporize 0.2.0 documentation" href="#" />
     <link rel="next" title="Getting Started" href="gettingstarted.html" /> 
   </head>
   <body>
@@ -41,7 +41,7 @@
         <li class="right" >
           <a href="gettingstarted.html" title="Getting Started"
              accesskey="N">next</a> |</li>
-        <li><a href="#">Vaporize 0.1.9 documentation</a> &raquo;</li> 
+        <li><a href="#">Vaporize 0.2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -70,12 +70,51 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="core.html"><tt class="docutils literal"><span class="pre">core</span></tt> &#8212; Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="domains.html"><tt class="docutils literal"><span class="pre">domains</span></tt> &#8212; Domains</a></li>
-<li class="toctree-l1"><a class="reference internal" href="flavors.html"><tt class="docutils literal"><span class="pre">flavors</span></tt> &#8212; Flavors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="images.html"><tt class="docutils literal"><span class="pre">images</span></tt> &#8212; Images</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ipgroups.html"><tt class="docutils literal"><span class="pre">ipgroups</span></tt> &#8212; Shared IP Groups</a></li>
-<li class="toctree-l1"><a class="reference internal" href="loadbalancers.html"><tt class="docutils literal"><span class="pre">loadbalancers</span></tt> &#8212; Load Balancers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="servers.html"><tt class="docutils literal"><span class="pre">servers</span></tt> &#8212; Servers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="databases.html"><tt class="docutils literal"><span class="pre">databases</span></tt> &#8212; CloudDatabases</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="databases.html#database-databases"><tt class="docutils literal"><span class="pre">Database</span></tt> &#8212; Databases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="databases.html#flavor-flavors"><tt class="docutils literal"><span class="pre">Flavor</span></tt> &#8212; Flavors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="databases.html#instance-instances"><tt class="docutils literal"><span class="pre">Instance</span></tt> &#8212; Instances</a></li>
+<li class="toctree-l2"><a class="reference internal" href="databases.html#user-users"><tt class="docutils literal"><span class="pre">User</span></tt> &#8212; Users</a></li>
+<li class="toctree-l2"><a class="reference internal" href="databases.html#volume-volumes"><tt class="docutils literal"><span class="pre">Volume</span></tt> &#8212; Volumes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="domains.html"><tt class="docutils literal"><span class="pre">domains</span></tt> &#8212; CloudDNS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="domains.html#change-change-history"><tt class="docutils literal"><span class="pre">Change</span></tt> &#8212; Change History</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domains.html#domain-domains"><tt class="docutils literal"><span class="pre">Domain</span></tt> &#8212; Domains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domains.html#export-zone-export"><tt class="docutils literal"><span class="pre">Export</span></tt> &#8212; Zone Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domains.html#nameserver-nameservers"><tt class="docutils literal"><span class="pre">Nameserver</span></tt> &#8212; Nameservers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domains.html#record-records"><tt class="docutils literal"><span class="pre">Record</span></tt> &#8212; Records</a></li>
+<li class="toctree-l2"><a class="reference internal" href="domains.html#subdomain-subdomains"><tt class="docutils literal"><span class="pre">Subdomain</span></tt> &#8212; Subdomains</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="exceptions.html"><tt class="docutils literal"><span class="pre">exceptions</span></tt> &#8212; Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loadbalancers.html"><tt class="docutils literal"><span class="pre">loadbalancers</span></tt> &#8212; CloudLoadBalancers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="loadbalancers.html#accessrule-access-rules"><tt class="docutils literal"><span class="pre">AccessRule</span></tt> &#8212; Access Rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadbalancers.html#algorithm-algorithms"><tt class="docutils literal"><span class="pre">Algorithm</span></tt> &#8212; Algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadbalancers.html#alloweddomain-allowed-domains"><tt class="docutils literal"><span class="pre">AllowedDomain</span></tt> &#8212; Allowed Domains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadbalancers.html#contentcaching-content-caching"><tt class="docutils literal"><span class="pre">ContentCaching</span></tt> &#8212; Content Caching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadbalancers.html#connectionlogging-connection-logging"><tt class="docutils literal"><span class="pre">ConnectionLogging</span></tt> &#8212; Connection Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadbalancers.html#connectionthrottle-connection-throttle"><tt class="docutils literal"><span class="pre">ConnectionThrottle</span></tt> &#8212; Connection Throttle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadbalancers.html#errorpage-error-pages"><tt class="docutils literal"><span class="pre">ErrorPage</span></tt> &#8212; Error Pages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadbalancers.html#healthmonitor-health-monitor"><tt class="docutils literal"><span class="pre">HealthMonitor</span></tt> &#8212; Health Monitor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadbalancers.html#loadbalancer-load-balancer"><tt class="docutils literal"><span class="pre">LoadBalancer</span></tt> &#8212; Load Balancer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadbalancers.html#node-nodes"><tt class="docutils literal"><span class="pre">Node</span></tt> &#8212; Nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadbalancers.html#protocol-protocols"><tt class="docutils literal"><span class="pre">Protocol</span></tt> &#8212; Protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadbalancers.html#sessionpersistence-session-persistence"><tt class="docutils literal"><span class="pre">SessionPersistence</span></tt> &#8212; Session Persistence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadbalancers.html#stat-stats"><tt class="docutils literal"><span class="pre">Stat</span></tt> &#8212; Stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadbalancers.html#usagereport-usage-reports"><tt class="docutils literal"><span class="pre">UsageReport</span></tt> &#8212; Usage Reports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadbalancers.html#virtualip-virtual-ips"><tt class="docutils literal"><span class="pre">VirtualIP</span></tt> &#8212; Virtual IPs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="servers.html"><tt class="docutils literal"><span class="pre">servers</span></tt> &#8212; CloudServers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="servers.html#backupschedule-backup-schedules"><tt class="docutils literal"><span class="pre">BackupSchedule</span></tt> &#8212; Backup Schedules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="servers.html#flavor-flavors"><tt class="docutils literal"><span class="pre">Flavor</span></tt> &#8212; Flavors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="servers.html#image-images"><tt class="docutils literal"><span class="pre">Image</span></tt> &#8212; Images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="servers.html#ip-ip-addresses"><tt class="docutils literal"><span class="pre">IP</span></tt> &#8212; IP Addresses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="servers.html#server-servers"><tt class="docutils literal"><span class="pre">Server</span></tt> &#8212; Servers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="servers.html#sharedipgroup-shared-ip-groups"><tt class="docutils literal"><span class="pre">SharedIPGroup</span></tt> &#8212; Shared IP Groups</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -146,7 +185,7 @@
         <li class="right" >
           <a href="gettingstarted.html" title="Getting Started"
              >next</a> |</li>
-        <li><a href="#">Vaporize 0.1.9 documentation</a> &raquo;</li> 
+        <li><a href="#">Vaporize 0.2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

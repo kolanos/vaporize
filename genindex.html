@@ -10,7 +10,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Index &mdash; Vaporize 0.1.9 documentation</title>
+    <title>Index &mdash; Vaporize 0.2.0 documentation</title>
     
     <link rel="stylesheet" href="static/default.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
@@ -18,7 +18,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.1.9',
+        VERSION:     '0.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="Vaporize 0.1.9 documentation" href="index.html" /> 
+    <link rel="top" title="Vaporize 0.2.0 documentation" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">Vaporize 0.1.9 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Vaporize 0.2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -65,7 +65,6 @@
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
  | <a href="#P"><strong>P</strong></a>
- | <a href="#Q"><strong>Q</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
@@ -77,7 +76,7 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.access_list">access_list() (vaporize.loadbalancers.LoadBalancer method)</a>
+  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.access_list">access_list (vaporize.loadbalancers.LoadBalancer attribute)</a>
   </dt>
 
       
@@ -89,29 +88,29 @@
   </dt>
 
       
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.add_nodes">add_nodes() (vaporize.loadbalancers.LoadBalancer method)</a>
+  <dt><a href="databases.html#vaporize.databases.Instance.add_databases">add_databases() (vaporize.databases.Instance method)</a>
   </dt>
 
       
-  <dt><a href="domains.html#vaporize.domains.Domain.add_records">add_records() (vaporize.domains.Domain method)</a>
+  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.add_nodes">add_nodes() (vaporize.loadbalancers.LoadBalancer method)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="domains.html#vaporize.domains.Domain.add_records">add_records() (vaporize.domains.Domain method)</a>
+  </dt>
+
+      
+  <dt><a href="databases.html#vaporize.databases.Instance.add_users">add_users() (vaporize.databases.Instance method)</a>
+  </dt>
+
       
   <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.add_virtual_ips">add_virtual_ips() (vaporize.loadbalancers.LoadBalancer method)</a>
   </dt>
 
       
   <dt><a href="loadbalancers.html#vaporize.loadbalancers.Algorithm">Algorithm (class in vaporize.loadbalancers)</a>
-  </dt>
-
-      
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.algorithms">algorithms() (in module vaporize.loadbalancers)</a>
-  </dt>
-
-      
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.allowed_domains">allowed_domains() (in module vaporize.loadbalancers)</a>
   </dt>
 
       
@@ -125,7 +124,7 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="servers.html#vaporize.servers.Server.backup_schedule">backup_schedule() (vaporize.servers.Server method)</a>
+  <dt><a href="servers.html#vaporize.servers.Server.backup_schedule">backup_schedule (vaporize.servers.Server attribute)</a>
   </dt>
 
   </dl></td>
@@ -157,11 +156,11 @@
   </dt>
 
       
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.connection_logging">connection_logging() (vaporize.loadbalancers.LoadBalancer method)</a>
+  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.connection_logging">connection_logging (vaporize.loadbalancers.LoadBalancer attribute)</a>
   </dt>
 
       
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.connection_throttle">connection_throttle() (vaporize.loadbalancers.LoadBalancer method)</a>
+  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.connection_throttle">connection_throttle (vaporize.loadbalancers.LoadBalancer attribute)</a>
   </dt>
 
   </dl></td>
@@ -175,7 +174,7 @@
   </dt>
 
       
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.content_caching">content_caching() (vaporize.loadbalancers.LoadBalancer method)</a>
+  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.content_caching">content_caching (vaporize.loadbalancers.LoadBalancer attribute)</a>
   </dt>
 
       
@@ -183,24 +182,20 @@
   </dt>
 
       
-  <dt><a href="domains.html#vaporize.domains.create">create() (in module vaporize.domains)</a>
+  <dt><a href="databases.html#vaporize.databases.Database.create">create() (vaporize.databases.Database class method)</a>
   </dt>
 
       <dd><dl>
         
-  <dt><a href="images.html#vaporize.images.create">(in module vaporize.images)</a>
+  <dt><a href="databases.html#vaporize.databases.Instance.create">(vaporize.databases.Instance class method)</a>
   </dt>
 
         
-  <dt><a href="ipgroups.html#vaporize.ipgroups.create">(in module vaporize.ipgroups)</a>
+  <dt><a href="databases.html#vaporize.databases.User.create">(vaporize.databases.User class method)</a>
   </dt>
 
         
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.create">(in module vaporize.loadbalancers)</a>
-  </dt>
-
-        
-  <dt><a href="servers.html#vaporize.servers.create">(in module vaporize.servers)</a>
+  <dt><a href="domains.html#vaporize.domains.Domain.create">(vaporize.domains.Domain class method)</a>
   </dt>
 
         
@@ -224,11 +219,27 @@
   </dt>
 
         
+  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.create">(vaporize.loadbalancers.LoadBalancer class method)</a>
+  </dt>
+
+        
   <dt><a href="loadbalancers.html#vaporize.loadbalancers.Node.create">(vaporize.loadbalancers.Node class method)</a>
   </dt>
 
         
   <dt><a href="loadbalancers.html#vaporize.loadbalancers.VirtualIP.create">(vaporize.loadbalancers.VirtualIP class method)</a>
+  </dt>
+
+        
+  <dt><a href="servers.html#vaporize.servers.Image.create">(vaporize.servers.Image class method)</a>
+  </dt>
+
+        
+  <dt><a href="servers.html#vaporize.servers.Server.create">(vaporize.servers.Server class method)</a>
+  </dt>
+
+        
+  <dt><a href="servers.html#vaporize.servers.SharedIPGroup.create">(vaporize.servers.SharedIPGroup class method)</a>
   </dt>
 
       </dl></dd>
@@ -239,20 +250,34 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="domains.html#vaporize.domains.Domain.delete">delete() (vaporize.domains.Domain method)</a>
+  <dt><a href="databases.html#vaporize.databases.Database">Database (class in vaporize.databases)</a>
+  </dt>
+
+      
+  <dt><a href="databases.html#vaporize.databases.Instance.databases">databases (vaporize.databases.Instance attribute)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="databases.html#vaporize.databases.Database.delete">delete() (vaporize.databases.Database method)</a>
   </dt>
 
       <dd><dl>
         
+  <dt><a href="databases.html#vaporize.databases.Instance.delete">(vaporize.databases.Instance method)</a>
+  </dt>
+
+        
+  <dt><a href="databases.html#vaporize.databases.User.delete">(vaporize.databases.User method)</a>
+  </dt>
+
+        
+  <dt><a href="domains.html#vaporize.domains.Domain.delete">(vaporize.domains.Domain method)</a>
+  </dt>
+
+        
   <dt><a href="domains.html#vaporize.domains.Record.delete">(vaporize.domains.Record method)</a>
-  </dt>
-
-        
-  <dt><a href="images.html#vaporize.images.Image.delete">(vaporize.images.Image method)</a>
-  </dt>
-
-        
-  <dt><a href="ipgroups.html#vaporize.ipgroups.SharedIPGroup.delete">(vaporize.ipgroups.SharedIPGroup method)</a>
   </dt>
 
         
@@ -272,36 +297,18 @@
   </dt>
 
         
+  <dt><a href="servers.html#vaporize.servers.Image.delete">(vaporize.servers.Image method)</a>
+  </dt>
+
+        
   <dt><a href="servers.html#vaporize.servers.Server.delete">(vaporize.servers.Server method)</a>
   </dt>
 
+        
+  <dt><a href="servers.html#vaporize.servers.SharedIPGroup.delete">(vaporize.servers.SharedIPGroup method)</a>
+  </dt>
+
       </dl></dd>
-      
-  <dt><a href="servers.html#vaporize.servers.Server.disable_backup_schedule">disable_backup_schedule() (vaporize.servers.Server method)</a>
-  </dt>
-
-      
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.disable_connection_logging">disable_connection_logging() (vaporize.loadbalancers.LoadBalancer method)</a>
-  </dt>
-
-      
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.disable_connection_throttle">disable_connection_throttle() (vaporize.loadbalancers.LoadBalancer method)</a>
-  </dt>
-
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
-      
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.disable_content_caching">disable_content_caching() (vaporize.loadbalancers.LoadBalancer method)</a>
-  </dt>
-
-      
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.disable_health_monitor">disable_health_monitor() (vaporize.loadbalancers.LoadBalancer method)</a>
-  </dt>
-
-      
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.disable_session_persistence">disable_session_persistence() (vaporize.loadbalancers.LoadBalancer method)</a>
-  </dt>
-
       
   <dt><a href="domains.html#vaporize.domains.Domain">Domain (class in vaporize.domains)</a>
   </dt>
@@ -313,45 +320,25 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="servers.html#vaporize.servers.Server.enable_backup_schedule">enable_backup_schedule() (vaporize.servers.Server method)</a>
+  <dt><a href="databases.html#vaporize.databases.Instance.enable_root">enable_root() (vaporize.databases.Instance method)</a>
   </dt>
 
       
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.enable_connection_logging">enable_connection_logging() (vaporize.loadbalancers.LoadBalancer method)</a>
-  </dt>
-
-      
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.enable_connection_throttle">enable_connection_throttle() (vaporize.loadbalancers.LoadBalancer method)</a>
-  </dt>
-
-      
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.enable_content_caching">enable_content_caching() (vaporize.loadbalancers.LoadBalancer method)</a>
-  </dt>
-
-      
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.enable_health_monitor">enable_health_monitor() (vaporize.loadbalancers.LoadBalancer method)</a>
-  </dt>
-
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
-      
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.enable_session_persistence">enable_session_persistence() (vaporize.loadbalancers.LoadBalancer method)</a>
-  </dt>
-
-      
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.error_page">error_page() (vaporize.loadbalancers.LoadBalancer method)</a>
+  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.error_page">error_page (vaporize.loadbalancers.LoadBalancer attribute)</a>
   </dt>
 
       
   <dt><a href="loadbalancers.html#vaporize.loadbalancers.ErrorPage">ErrorPage (class in vaporize.loadbalancers)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="domains.html#vaporize.domains.Export">Export (class in vaporize.domains)</a>
   </dt>
 
       
-  <dt><a href="domains.html#vaporize.domains.Domain.export_zone">export_zone() (vaporize.domains.Domain method)</a>
+  <dt><a href="domains.html#vaporize.domains.Domain.export_zone">export_zone (vaporize.domains.Domain attribute)</a>
   </dt>
 
   </dl></td>
@@ -361,9 +348,15 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="flavors.html#vaporize.flavors.Flavor">Flavor (class in vaporize.flavors)</a>
+  <dt><a href="databases.html#vaporize.databases.Flavor">Flavor (class in vaporize.databases)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="servers.html#vaporize.servers.Flavor">(class in vaporize.servers)</a>
+  </dt>
+
+      </dl></dd>
   </dl></td>
 </tr></table>
 
@@ -371,41 +364,39 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="domains.html#vaporize.domains.get">get() (in module vaporize.domains)</a>
+  <dt><a href="databases.html#vaporize.databases.Flavor.get">get() (vaporize.databases.Flavor class method)</a>
   </dt>
 
       <dd><dl>
         
-  <dt><a href="flavors.html#vaporize.flavors.get">(in module vaporize.flavors)</a>
+  <dt><a href="databases.html#vaporize.databases.Instance.get">(vaporize.databases.Instance class method)</a>
   </dt>
 
         
-  <dt><a href="images.html#vaporize.images.get">(in module vaporize.images)</a>
+  <dt><a href="domains.html#vaporize.domains.Domain.get">(vaporize.domains.Domain class method)</a>
   </dt>
 
         
-  <dt><a href="ipgroups.html#vaporize.ipgroups.get">(in module vaporize.ipgroups)</a>
+  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.get">(vaporize.loadbalancers.LoadBalancer class method)</a>
   </dt>
 
         
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.get">(in module vaporize.loadbalancers)</a>
+  <dt><a href="servers.html#vaporize.servers.Flavor.get">(vaporize.servers.Flavor class method)</a>
   </dt>
 
         
-  <dt><a href="servers.html#vaporize.servers.get">(in module vaporize.servers)</a>
+  <dt><a href="servers.html#vaporize.servers.Image.get">(vaporize.servers.Image class method)</a>
+  </dt>
+
+        
+  <dt><a href="servers.html#vaporize.servers.Server.get">(vaporize.servers.Server class method)</a>
+  </dt>
+
+        
+  <dt><a href="servers.html#vaporize.servers.SharedIPGroup.get">(vaporize.servers.SharedIPGroup class method)</a>
   </dt>
 
       </dl></dd>
-      
-  <dt><a href="core.html#vaporize.core.get_session">get_session() (in module vaporize.core)</a>
-  </dt>
-
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
-      
-  <dt><a href="core.html#vaporize.core.get_url">get_url() (in module vaporize.core)</a>
-  </dt>
-
   </dl></td>
 </tr></table>
 
@@ -413,19 +404,11 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="core.html#vaporize.core.handle_request">handle_request() (in module vaporize.core)</a>
-  </dt>
-
-      
-  <dt><a href="servers.html#vaporize.servers.Server.hard_reboot">hard_reboot() (vaporize.servers.Server method)</a>
+  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.health_monitor">health_monitor (vaporize.loadbalancers.LoadBalancer attribute)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
-      
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.health_monitor">health_monitor() (vaporize.loadbalancers.LoadBalancer method)</a>
-  </dt>
-
       
   <dt><a href="loadbalancers.html#vaporize.loadbalancers.HealthMonitor">HealthMonitor (class in vaporize.loadbalancers)</a>
   </dt>
@@ -437,11 +420,15 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="images.html#vaporize.images.Image">Image (class in vaporize.images)</a>
+  <dt><a href="servers.html#vaporize.servers.Image">Image (class in vaporize.servers)</a>
   </dt>
 
       
-  <dt><a href="domains.html#vaporize.domains.import_zone">import_zone() (in module vaporize.domains)</a>
+  <dt><a href="domains.html#vaporize.domains.Domain.import_zone">import_zone() (vaporize.domains.Domain class method)</a>
+  </dt>
+
+      
+  <dt><a href="databases.html#vaporize.databases.Instance">Instance (class in vaporize.databases)</a>
   </dt>
 
   </dl></td>
@@ -451,7 +438,7 @@
   </dt>
 
       
-  <dt><a href="servers.html#vaporize.servers.Server.ips">ips() (vaporize.servers.Server method)</a>
+  <dt><a href="servers.html#vaporize.servers.Server.ips">ips (vaporize.servers.Server attribute)</a>
   </dt>
 
   </dl></td>
@@ -461,28 +448,48 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="domains.html#vaporize.domains.list">list() (in module vaporize.domains)</a>
+  <dt><a href="databases.html#vaporize.databases.Flavor.list">list() (vaporize.databases.Flavor class method)</a>
   </dt>
 
       <dd><dl>
         
-  <dt><a href="flavors.html#vaporize.flavors.list">(in module vaporize.flavors)</a>
+  <dt><a href="databases.html#vaporize.databases.Instance.list">(vaporize.databases.Instance class method)</a>
   </dt>
 
         
-  <dt><a href="images.html#vaporize.images.list">(in module vaporize.images)</a>
+  <dt><a href="domains.html#vaporize.domains.Domain.list">(vaporize.domains.Domain class method)</a>
   </dt>
 
         
-  <dt><a href="ipgroups.html#vaporize.ipgroups.list">(in module vaporize.ipgroups)</a>
+  <dt><a href="loadbalancers.html#vaporize.loadbalancers.Algorithm.list">(vaporize.loadbalancers.Algorithm class method)</a>
   </dt>
 
         
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.list">(in module vaporize.loadbalancers)</a>
+  <dt><a href="loadbalancers.html#vaporize.loadbalancers.AllowedDomain.list">(vaporize.loadbalancers.AllowedDomain class method)</a>
   </dt>
 
         
-  <dt><a href="servers.html#vaporize.servers.list">(in module vaporize.servers)</a>
+  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.list">(vaporize.loadbalancers.LoadBalancer class method)</a>
+  </dt>
+
+        
+  <dt><a href="loadbalancers.html#vaporize.loadbalancers.Protocol.list">(vaporize.loadbalancers.Protocol class method)</a>
+  </dt>
+
+        
+  <dt><a href="servers.html#vaporize.servers.Flavor.list">(vaporize.servers.Flavor class method)</a>
+  </dt>
+
+        
+  <dt><a href="servers.html#vaporize.servers.Image.list">(vaporize.servers.Image class method)</a>
+  </dt>
+
+        
+  <dt><a href="servers.html#vaporize.servers.Server.list">(vaporize.servers.Server class method)</a>
+  </dt>
+
+        
+  <dt><a href="servers.html#vaporize.servers.SharedIPGroup.list">(vaporize.servers.SharedIPGroup class method)</a>
   </dt>
 
       </dl></dd>
@@ -521,12 +528,6 @@
 
       </dl></dd>
   </dl></td>
-  <td style="width: 33%" valign="top"><dl>
-      
-  <dt><a href="core.html#vaporize.core.munge_url">munge_url() (in module vaporize.core)</a>
-  </dt>
-
-  </dl></td>
 </tr></table>
 
 <h2 id="N">N</h2>
@@ -543,7 +544,7 @@
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.nodes">nodes() (vaporize.loadbalancers.LoadBalancer method)</a>
+  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.nodes">nodes (vaporize.loadbalancers.LoadBalancer attribute)</a>
   </dt>
 
   </dl></td>
@@ -563,21 +564,7 @@
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.protocols">protocols() (in module vaporize.loadbalancers)</a>
-  </dt>
-
-      
   <dt><a href="servers.html#vaporize.servers.Server.public_ips">public_ips (vaporize.servers.Server attribute)</a>
-  </dt>
-
-  </dl></td>
-</tr></table>
-
-<h2 id="Q">Q</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%" valign="top"><dl>
-      
-  <dt><a href="core.html#vaporize.core.query">query() (in module vaporize.core)</a>
   </dt>
 
   </dl></td>
@@ -587,6 +574,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
+  <dt><a href="servers.html#vaporize.servers.Server.reboot">reboot() (vaporize.servers.Server method)</a>
+  </dt>
+
+      
   <dt><a href="servers.html#vaporize.servers.Server.rebuild">rebuild() (vaporize.servers.Server method)</a>
   </dt>
 
@@ -595,14 +586,22 @@
   </dt>
 
       
-  <dt><a href="domains.html#vaporize.domains.Domain.records">records() (vaporize.domains.Domain method)</a>
+  <dt><a href="domains.html#vaporize.domains.Domain.records">records (vaporize.domains.Domain attribute)</a>
   </dt>
 
       
-  <dt><a href="domains.html#vaporize.domains.Domain.reload">reload() (vaporize.domains.Domain method)</a>
+  <dt><a href="databases.html#vaporize.databases.Flavor.ref">ref (vaporize.databases.Flavor attribute)</a>
+  </dt>
+
+      
+  <dt><a href="databases.html#vaporize.databases.Instance.reload">reload() (vaporize.databases.Instance method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="domains.html#vaporize.domains.Domain.reload">(vaporize.domains.Domain method)</a>
+  </dt>
+
         
   <dt><a href="domains.html#vaporize.domains.Record.reload">(vaporize.domains.Record method)</a>
   </dt>
@@ -616,6 +615,10 @@
   </dt>
 
         
+  <dt><a href="servers.html#vaporize.servers.Image.reload">(vaporize.servers.Image method)</a>
+  </dt>
+
+        
   <dt><a href="servers.html#vaporize.servers.Server.reload">(vaporize.servers.Server method)</a>
   </dt>
 
@@ -624,12 +627,12 @@
   <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.remove_access_rule">remove_access_rule() (vaporize.loadbalancers.LoadBalancer method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.remove_node">remove_node() (vaporize.loadbalancers.LoadBalancer method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="domains.html#vaporize.domains.Domain.remove_record">remove_record() (vaporize.domains.Domain method)</a>
   </dt>
@@ -639,15 +642,25 @@
   </dt>
 
       
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.reset_error_page">reset_error_page() (vaporize.loadbalancers.LoadBalancer method)</a>
+  <dt><a href="databases.html#vaporize.databases.Instance.resize">resize() (vaporize.databases.Instance method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="servers.html#vaporize.servers.Server.resize">(vaporize.servers.Server method)</a>
+  </dt>
+
+      </dl></dd>
       
-  <dt><a href="servers.html#vaporize.servers.Server.resize">resize() (vaporize.servers.Server method)</a>
+  <dt><a href="databases.html#vaporize.databases.Instance.restart">restart() (vaporize.databases.Instance method)</a>
   </dt>
 
       
   <dt><a href="servers.html#vaporize.servers.Server.revert_resize">revert_resize() (vaporize.servers.Server method)</a>
+  </dt>
+
+      
+  <dt><a href="databases.html#vaporize.databases.Instance.root_enabled">root_enabled (vaporize.databases.Instance attribute)</a>
   </dt>
 
   </dl></td>
@@ -661,7 +674,7 @@
   </dt>
 
       
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.session_persistence">session_persistence() (vaporize.loadbalancers.LoadBalancer method)</a>
+  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.session_persistence">session_persistence (vaporize.loadbalancers.LoadBalancer attribute)</a>
   </dt>
 
       
@@ -669,29 +682,21 @@
   </dt>
 
       
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.set_error_page">set_error_page() (vaporize.loadbalancers.LoadBalancer method)</a>
-  </dt>
-
-      
   <dt><a href="servers.html#vaporize.servers.Server.share_ip">share_ip() (vaporize.servers.Server method)</a>
   </dt>
 
       
-  <dt><a href="ipgroups.html#vaporize.ipgroups.SharedIPGroup">SharedIPGroup (class in vaporize.ipgroups)</a>
+  <dt><a href="servers.html#vaporize.servers.SharedIPGroup">SharedIPGroup (class in vaporize.servers)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="servers.html#vaporize.servers.Server.soft_reboot">soft_reboot() (vaporize.servers.Server method)</a>
-  </dt>
-
-      
   <dt><a href="loadbalancers.html#vaporize.loadbalancers.Stat">Stat (class in vaporize.loadbalancers)</a>
   </dt>
 
       
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.stats">stats() (vaporize.loadbalancers.LoadBalancer method)</a>
+  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.stats">stats (vaporize.loadbalancers.LoadBalancer attribute)</a>
   </dt>
 
       
@@ -699,7 +704,7 @@
   </dt>
 
       
-  <dt><a href="domains.html#vaporize.domains.Domain.subdomains">subdomains() (vaporize.domains.Domain method)</a>
+  <dt><a href="domains.html#vaporize.domains.Domain.subdomains">subdomains (vaporize.domains.Domain attribute)</a>
   </dt>
 
   </dl></td>
@@ -732,10 +737,18 @@
   <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.usage">usage() (vaporize.loadbalancers.LoadBalancer method)</a>
   </dt>
 
+      
+  <dt><a href="loadbalancers.html#vaporize.loadbalancers.UsageReport">UsageReport (class in vaporize.loadbalancers)</a>
+  </dt>
+
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.UsageReport">UsageReport (class in vaporize.loadbalancers)</a>
+  <dt><a href="databases.html#vaporize.databases.User">User (class in vaporize.databases)</a>
+  </dt>
+
+      
+  <dt><a href="databases.html#vaporize.databases.Instance.users">users (vaporize.databases.Instance attribute)</a>
   </dt>
 
   </dl></td>
@@ -749,37 +762,37 @@
   </dt>
 
       
+  <dt><a href="databases.html#module-vaporize.databases">vaporize.databases (module)</a>
+  </dt>
+
+      
   <dt><a href="domains.html#module-vaporize.domains">vaporize.domains (module)</a>
   </dt>
 
       
-  <dt><a href="flavors.html#module-vaporize.flavors">vaporize.flavors (module)</a>
+  <dt><a href="exceptions.html#module-vaporize.exceptions">vaporize.exceptions (module)</a>
   </dt>
 
       
-  <dt><a href="images.html#module-vaporize.images">vaporize.images (module)</a>
-  </dt>
-
-      
-  <dt><a href="ipgroups.html#module-vaporize.ipgroups">vaporize.ipgroups (module)</a>
+  <dt><a href="loadbalancers.html#module-vaporize.loadbalancers">vaporize.loadbalancers (module)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="loadbalancers.html#module-vaporize.loadbalancers">vaporize.loadbalancers (module)</a>
-  </dt>
-
-      
   <dt><a href="servers.html#module-vaporize.servers">vaporize.servers (module)</a>
   </dt>
 
       
-  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.virtual_ips">virtual_ips() (vaporize.loadbalancers.LoadBalancer method)</a>
+  <dt><a href="loadbalancers.html#vaporize.loadbalancers.LoadBalancer.virtual_ips">virtual_ips (vaporize.loadbalancers.LoadBalancer attribute)</a>
   </dt>
 
       
   <dt><a href="loadbalancers.html#vaporize.loadbalancers.VirtualIP">VirtualIP (class in vaporize.loadbalancers)</a>
+  </dt>
+
+      
+  <dt><a href="databases.html#vaporize.databases.Volume">Volume (class in vaporize.databases)</a>
   </dt>
 
   </dl></td>
@@ -821,7 +834,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">Vaporize 0.1.9 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Vaporize 0.2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

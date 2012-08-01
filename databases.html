@@ -1,0 +1,585 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>databases — CloudDatabases &mdash; Vaporize 0.2.0 documentation</title>
+    
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="Vaporize 0.2.0 documentation" href="index.html" />
+    <link rel="next" title="domains — CloudDNS" href="domains.html" />
+    <link rel="prev" title="core — Core" href="core.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="domains.html" title="domains — CloudDNS"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="core.html" title="core — Core"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Vaporize 0.2.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-vaporize.databases">
+<span id="databases-clouddatabases"></span><h1><tt class="docutils literal"><span class="pre">databases</span></tt> &#8212; CloudDatabases<a class="headerlink" href="#module-vaporize.databases" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="database-databases">
+<h2><tt class="docutils literal"><span class="pre">Database</span></tt> &#8212; Databases<a class="headerlink" href="#database-databases" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="vaporize.databases.Database">
+<em class="property">class </em><tt class="descclassname">vaporize.databases.</tt><tt class="descname">Database</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.databases.Database" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CloudDatabase Database.</p>
+<dl class="classmethod">
+<dt id="vaporize.databases.Database.create">
+<em class="property">classmethod </em><tt class="descname">create</tt><big>(</big><em>name</em>, <em>character_set='utf8'</em>, <em>collate='utf8_general_ci'</em><big>)</big><a class="headerlink" href="#vaporize.databases.Database.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a CloudDatabase Database.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Must be added to a CloudDatabase Instance before it is created.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) &#8211; Name of the CloudDatabase Database.</li>
+<li><strong>character_set</strong> (<em>str</em>) &#8211; Character set for the CloudDatabase Database
+(default: utf8).</li>
+<li><strong>collate</strong> (<em>str</em>) &#8211; Collation for the CloudDatabase Database (default:
+utf8_general_ci).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A shiny new CloudDatabases Database.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#vaporize.databases.Database" title="vaporize.databases.Database"><tt class="xref py py-class docutils literal"><span class="pre">Database</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.databases.Database.delete">
+<tt class="descname">delete</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.databases.Database.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes the specified database.</p>
+<p>This operation deletes the requested database within the specified
+database instance. Note that all data associated with the database is
+also deleted.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">There is no confirmation step for this operation.</p>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="flavor-flavors">
+<h2><tt class="docutils literal"><span class="pre">Flavor</span></tt> &#8212; Flavors<a class="headerlink" href="#flavor-flavors" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="vaporize.databases.Flavor">
+<em class="property">class </em><tt class="descclassname">vaporize.databases.</tt><tt class="descname">Flavor</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.databases.Flavor" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CloudDatabase Flavor</p>
+<dl class="classmethod">
+<dt id="vaporize.databases.Flavor.get">
+<em class="property">classmethod </em><tt class="descname">get</tt><big>(</big><em>id</em><big>)</big><a class="headerlink" href="#vaporize.databases.Flavor.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lists all flavor information about the specified flavor ID.</p>
+<p>This operation lists all information for the specified flavor ID with
+details of the RAM.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>int</em>) &#8211; The ID of the Flavor to retrieve.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A CloudDatabases Flavor matching the ID.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#vaporize.databases.Flavor" title="vaporize.databases.Flavor"><tt class="xref py py-class docutils literal"><span class="pre">Flavor</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="vaporize.databases.Flavor.list">
+<em class="property">classmethod </em><tt class="descname">list</tt><big>(</big><em>limit=None</em>, <em>offset=None</em><big>)</big><a class="headerlink" href="#vaporize.databases.Flavor.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lists information for all available flavors.</p>
+<p>This operation lists information for all available flavors.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>limit</strong> (<em>int</em>) &#8211; Limit the result set by a number</li>
+<li><strong>offset</strong> (<em>int</em>) &#8211; Offset the result set by a number</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of CloudDatabases Flavors.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of <a class="reference internal" href="#vaporize.databases.Flavor" title="vaporize.databases.Flavor"><tt class="xref py py-class docutils literal"><span class="pre">Flavor</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="vaporize.databases.Flavor.ref">
+<tt class="descname">ref</tt><a class="headerlink" href="#vaporize.databases.Flavor.ref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the self link reference.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="instance-instances">
+<h2><tt class="docutils literal"><span class="pre">Instance</span></tt> &#8212; Instances<a class="headerlink" href="#instance-instances" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="vaporize.databases.Instance">
+<em class="property">class </em><tt class="descclassname">vaporize.databases.</tt><tt class="descname">Instance</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.databases.Instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CloudDatabase Instance.</p>
+<dl class="method">
+<dt id="vaporize.databases.Instance.add_databases">
+<tt class="descname">add_databases</tt><big>(</big><em>*databases</em><big>)</big><a class="headerlink" href="#vaporize.databases.Instance.add_databases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new database within the specified instance.</p>
+<p>This operation creates a new database within the specified instance.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>databases</strong> (<a class="reference internal" href="#vaporize.databases.Database" title="vaporize.databases.Database"><tt class="xref py py-class docutils literal"><span class="pre">Database</span></tt></a>) &#8211; Databases to add to CloudDatabases Instance.</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.databases.Instance.add_users">
+<tt class="descname">add_users</tt><big>(</big><em>*users</em><big>)</big><a class="headerlink" href="#vaporize.databases.Instance.add_users" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a user for the specified database instance.</p>
+<p>This operation asynchronously provisions a new user for the specified
+database instance based on the configuration defined in the request
+object. Once the request is validated and progress has started on the
+provisioning process, a 202 Accepted response object is returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>users</strong> &#8211; Users to add to CloudDatabases Instance.</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="vaporize.databases.Instance.create">
+<em class="property">classmethod </em><tt class="descname">create</tt><big>(</big><em>name</em>, <em>flavor</em>, <em>size</em>, <em>databases</em>, <em>users</em><big>)</big><a class="headerlink" href="#vaporize.databases.Instance.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a CloudDatabases Instance.</p>
+<p>This operation asynchronously provisions a new database instance. This
+call requires the user to specify a flavor and a volume size. The
+service then provisions the instance with the requested flavor and sets
+up a volume of the specified size, which is the storage for the
+database instance.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) &#8211; Name of the Instance.</li>
+<li><strong>flavor</strong> (<a class="reference internal" href="#vaporize.databases.Flavor" title="vaporize.databases.Flavor"><tt class="xref py py-class docutils literal"><span class="pre">Flavor</span></tt></a>) &#8211; The Flavor of the CloudDatabase instance.</li>
+<li><strong>size</strong> (<em>int</em>) &#8211; Specifies the volume size in gigabytes (GB). The value
+specified must be between 1 and 10.</li>
+<li><strong>databases</strong> (list of <a class="reference internal" href="#vaporize.databases.Database" title="vaporize.databases.Database"><tt class="xref py py-class docutils literal"><span class="pre">Database</span></tt></a>) &#8211; A list of Databases to create for the instance.</li>
+<li><strong>users</strong> (list of <a class="reference internal" href="#vaporize.databases.User" title="vaporize.databases.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a>) &#8211; A list of Users to create for the instance.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A shiny new CloudDatabases Instance.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#vaporize.databases.Instance" title="vaporize.databases.Instance"><tt class="xref py py-class docutils literal"><span class="pre">Instance</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="vaporize.databases.Instance.databases">
+<tt class="descname">databases</tt><a class="headerlink" href="#vaporize.databases.Instance.databases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lists databases for the specified instance.</p>
+<p>This operation lists the databases for the specified instance.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of Databases for this Instance.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of <a class="reference internal" href="#vaporize.databases.Database" title="vaporize.databases.Database"><tt class="xref py py-class docutils literal"><span class="pre">Database</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.databases.Instance.delete">
+<tt class="descname">delete</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.databases.Instance.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete this CloudDatabases Instance.</p>
+<p>This operation deletes the specified database instance, including any
+associated data.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">There is not confirmation step for this operation. Deleting an
+image is permanent.</p>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.databases.Instance.enable_root">
+<tt class="descname">enable_root</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.databases.Instance.enable_root" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable root access for this CloudDatabase Instance.</p>
+<p>This operation enables login from any host for the root user and
+provides the user with a generated root password.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The root user&#8217;s credentials for the Instance.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#vaporize.databases.User" title="vaporize.databases.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="vaporize.databases.Instance.get">
+<em class="property">classmethod </em><tt class="descname">get</tt><big>(</big><em>id</em><big>)</big><a class="headerlink" href="#vaporize.databases.Instance.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an Instance by ID.</p>
+<p>This operation lists the status and details of the specified database
+instance.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>int</em>) &#8211; The ID of the Instance to retrieve.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A CloudDatabases Instance matching the ID.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#vaporize.databases.Instance" title="vaporize.databases.Instance"><tt class="xref py py-class docutils literal"><span class="pre">Instance</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="vaporize.databases.Instance.list">
+<em class="property">classmethod </em><tt class="descname">list</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.databases.Instance.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of CloudDatabase instances.</p>
+<p>This operation lists the status and information for all database
+instances.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of CloudDatabase instances.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#vaporize.databases.Instance" title="vaporize.databases.Instance"><tt class="xref py py-class docutils literal"><span class="pre">Instance</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.databases.Instance.reload">
+<tt class="descname">reload</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.databases.Instance.reload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reload this CloudDatabases Instance.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">An updated CloudDatabases Instance.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#vaporize.databases.Instance" title="vaporize.databases.Instance"><tt class="xref py py-class docutils literal"><span class="pre">Instance</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.databases.Instance.resize">
+<tt class="descname">resize</tt><big>(</big><em>flavor=None</em>, <em>size=None</em><big>)</big><a class="headerlink" href="#vaporize.databases.Instance.resize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resize the memory and/or volume of the instance.</p>
+<p>This operation changes the memory and/or volume size of the instance,
+assuming a valid Flavor is provided. Restarts MySQL in the process.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>flavor</strong> (<a class="reference internal" href="#vaporize.databases.Flavor" title="vaporize.databases.Flavor"><tt class="xref py py-class docutils literal"><span class="pre">Flavor</span></tt></a>) &#8211; New Flavor (memory size) ofr the Instance.</li>
+<li><strong>size</strong> (<em>int</em>) &#8211; New volume size Iin GBs) for Instance, 1 to 25.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.databases.Instance.restart">
+<tt class="descname">restart</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.databases.Instance.restart" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restart the database service on the instance.</p>
+<p>The restart operation will restart only the MySQL Instance. Restarting
+MySQL will erase any dynamic configuration settings that you have made
+within MySQL.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="vaporize.databases.Instance.root_enabled">
+<tt class="descname">root_enabled</tt><a class="headerlink" href="#vaporize.databases.Instance.root_enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if root user is enabled for the specified database
+instance or false otherwise.</p>
+<p>This operation checks an active specified database instance to see if
+root access is enabled. It returns True if root user is enabled for the
+specified database instance or False otherwise.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Status of whether root access is enabled.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="vaporize.databases.Instance.users">
+<tt class="descname">users</tt><a class="headerlink" href="#vaporize.databases.Instance.users" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lists the users in the specified database instance.</p>
+<p>This operation lists the users in the specified database instance, along
+with the associated databases for that user.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of Users for this Instance.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of <a class="reference internal" href="#vaporize.databases.User" title="vaporize.databases.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a></td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="user-users">
+<h2><tt class="docutils literal"><span class="pre">User</span></tt> &#8212; Users<a class="headerlink" href="#user-users" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="vaporize.databases.User">
+<em class="property">class </em><tt class="descclassname">vaporize.databases.</tt><tt class="descname">User</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.databases.User" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CloudDatabases User.</p>
+<dl class="classmethod">
+<dt id="vaporize.databases.User.create">
+<em class="property">classmethod </em><tt class="descname">create</tt><big>(</big><em>name</em>, <em>password</em>, <em>*databases</em><big>)</big><a class="headerlink" href="#vaporize.databases.User.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a CloudDatabase User.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Must be added to a CloudDatabase Instance before it is created.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) &#8211; Username of the Database User.</li>
+<li><strong>password</strong> (<em>str</em>) &#8211; Password for the Database User.</li>
+<li><strong>databases</strong> (<a class="reference internal" href="#vaporize.databases.Database" title="vaporize.databases.Database"><tt class="xref py py-class docutils literal"><span class="pre">Database</span></tt></a>) &#8211; Databases that the User should have full access.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A shiny new CloudDatabases User.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#vaporize.databases.User" title="vaporize.databases.User"><tt class="xref py py-class docutils literal"><span class="pre">User</span></tt></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vaporize.databases.User.delete">
+<tt class="descname">delete</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.databases.User.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes the user identified by {name} for the specified database
+instance.</p>
+<p>This operation deletes the specified user for the specified database
+instance.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">There is no confirmation step for this operation.</p>
+</div>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.2.</span></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="volume-volumes">
+<h2><tt class="docutils literal"><span class="pre">Volume</span></tt> &#8212; Volumes<a class="headerlink" href="#volume-volumes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="vaporize.databases.Volume">
+<em class="property">class </em><tt class="descclassname">vaporize.databases.</tt><tt class="descname">Volume</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.databases.Volume" title="Permalink to this definition">¶</a></dt>
+<dd><p>A CloudDatabase Volume.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><tt class="docutils literal"><span class="pre">databases</span></tt> &#8212; CloudDatabases</a><ul>
+<li><a class="reference internal" href="#database-databases"><tt class="docutils literal"><span class="pre">Database</span></tt> &#8212; Databases</a></li>
+<li><a class="reference internal" href="#flavor-flavors"><tt class="docutils literal"><span class="pre">Flavor</span></tt> &#8212; Flavors</a></li>
+<li><a class="reference internal" href="#instance-instances"><tt class="docutils literal"><span class="pre">Instance</span></tt> &#8212; Instances</a></li>
+<li><a class="reference internal" href="#user-users"><tt class="docutils literal"><span class="pre">User</span></tt> &#8212; Users</a></li>
+<li><a class="reference internal" href="#volume-volumes"><tt class="docutils literal"><span class="pre">Volume</span></tt> &#8212; Volumes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="core.html"
+                        title="previous chapter"><tt class="docutils literal"><span class="pre">core</span></tt> &#8212; Core</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="domains.html"
+                        title="next chapter"><tt class="docutils literal"><span class="pre">domains</span></tt> &#8212; CloudDNS</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/databases.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="domains.html" title="domains — CloudDNS"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="core.html" title="core — Core"
+             >previous</a> |</li>
+        <li><a href="index.html">Vaporize 0.2.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Michael Lavers.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

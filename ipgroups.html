@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -10,7 +9,7 @@
     
     <title>ipgroups — Shared IP Groups &mdash; Vaporize 0.1.9 documentation</title>
     
-    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -26,10 +25,15 @@
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="Vaporize 0.1.9 documentation" href="index.html" />
-    <link rel="next" title="loadbalancers — Load Balancers" href="loadbalancers.html" />
-    <link rel="prev" title="images — Images" href="images.html" /> 
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
   </head>
   <body>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -39,12 +43,6 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="loadbalancers.html" title="loadbalancers — Load Balancers"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="images.html" title="images — Images"
-             accesskey="P">previous</a> |</li>
         <li><a href="index.html">Vaporize 0.1.9 documentation</a> &raquo;</li> 
       </ul>
     </div>  
@@ -54,93 +52,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-vaporize.ipgroups">
-<span id="ipgroups-shared-ip-groups"></span><h1><tt class="docutils literal"><span class="pre">ipgroups</span></tt> &#8212; Shared IP Groups<a class="headerlink" href="#module-vaporize.ipgroups" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="vaporize.ipgroups.SharedIPGroup">
-<em class="property">class </em><tt class="descclassname">vaporize.ipgroups.</tt><tt class="descname">SharedIPGroup</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.ipgroups.SharedIPGroup" title="Permalink to this definition">¶</a></dt>
-<dd><p>A Cloudservers Shared IP Group.</p>
-<dl class="method">
-<dt id="vaporize.ipgroups.SharedIPGroup.delete">
-<tt class="descname">delete</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.ipgroups.SharedIPGroup.delete" title="Permalink to this definition">¶</a></dt>
-<dd><p>Delete this Shared IP Group.</p>
-<p class="versionadded">
-<span class="versionmodified">New in version 0.1.</span></p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="vaporize.ipgroups.create">
-<tt class="descclassname">vaporize.ipgroups.</tt><tt class="descname">create</tt><big>(</big><em>name</em>, <em>server</em><big>)</big><a class="headerlink" href="#vaporize.ipgroups.create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a Shared IP Group.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>str</em>) &#8211; Name of the Shared IP Group</li>
-<li><strong>server</strong> (int or <a class="reference internal" href="servers.html#vaporize.servers.Server" title="vaporize.servers.Server"><tt class="xref py py-class docutils literal"><span class="pre">vaporize.servers.Server</span></tt></a>) &#8211; The Server or <tt class="docutils literal"><span class="pre">id</span></tt> to add to group</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A shiny new CloudServers Shared IP Group.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#vaporize.ipgroups.SharedIPGroup" title="vaporize.ipgroups.SharedIPGroup"><tt class="xref py py-class docutils literal"><span class="pre">SharedIPGroup</span></tt></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-<p class="versionadded">
-<span class="versionmodified">New in version 0.1.</span></p>
-</dd></dl>
-
-<dl class="function">
-<dt id="vaporize.ipgroups.get">
-<tt class="descclassname">vaporize.ipgroups.</tt><tt class="descname">get</tt><big>(</big><em>id</em><big>)</big><a class="headerlink" href="#vaporize.ipgroups.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a Shared IP Group by ID.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>int</em>) &#8211; The ID of the Shared IP Group to retrieve</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A <a class="reference internal" href="#vaporize.ipgroups.SharedIPGroup" title="vaporize.ipgroups.SharedIPGroup"><tt class="xref py py-class docutils literal"><span class="pre">SharedIPGroup</span></tt></a></td>
-</tr>
-</tbody>
-</table>
-<p class="versionadded">
-<span class="versionmodified">New in version 0.1.</span></p>
-</dd></dl>
-
-<dl class="function">
-<dt id="vaporize.ipgroups.list">
-<tt class="descclassname">vaporize.ipgroups.</tt><tt class="descname">list</tt><big>(</big><em>limit=None</em>, <em>offset=None</em>, <em>detail=False</em><big>)</big><a class="headerlink" href="#vaporize.ipgroups.list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of Shared IP Groups.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>limit</strong> (<em>int</em>) &#8211; Limit the result set by a certain number</li>
-<li><strong>offset</strong> (<em>int</em>) &#8211; Offset the result set by a certain number</li>
-<li><strong>detail</strong> (<em>bool</em>) &#8211; Return additional details about each Shared IP Group</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of Shared IP Groups.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">A list of <a class="reference internal" href="#vaporize.ipgroups.SharedIPGroup" title="vaporize.ipgroups.SharedIPGroup"><tt class="xref py py-class docutils literal"><span class="pre">SharedIPGroup</span></tt></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-<p class="versionadded">
-<span class="versionmodified">New in version 0.1.</span></p>
-</dd></dl>
-
+  <div class="section" id="ipgroups-shared-ip-groups">
+<h1><tt class="docutils literal"><span class="pre">ipgroups</span></tt> &#8212; Shared IP Groups<a class="headerlink" href="#ipgroups-shared-ip-groups" title="Permalink to this headline">¶</a></h1>
 </div>
 
 
@@ -149,17 +62,6 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="images.html"
-                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">images</span></tt> &#8212; Images</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="loadbalancers.html"
-                        title="next chapter"><tt class="docutils literal"><span class="pre">loadbalancers</span></tt> &#8212; Load Balancers</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="sources/ipgroups.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
@@ -186,12 +88,6 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="loadbalancers.html" title="loadbalancers — Load Balancers"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="images.html" title="images — Images"
-             >previous</a> |</li>
         <li><a href="index.html">Vaporize 0.1.9 documentation</a> &raquo;</li> 
       </ul>
     </div>

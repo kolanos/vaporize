@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -10,7 +9,7 @@
     
     <title>images — Images &mdash; Vaporize 0.1.9 documentation</title>
     
-    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pyramid.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -26,10 +25,15 @@
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
     <link rel="top" title="Vaporize 0.1.9 documentation" href="index.html" />
-    <link rel="next" title="ipgroups — Shared IP Groups" href="ipgroups.html" />
-    <link rel="prev" title="flavors — Flavors" href="flavors.html" /> 
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
   </head>
   <body>
+
     <div class="related">
       <h3>Navigation</h3>
       <ul>
@@ -39,12 +43,6 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="ipgroups.html" title="ipgroups — Shared IP Groups"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="flavors.html" title="flavors — Flavors"
-             accesskey="P">previous</a> |</li>
         <li><a href="index.html">Vaporize 0.1.9 documentation</a> &raquo;</li> 
       </ul>
     </div>  
@@ -54,104 +52,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-vaporize.images">
-<span id="images-images"></span><h1><tt class="docutils literal"><span class="pre">images</span></tt> &#8212; Images<a class="headerlink" href="#module-vaporize.images" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="vaporize.images.Image">
-<em class="property">class </em><tt class="descclassname">vaporize.images.</tt><tt class="descname">Image</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.images.Image" title="Permalink to this definition">¶</a></dt>
-<dd><p>A CloudServers Image.</p>
-<dl class="method">
-<dt id="vaporize.images.Image.delete">
-<tt class="descname">delete</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.images.Image.delete" title="Permalink to this definition">¶</a></dt>
-<dd><p>Delete this Image.</p>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">You can only delete Images you create.</p>
-</div>
-<div class="admonition warning">
-<p class="first admonition-title">Warning</p>
-<p class="last">There is not confirmation step for this operation. Deleting an
-image is permanent.</p>
-</div>
-<p class="versionadded">
-<span class="versionmodified">New in version 0.1.</span></p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="vaporize.images.create">
-<tt class="descclassname">vaporize.images.</tt><tt class="descname">create</tt><big>(</big><em>name</em>, <em>server</em><big>)</big><a class="headerlink" href="#vaporize.images.create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create an Image.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>str</em>) &#8211; Name of the Image</li>
-<li><strong>server</strong> (int or <a class="reference internal" href="servers.html#vaporize.servers.Server" title="vaporize.servers.Server"><tt class="xref py py-class docutils literal"><span class="pre">vaporize.servers.Server</span></tt></a>) &#8211; Server or <tt class="docutils literal"><span class="pre">id</span></tt> to base the Image upon</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A shiny new CloudServers Image.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#vaporize.images.Image" title="vaporize.images.Image"><tt class="xref py py-class docutils literal"><span class="pre">Image</span></tt></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-<p class="versionadded">
-<span class="versionmodified">New in version 0.1.</span></p>
-</dd></dl>
-
-<dl class="function">
-<dt id="vaporize.images.get">
-<tt class="descclassname">vaporize.images.</tt><tt class="descname">get</tt><big>(</big><em>id</em><big>)</big><a class="headerlink" href="#vaporize.images.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return an Image by ID.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>int</em>) &#8211; The ID of the Image to retrieve</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A CloudServer Image matching the ID.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#vaporize.images.Image" title="vaporize.images.Image"><tt class="xref py py-class docutils literal"><span class="pre">Image</span></tt></a></td>
-</tr>
-</tbody>
-</table>
-<p class="versionadded">
-<span class="versionmodified">New in version 0.1.</span></p>
-</dd></dl>
-
-<dl class="function">
-<dt id="vaporize.images.list">
-<tt class="descclassname">vaporize.images.</tt><tt class="descname">list</tt><big>(</big><em>limit=None</em>, <em>offset=None</em>, <em>detail=False</em><big>)</big><a class="headerlink" href="#vaporize.images.list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of CloudServers Images.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>limit</strong> (<em>int</em>) &#8211; Limit the result set by a cetain number</li>
-<li><strong>offset</strong> (<em>int</em>) &#8211; Offset the result set by a certain number</li>
-<li><strong>detail</strong> (<em>bool</em>) &#8211; Return additional details about each Image</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of CloudServers Images.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">A list of <a class="reference internal" href="#vaporize.images.Image" title="vaporize.images.Image"><tt class="xref py py-class docutils literal"><span class="pre">Image</span></tt></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-<p class="versionadded">
-<span class="versionmodified">New in version 0.1.</span></p>
-</dd></dl>
-
+  <div class="section" id="images-images">
+<h1><tt class="docutils literal"><span class="pre">images</span></tt> &#8212; Images<a class="headerlink" href="#images-images" title="Permalink to this headline">¶</a></h1>
 </div>
 
 
@@ -160,17 +62,6 @@ image is permanent.</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="flavors.html"
-                        title="previous chapter"><tt class="docutils literal docutils literal docutils literal"><span class="pre">flavors</span></tt> &#8212; Flavors</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="ipgroups.html"
-                        title="next chapter"><tt class="docutils literal"><span class="pre">ipgroups</span></tt> &#8212; Shared IP Groups</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="sources/images.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
@@ -197,12 +88,6 @@ image is permanent.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="right" >
-          <a href="ipgroups.html" title="ipgroups — Shared IP Groups"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="flavors.html" title="flavors — Flavors"
-             >previous</a> |</li>
         <li><a href="index.html">Vaporize 0.1.9 documentation</a> &raquo;</li> 
       </ul>
     </div>

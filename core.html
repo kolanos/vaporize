@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>core — Core &mdash; Vaporize 0.1.9 documentation</title>
+    <title>core — Core &mdash; Vaporize 0.2.0 documentation</title>
     
     <link rel="stylesheet" href="static/default.css" type="text/css" />
     <link rel="stylesheet" href="static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.1.9',
+        VERSION:     '0.2.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,8 +25,8 @@
     <script type="text/javascript" src="static/jquery.js"></script>
     <script type="text/javascript" src="static/underscore.js"></script>
     <script type="text/javascript" src="static/doctools.js"></script>
-    <link rel="top" title="Vaporize 0.1.9 documentation" href="index.html" />
-    <link rel="next" title="domains — Domains" href="domains.html" />
+    <link rel="top" title="Vaporize 0.2.0 documentation" href="index.html" />
+    <link rel="next" title="domains — CloudDNS" href="domains.html" />
     <link rel="prev" title="Getting Started" href="gettingstarted.html" /> 
   </head>
   <body>
@@ -40,12 +40,12 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="domains.html" title="domains — Domains"
+          <a href="domains.html" title="domains — CloudDNS"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="gettingstarted.html" title="Getting Started"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Vaporize 0.1.9 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Vaporize 0.2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -68,49 +68,20 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>user</strong> (<em>str</em>) &#8211; A Rackspace Cloud username.</li>
 <li><strong>apikey</strong> (<em>str</em>) &#8211; A Rackspace Cloud API key.</li>
 <li><strong>region</strong> (<em>str</em>) &#8211; A Rackspace Cloud region, such as <tt class="docutils literal"><span class="pre">DFW</span></tt>, <tt class="docutils literal"><span class="pre">ORD</span></tt> or <tt class="docutils literal"><span class="pre">LON</span></tt>.</li>
 </ul>
 </td>
 </tr>
+<tr class="field-even field"><th class="field-name">Raises :</th><td class="field-body"><p class="first last">ConnectionError</p>
+</td>
+</tr>
 </tbody>
 </table>
-<dl class="docutils">
-<dt>Raises::</dt>
-<dd>ConnectionError: An error occured while creating the connection/session.</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="vaporize.core.get_session">
-<tt class="descclassname">vaporize.core.</tt><tt class="descname">get_session</tt><big>(</big><big>)</big><a class="headerlink" href="#vaporize.core.get_session" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the requests session.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="vaporize.core.get_url">
-<tt class="descclassname">vaporize.core.</tt><tt class="descname">get_url</tt><big>(</big><em>service</em><big>)</big><a class="headerlink" href="#vaporize.core.get_url" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the URL for the specific Rackspace Cloud service.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="vaporize.core.handle_request">
-<tt class="descclassname">vaporize.core.</tt><tt class="descname">handle_request</tt><big>(</big><em>verb</em>, <em>url</em>, <em>data=None</em>, <em>wrapper=None</em>, <em>container=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.core.handle_request" title="Permalink to this definition">¶</a></dt>
-<dd><p>Handle a request/response in a consistent way.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="vaporize.core.munge_url">
-<tt class="descclassname">vaporize.core.</tt><tt class="descname">munge_url</tt><big>(</big><em>url</em><big>)</big><a class="headerlink" href="#vaporize.core.munge_url" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prevent GET responses from being aggressively cached.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="vaporize.core.query">
-<tt class="descclassname">vaporize.core.</tt><tt class="descname">query</tt><big>(</big><em>url</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#vaporize.core.query" title="Permalink to this definition">¶</a></dt>
-<dd><p>Append to the URL&#8217;s query string.</p>
+<p class="versionadded">
+<span class="versionmodified">New in version 0.1.</span></p>
 </dd></dl>
 
 </div>
@@ -126,7 +97,7 @@
                         title="previous chapter">Getting Started</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="domains.html"
-                        title="next chapter"><tt class="docutils literal"><span class="pre">domains</span></tt> &#8212; Domains</a></p>
+                        title="next chapter"><tt class="docutils literal"><span class="pre">domains</span></tt> &#8212; CloudDNS</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="sources/core.txt"
@@ -159,12 +130,12 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="domains.html" title="domains — Domains"
+          <a href="domains.html" title="domains — CloudDNS"
              >next</a> |</li>
         <li class="right" >
           <a href="gettingstarted.html" title="Getting Started"
              >previous</a> |</li>
-        <li><a href="index.html">Vaporize 0.1.9 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Vaporize 0.2.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
