@@ -48,20 +48,20 @@ Contributing
 Vaporize is currently still in development. Contributors are welcome. Just fork
 this repo and start making pull requests.
 
-Planned for v0.1
-----------------
+Features
+--------
 
 Support for the following Rackspace Cloud services:
 
  * CloudServers
  * CloudLoadBalancers
  * CloudDNS
+ * CloudDatabases
 
-Planned for v0.2
+Planned Features
 ----------------
 
 Support for the following Rackspace Cloud services:
 
  * CloudFiles
- * CloudDatabase
  * CloudMonitoring
