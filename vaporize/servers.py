@@ -38,6 +38,18 @@ class BackupSchedule(DotDict):
             return '<BackupSchedule %s>' % self['weekly']
         return super(BackupSchedule, self).__repr__()
 
+    @classmethod
+    def create(cls, weekly=None, daily=None):
+        return cls(weekly=weekly, daily=daily)
+
+    def to_dict(self):
+        ret = {'backupSchedule': {'enabled': True}}
+        if self.weekly:
+            ret['backupSchedule']['weekly'] = self.weekly
+        if self.daily:
+            self['backupSchedule']['daily'] = daily
+        return ret
+
 
 class Flavor(DotDict):
     """A CloudServers Flavor."""
@@ -350,24 +362,17 @@ class Server(DotDict):
                         'ips', 'public', address])
         handle_request('delete', url)
 
-    def soft_reboot(self):
-        """Perform a soft reboot on this Server
+    def reboot(self, type='SOFT'):
+        """Perform a soft/hard reboot on this Server.
+
+        :param type: A reboot type (``SOFT`` or ``HARD``).
+        :type type: str
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
-        data = json.dumps({'reboot': {'type': 'SOFT'}})
-        url = '/'.join([get_url('cloudservers'), 'servers',
-                        str(self['id']), 'action'])
-        handle_request('post', url, data)
-
-    def hard_reboot(self):
-        """Perform a hard reboot on this Server
-
-        .. versionadded:: 0.1
-        """
-        assert 'id' in self
-        data = json.dumps({'reboot': {'type': 'HARD'}})
+        assert 'id' in self, "Missing Server ID"
+        assert type in ['SOFT', 'HARD'], "Reboot type must be 'SOFT' or 'HARD'"
+        data = json.dumps({'reboot': {'type': type}})
         url = '/'.join([get_url('cloudservers'), 'servers',
                         str(self['id']), 'action'])
         handle_request('post', url, data)
@@ -436,34 +441,43 @@ class Server(DotDict):
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
-                        'backup_schedule'])
-        return handle_request('get', url, wrapper=BackupSchedule,
-                              container='backupSchedule')
+        if 'backup_schedule' not in self:
+            assert 'id' in self
+            url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
+                            'backup_schedule'])
+            response = handle_request('get', url, wrapper=BackupSchedule,
+                                      container='backupSchedule')
+            self['backup_schedule'] = response
+        return self['backup_schedule']
 
-    def enable_backup_schedule(self, weekly=None, daily=None):
+    @backup_schedule.setter
+    def backup_schedule(self, schedule):
         """Enable a backup schedule for this Server
 
-        :param weekly: The weekly backup schedule
-        :type weekly: str
-        :param daily: The daily backup schedule
-        :type daily: str
+        :param schedule: A BackupSchedule instance 
+        :type schedule: :class:`BackupSchedule`
+
+            >>> server = vaporize.servers.Server.get(...)
+            >>> bs = vaporize.servers.BackupSchedule.create(weekly=...,
+            ...                                             daily=...)
+            >>> server.backup_schedule = bs
+
 
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        data = {'backupSchedule': {'enable': True}}
-        if weekly is not None:
-            data['backupSchedule']['weekly'] = weekly
-        if daily is not None:
-            data['backupSchedule']['daily'] = daily
+        assert isinstance(schedule, BackupSchedule)
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'backup_schedule'])
-        handle_request('post', url, data)
+        handle_request('post', url, schedule.to_dict())
+        self['backup_schedule'] = schedule
 
-    def disable_backup_schedule(self):
+    @backup_schedule.deleter
+    def backup_schedule(self):
         """Disable a backup schedule for this Server
+
+            >>> server = vaporize.servers.Server.get(...)
+            >>> del server.backup_schedule
 
         .. versionadded:: 0.1
         """
@@ -471,6 +485,7 @@ class Server(DotDict):
         url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
                         'backup_schedule'])
         handle_request('delete', url)
+        del self['backup_schedule']
 
     @classmethod
     def list(cls, limit=None, offset=None, detail=False):
