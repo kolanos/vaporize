@@ -23,7 +23,6 @@ API
    core
    databases
    domains
-   exceptions
    loadbalancers
    servers
 
