@@ -3,7 +3,7 @@
 __title__ = 'vaporize'
 __author__ = 'Michael Lavers'
 __email__ = 'kolanos@gmail.com'
-__version__ = '0.2.0'
+__version__ = '0.2.1'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2012 Michael Lavers'
 
