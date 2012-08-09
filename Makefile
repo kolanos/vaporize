@@ -22,13 +22,13 @@ init:
 	pip install -r requirements.txt
 
 test:
-	nosetests ./
+	nosetests -w ./
 
 lazy:
-	nosetests --with-color ./
+	nosetests --with-color -w ./
 
 simple:
-	nosetests ./
+	nosetests -w ./
 
 pyflakes:
 	pyflakes ${PYFLAKES_WHITELIST}
@@ -37,7 +37,7 @@ cipyflakes:
 	${PYFLAKES_IF_AVAILABLE} ${PYFLAKES_WHITELIST}
 
 citests:
-	nosetests ${CI_TESTS} --with-xunit --xunit-file=junit-report.xml
+	nosetests -w ./ --with-xunit --xunit-file=junit-report.xml
 
 ci: citests cipyflakes
 
