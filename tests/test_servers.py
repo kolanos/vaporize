@@ -1,6 +1,7 @@
+from __future__ import with_statement
 from functools import partial
 
-from .mock import mock, handle_request_mock
+from mock import mock, handle_request_mock
 
 import vaporize
 
