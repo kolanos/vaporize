@@ -65,3 +65,4 @@ Support for the following Rackspace Cloud services:
 
  * CloudFiles
  * CloudMonitoring
+
