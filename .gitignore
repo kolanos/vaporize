@@ -28,4 +28,4 @@ pip-log.txt
 
 env
 docs/_build/*
-test.py
+demo.py
