@@ -38,7 +38,7 @@ class Domain(DotDict):
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        response = get(self['id'])
+        response = self.get(self['id'])
         self.update(response)
         return self
 
@@ -106,7 +106,8 @@ class Domain(DotDict):
             assert 'id' in self
             url = '/'.join([get_url('clouddns'), 'domains', str(self['id']),
                             'records'])
-            response = handle_request('get', url, wrapper=Record,
+            response = handle_request('get', url,
+                                      wrapper=Record,
                                       container='records',
                                       domain_id=self['id'])
             self['records'] = response
@@ -155,7 +156,7 @@ class Domain(DotDict):
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        record = record.id if isinstance(record, Record) else int(record)
+        record = record.id if isinstance(record, Record) else record
         url = '/'.join([get_url('clouddns'), 'domains', str(self['id']),
                         'records', str(record)])
         handle_request('delete', url)

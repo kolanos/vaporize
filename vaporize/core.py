@@ -16,6 +16,7 @@ import requests
 
 from vaporize import __version__
 from vaporize.exceptions import ConnectionError, handle_exception
+from vaporize.utils import DotDict
 
 US_AUTH_URL = "https://identity.api.rackspacecloud.com/v2.0/tokens"
 UK_AUTH_URL = "https://lon.identity.api.rackspacecloud.com/v2.0/tokens"
@@ -106,6 +107,8 @@ def handle_request(verb, url, data=None, wrapper=None, container=None, **kwargs)
     if not content:
         return True
     content = json.loads(content)
+    if wrapper is None:
+        wrapper = DotDict
     if container and isinstance(content[container], list):
         return [wrapper(i, **kwargs) for i in content[container]]
     elif container is None:
