@@ -336,7 +336,7 @@ class Instance(DotDict):
         data = json.dumps(data)
         url = '/'.join([get_url('clouddatabases'), 'instances',
                         str(self['id']), 'action'])
-        handle_request('post', url, dataa)
+        handle_request('post', url, data)
  
     @classmethod
     def list(cls):
