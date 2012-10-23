@@ -300,8 +300,8 @@ class LoadBalancer(DotDict):
         elif key == 'virtualIps':
             value = [VirtualIP(v) for v in value]
         elif key in ['created', 'updated']:
-            if 'time' in value:
-                value = convert_datetime(value['time'])
+            if not isinstance(value, datetime.datetime) and 'time' in value:
+                    value = convert_datetime(value['time'])
         super(LoadBalancer, self).__setitem__(key, value)
 
     def reload(self):
@@ -1304,7 +1304,7 @@ class Node(DotDict):
         if type is not None and type in ['PRIMARY', 'SECONDARY']:
             self['type'] = type
         if weight is None:
-            self['weight'] = int(weight)
+            self['weight'] = weight
         return self
 
     def delete(self):
