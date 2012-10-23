@@ -21,7 +21,10 @@ class Domain(DotDict):
     def __setitem__(self, key, value):
         if key == 'recordsList':
             key = 'records'
-            value = [Record(v) for v in value['records']]
+            if 'id' in self:
+                value = [Record(v, domain_id=self['id']) for v in value['records']]
+            else:
+                value = [Record(v) for v in value['records']]
         elif key == 'subdomains':
             value = [Subdomain(v) for v in value['domains']]
         elif key in ['created', 'updated']:

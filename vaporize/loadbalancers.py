@@ -282,7 +282,10 @@ class LoadBalancer(DotDict):
 
     def __setitem__(self, key, value):
         if key == 'accessList':
-            value = [AccessRule(v) for v in value]
+            if 'id' in self:
+                value = [AccessRule(v, loadbalancer_id=self['id']) for v in value]
+            else:
+                value = [AccessRule(v, loadbalancer_id=self['id']) for v in value]
         elif key == 'connectionLogging':
             value = ConnectionLogging(value)
         elif key == 'connectionThrottle':
@@ -294,11 +297,18 @@ class LoadBalancer(DotDict):
         elif key == 'healthMonitor':
             value = HealthMonitor(value)
         elif key == 'nodes':
-            value = [Node(v) for v in value]
+            if 'id' in self:
+                value = [Node(v, loadbalancer_id=self['id']) for v in value]
+            else:
+
+               value = [Node(v) for v in value]
         elif key == 'sessionPersistence':
             value = SessionPersistence(value)
         elif key == 'virtualIps':
-            value = [VirtualIP(v) for v in value]
+            if 'id' in self:
+                value = [VirtualIP(v, loadbalancer_id=self['id']) for v in value]
+            else:
+                value = [VirtualIP(v) for v in value]
         elif key in ['created', 'updated']:
             if not isinstance(value, datetime.datetime) and 'time' in value:
                     value = convert_datetime(value['time'])

@@ -134,11 +134,17 @@ class Instance(DotDict):
         if key in ['created', 'updated']:
             value = convert_datetime(value)
         elif key == 'databases':
-            value = [Database(v, instance_id=self.get('id')) for v in value]
+            if 'id' in self:
+                value = [Database(v, instance_id=self['id']) for v in value]
+            else:
+                value = [Database(v) for v in value]
         elif key == 'flavor':
             value = Flavor(value)
         elif key == 'users':
-            value = [User(v, instance_id=self.get('id')) for v in value]
+            if 'id' in self:
+                value = [User(v, instance_id=self['id']) for v in value]
+            else:
+                value = [User(v) for v in value]
         elif key == 'volume':
             value = Volume(value)
         super(Instance, self).__setitem__(key, value)
