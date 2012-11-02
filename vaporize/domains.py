@@ -432,17 +432,17 @@ class Record(DotDict):
         """
         assert 'id' in self
         assert 'domain_id' in self
-        data = {}
+        _data = {}
         if name is not None:
-            data['name'] = name
+            _data['name'] = name
         if data is not None:
-            data['data'] = data
+            _data['data'] = data
         if ttl is not None:
-            data['ttl'] = int(ttl)
-        data = json.dumps(data)
+            _data['ttl'] = int(ttl)
+        _data = json.dumps(_data)
         url = '/'.join([get_url('clouddns'), 'domains', str(self['domain_id']),
                         'records', str(self['id'])])
-        handle_request('put', url, data)
+        handle_request('put', url, _data)
         if name is not None:
             self['name'] = name
         if data is not None:
