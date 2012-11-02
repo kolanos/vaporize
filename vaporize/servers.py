@@ -47,7 +47,7 @@ class BackupSchedule(DotDict):
         if self.weekly:
             ret['backupSchedule']['weekly'] = self.weekly
         if self.daily:
-            self['backupSchedule']['daily'] = daily
+            ret['backupSchedule']['daily'] = self.daily
         return ret
 
 
