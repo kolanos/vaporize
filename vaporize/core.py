@@ -52,6 +52,7 @@ def connect(user, apikey, region='DFW'):
     .. versionadded:: 0.1
     """
     global _settings, _session
+    region = region.upper()
     if region in ['DFW', 'ORD']:
         auth_url = US_AUTH_URL
     elif region == 'LON':
