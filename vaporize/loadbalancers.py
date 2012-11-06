@@ -300,8 +300,7 @@ class LoadBalancer(DotDict):
             if 'id' in self:
                 value = [Node(v, loadbalancer_id=self['id']) for v in value]
             else:
-
-               value = [Node(v) for v in value]
+                value = [Node(v) for v in value]
         elif key == 'sessionPersistence':
             value = SessionPersistence(value)
         elif key == 'virtualIps':
@@ -1144,7 +1143,7 @@ class LoadBalancer(DotDict):
                         'address': access_rule.address
                         })
         if connection_throttle is not None \
-                and isintance(connection_throtle, ConnectionThrottle):
+                and isinstance(connection_throttle, ConnectionThrottle):
             data['loadBalancer']['connectionThrottle'] = {
                     'maxConnections': connection_throttle.max_connections,
                     'minConnections': connection_throttle.min_connections,

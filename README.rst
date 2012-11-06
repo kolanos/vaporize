@@ -57,6 +57,7 @@ Support for the following Rackspace Cloud services:
  * CloudLoadBalancers
  * CloudDNS
  * CloudDatabases
+ * CloudBlockStorage
 
 Planned Features
 ----------------

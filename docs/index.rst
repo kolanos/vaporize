@@ -25,6 +25,7 @@ API
    domains
    loadbalancers
    servers
+   blockstorage
 
 Indices and tables
 ==================
