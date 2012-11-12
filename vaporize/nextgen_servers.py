@@ -194,7 +194,7 @@ class NextGenServer(DotDict):
         assert 'id' in self
         url = '/'.join([get_url('cloudserversopenstack'), 'servers',
                 str(self['id']), 'ips'])
-        return  handle_request('get', url, wrapper=cls, container='addresses')
+        return  handle_request('get', url, container='addresses')
 
     def ips_by_networkid(self, network_id=None):
         """Returns the list of ip addresses attached to the NextGenServer by the
@@ -202,10 +202,10 @@ class NextGenServer(DotDict):
 
         """
         assert 'id' in self
-        assert network_is is not None
+        assert network_id is not None
         url = '/'.join([get_url('cloudserversopenstack'), 'servers',
                 str(self['id']), 'ips', str(network_id)])
-        return  handle_request('get', url, wrapper=cls, container='network')
+        return  handle_request('get', url, container='network')
 
     def update_server(self, name=None, accessIPv4=None, accessIPv6=None):
         """Update this NextGenServer's name or ip addresses.
