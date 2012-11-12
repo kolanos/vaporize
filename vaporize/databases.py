@@ -193,7 +193,7 @@ class Instance(DotDict):
         """
         if 'databases' not in self:
             assert 'id' in self, "Missing Instance ID"
-            url = '/'.join([get_url('clouddatabases'), 'insances',
+            url = '/'.join([get_url('clouddatabases'), 'instances',
                             str(self['id']), 'databases'])
             response = handle_request('get', url, data, Database, 'databases',
                                       instance_id=self['id'])
@@ -216,7 +216,7 @@ class Instance(DotDict):
             if isinstance(database, Database):
                 data['databases'].append(database.to_dict())
         data = json.dumps(data)
-        url = '/'.join([get_url('clouddatabases'), 'insances', str(self['id']),
+        url = '/'.join([get_url('clouddatabases'), 'instances', str(self['id']),
                         'databases'])
         handle_request('post', url, data)
 
@@ -234,7 +234,7 @@ class Instance(DotDict):
         """
         if 'users' not in self:
             assert 'id' in self, "Missing Instance ID"
-            url = '/'.join([get_url('clouddatabases'), 'insances',
+            url = '/'.join([get_url('clouddatabases'), 'instances',
                             str(self['id']), 'users'])
             response = handle_request('get', url, data, User, 'users',
                                       instance_id=self['id'])
@@ -260,7 +260,7 @@ class Instance(DotDict):
             if isinstance(user, User):
                 data['users'].append(user.to_dict())
         data = json.dumps(data)
-        url = '/'.join([get_url('clouddatabases'), 'insances', str(self['id']),
+        url = '/'.join([get_url('clouddatabases'), 'instances', str(self['id']),
                         'users'])
         handle_request('post', url, data)
 

@@ -60,13 +60,13 @@ class Volume(DotDict):
         """
         assert 100  <= int(size) <= 1000
         data = { 'volume': { 'size': int(size)}}
-        if len(display_description) > 0:
+        if display_description:
             data['volume']['display_descrition'] = str(display_description)
-        if len(display_name) >0:
+        if display_name:
             data['volume']['display_name'] = str(display_name)
-        if len(snapshot_id) > 0:
+        if snapshot_id:
             data['volume']['snapshot_id'] = str(snapshot_id)
-        if len(volume_type) > 0:
+        if volume_type:
             data['volume']['volume_type'] = str(volume_type)
         data = json.dumps(data)
         url = '/'.join([get_url('cloudblockstorage'), 'volumes'])
@@ -152,9 +152,9 @@ class Snapshot(DotDict):
         """
         assert volume_id
         data = { 'snapshot': { 'volume_id': str(volume_id)}}
-        if len(display_description) > 0:
+        if display_description:
             data['snapshot']['display_descrition'] = str(display_description)
-        if len(display_name) >0:
+        if display_name:
             data['snapshot']['display_name'] = str(display_name)
         if force:
             data['snapshot']['force'] = 'True'
