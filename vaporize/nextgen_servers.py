@@ -180,7 +180,7 @@ class NextGenServer(DotDict):
         :returns: An updated CloudNextGenServers NextGenServer.
         :rtype: :class:`NextGenServer`
 
-    .. versionadded:: 0.1
+        .. versionadded:: 0.1
         """
         assert 'id' in self
         response = NextGenServer.get(self['id'])
@@ -293,13 +293,18 @@ class NextGenServer(DotDict):
 
     def change_admin_pass(self, password):
         """Change admin password.
+
+        :param password: Admin Password.
+        :type type: str
+
         """
-        assert len(password) >= 8
+        assert len(password) >= 8, "Admin password must be >= 8 chars long"
+
         assert 'id' in self
         url = '/'.join([get_url('cloudserversopenstack'), 'servers',
             str(self['id']), 'action'])
         data = json.dumps({ "changePassword": { "adminPass" : str(password)}})
-        return handle_request('post', url, data)
+        handle_request('post', url, data)
 
     def reboot(self, type='SOFT'):
         """Perform a soft/hard reboot on this NextGenServer.
@@ -322,12 +327,27 @@ class NextGenServer(DotDict):
 
         :param image: The NextGenImage or ``id``
         :type image: int or :class:`NextGenImage`
+        :param flavor: The NextGenFlavor or  ``id``
+        :type image: int or :class:`NextGenFlavor`
+        :param adminpass: Admin Password.
+        :param accessIPv4: IPv4 access address
+        :type type: str
+        :param accessIPv6: IPv6 access address
+        :type type: str
+        :param metadata: key/value pairs
+        :type type: dict
+        :param personality: path,contents dict
+        :type type: dict
+        :param diskConfig: OS-DCF:diskConfig AUTO or MANUAL
+        :type type: str
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
-        assert 'name' in self or len(name) > 0
-        assert len(adminpass) > 8
+        assert 'id' in self, "id is missing"
+        assert 'name' in self or len(name) > 0, "name is missing"
+        assert len(adminpass) >= 8, "Admin password must be >= 8 chars long"
+        assert 'diskConfig' in ['AUTO', 'MANUAL'], ("diskConfig must be"
+        "'AUTO' or 'MANUAL'")
         if name:
             self['name'] = name
         if isinstance(image, NextGenImage):
@@ -473,20 +493,33 @@ class NextGenServer(DotDict):
         return handle_request('get', url, wrapper=cls, container='server')
 
     @classmethod
-    def create(cls, name, image, flavor, adminpass=None, diskConfig=None,
+    def create(cls, name, image, flavor, adminpass=None, diskConfig='AUTO',
             metadata=None, personality=None, networksUUIDs=[], accessIPv4=None,
             accessIPv6=None):
         """Create a CloudNextGenServers NextGenServer
 
-        :param name: A NextGenServer's name
-        :type name: str
-        :param image: An NextGenImage or ``id``
+        :param image: The NextGenImage or ``id``
         :type image: int or :class:`NextGenImage`
-        :param flavor: A NextGenFlavor or ``id``
-        :type flavor: int or :class:`NextGenFlavor`
-
+        :param flavor: The NextGenFlavor or  ``id``
+        :type image: int or :class:`NextGenFlavor`
+        :param adminpass: Admin Password.
+        :type type: str
+        :param diskConfig: OS-DCF:diskConfig AUTO or MANUAL
+        :type type: str
+        :param metadata: key/value pairs
+        :type type: dict
+        :param personality: path,contents dict
+        :type type: dict
+        :param networksUUIDs: list of network uuids
+        :type type: list
+        :param accessIPv4: IPv4 access address
+        :type type: str
+        :param accessIPv6: IPv6 access address
+        :type type: str
         .. versionadded:: 0.1
         """
+        assert 'diskConfig' in ['AUTO', 'MANUAL'], ("diskConfig must be "
+        "'AUTO' or 'MANUAL'")
         if isinstance(image, NextGenImage):
             image = image.id
         image = int(image)
@@ -502,6 +535,10 @@ class NextGenServer(DotDict):
         if isinstance(files, dict):
             for path, contents in list(files.items()):
                 data['personality'].append({'path': path, 'contents': contents})
+        if adminpass:
+            assert len(adminpass) >= 8, ("Admin password must be at least 8"
+            "chars long")
+            data['server']['adminPass'] = str(adminpass)
         if len(networksUUIDs) > 0:
             data['server']['networks'] = [ {'uuuid': v} for v in networksUUIDs ]
         if diskConfig:

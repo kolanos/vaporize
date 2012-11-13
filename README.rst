@@ -54,7 +54,7 @@ Features
 Support for the following Rackspace Cloud services:
 
  * CloudServers
- * CloudServers - Next Gen. (in progress... production not ready!)
+ * CloudServers - Next Gen. 
  * CloudLoadBalancers
  * CloudDNS
  * CloudDatabases
