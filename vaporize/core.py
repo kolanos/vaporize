@@ -89,7 +89,7 @@ def connect(user, apikey, region='DFW'):
             _session = requests.Session()
             _session.auth = auth
             _session.headers.update(headers)
-        except Exception, e:
+        except:
             raise
     else:
         raise ConnectionError("HTTP %d: %s" % (response.status_code,
