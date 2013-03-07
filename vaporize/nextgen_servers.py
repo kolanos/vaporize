@@ -25,7 +25,7 @@ class NextGenFlavor(DotDict):
         :returns: A list of CloudNextGenServers NextGenFlavors.
         :rtype: :class:`NextGenFlavor`
 
-        .. versionadded:: 0.1
+        .. versionadded:: 0.3
         """
         url = [get_url('cloudserversopenstack'), 'flavors']
         if detail:
@@ -44,7 +44,7 @@ class NextGenFlavor(DotDict):
         :returns: A CloudNextGenServers NextGenFlavor matching the ID.
         :rtype: :class:`NextGenFlavor`
 
-        .. versionadded:: 0.1
+        .. versionadded:: 0.3
         """
         url = '/'.join([get_url('cloudserversopenstack'), 'flavors', str(id)])
         return handle_request('get', url, wrapper=cls, container='flavor')
@@ -70,7 +70,7 @@ class NextGenImage(DotDict):
         :returns: An updated CloudNextGenServers NextGenImage.
         :rtype: :class:`NextGenImage`
 
-        .. versionadded:: 0.1.9
+        .. versionadded:: 0.3
         """
         assert 'id' in self, "Missing NextGenImage ID"
         response = NextGenImage.get(self['id'])
@@ -89,7 +89,7 @@ class NextGenImage(DotDict):
             There is not confirmation step for this operation. Deleting an
             image is permanent.
 
-        .. versionadded:: 0.1
+        .. versionadded:: 0.3
         """
         assert 'id' in self
         url = '/'.join([get_url('cloudserversopenstack'), 'images', str(self['id'])])
@@ -108,7 +108,7 @@ class NextGenImage(DotDict):
         :returns: A list of CloudNextGenServers NextGenImages.
         :rtype: A list of :class:`NextGenImage`
 
-        .. versionadded:: 0.1
+        .. versionadded:: 0.3
         """
         url = [get_url('cloudserversopenstack'), 'images']
         if detail:
@@ -127,7 +127,7 @@ class NextGenImage(DotDict):
         :returns: A CloudNextGenServer NextGenImage matching the ID.
         :rtype: :class:`NextGenImage`
 
-        .. versionadded:: 0.1
+        .. versionadded:: 0.3
         """
         url = '/'.join([get_url('cloudserversopenstack'), 'images', str(id)])
         return handle_request('get', url, wrapper=cls, container='image')
@@ -143,7 +143,7 @@ class NextGenImage(DotDict):
         :returns: A shiny new CloudNextGenServers NextGenImage.
         :rtype: :class:`NextGenImage`
 
-        .. versionadded:: 0.1
+        .. versionadded:: 0.3
         """
         if isinstance(server, NextGenServer):
             server = server.id
@@ -180,13 +180,14 @@ class NextGenServer(DotDict):
         :returns: An updated CloudNextGenServers NextGenServer.
         :rtype: :class:`NextGenServer`
 
-        .. versionadded:: 0.1
+        .. versionadded:: 0.3
         """
         assert 'id' in self
         response = NextGenServer.get(self['id'])
         self.update(response)
         return self
 
+    @property
     def ips(self):
         """Returns a list of ip addresses attached to the NextGenServer instance.
 
@@ -219,7 +220,7 @@ class NextGenServer(DotDict):
         :returns: A modified CloudNextGenServers NextGenServer.
         :rtype: :class:`NextGenServer`
 
-        .. versionadded:: 0.1
+        .. versionadded:: 0.3
         """
         assert 'id' in self
         data = {'server': {}}
@@ -312,7 +313,7 @@ class NextGenServer(DotDict):
         :param type: A reboot type (``SOFT`` or ``HARD``).
         :type type: str
 
-        .. versionadded:: 0.1
+        .. versionadded:: 0.3
         """
         assert 'id' in self, "Missing NextGenServer ID"
         assert type in ['SOFT', 'HARD'], "Reboot type must be 'SOFT' or 'HARD'"
@@ -322,7 +323,7 @@ class NextGenServer(DotDict):
         handle_request('post', url, data)
 
     def rebuild(self, name, image, flavor, adminpass, accessIPv4=None,
-            accessIPv6=None, metadata={}, personality=[], diskConfig='AUTO'):
+            accessIPv6=None, metadata={}, files={}, diskConfig='AUTO'):
         """Rebuild this NextGenServer using a specified NextGenImage
 
         :param image: The NextGenImage or ``id``
@@ -336,17 +337,17 @@ class NextGenServer(DotDict):
         :type type: str
         :param metadata: key/value pairs
         :type type: dict
-        :param personality: path,contents dict
+        :param files: path,contents dict
         :type type: dict
         :param diskConfig: OS-DCF:diskConfig AUTO or MANUAL
         :type type: str
 
-        .. versionadded:: 0.1
+        .. versionadded:: 0.3
         """
         assert 'id' in self, "id is missing"
         assert 'name' in self or len(name) > 0, "name is missing"
         assert len(adminpass) >= 8, "Admin password must be >= 8 chars long"
-        assert 'diskConfig' in ['AUTO', 'MANUAL'], ("diskConfig must be"
+        assert diskConfig in ['AUTO', 'MANUAL'], ("diskConfig must be"
         "'AUTO' or 'MANUAL'")
         if name:
             self['name'] = name
@@ -354,8 +355,6 @@ class NextGenServer(DotDict):
             image = image.id
         if isinstance(flavor, NextGenFlavor):
             flavor = flavor.id
-        image = int(image)
-        flavor = int(flavor)
         data = {'rebuild':{
                     'name': str(self['name']),
                     'imageRef': str(image),
@@ -369,7 +368,7 @@ class NextGenServer(DotDict):
             data['rebuild']['accessIPv6'] = str(accessIPv6)
         if isinstance(files, dict):
             for path, contents in list(files.items()):
-                data['personality'].append({'path': path, 'contents': contents})
+                data['rebuild']['personality'].append({'path': path, 'contents': contents})
         data = json.dumps(data)
         url = '/'.join([get_url('cloudserversopenstack'), 'servers',
                         str(self['id']), 'action'])
@@ -381,7 +380,7 @@ class NextGenServer(DotDict):
         :param flavor: The NextGenFlavor or ``id``
         :type flavor: int or :class:`NextGenFlavor`
 
-        .. versionadded:: 0.1
+        .. versionadded:: 0.3
         """
         assert 'id' in self
         assert 'name' in self or len(name) > 0
@@ -400,7 +399,7 @@ class NextGenServer(DotDict):
     def confirm_resize(self):
         """Confirm a successful resize operation
 
-        .. versionadded:: 0.1
+        .. versionadded:: 0.3
         """
         assert 'id' in self
         data = json.dumps({'confirmResize': None})
@@ -411,7 +410,7 @@ class NextGenServer(DotDict):
     def revert_resize(self):
         """Revert an unsuccessful resize operation
 
-        .. versionadded:: 0.1
+        .. versionadded:: 0.3
         """
         assert 'id' in self
         data = json.dumps({'revertResize': None})
@@ -422,7 +421,7 @@ class NextGenServer(DotDict):
     def rescue(self):
         """Put server im rescue mode.
 
-        .. versionadded:: 0.1
+        .. versionadded:: 0.3
         """
         assert 'id' in self
         data = json.dumps({'rescue': None})
@@ -433,7 +432,7 @@ class NextGenServer(DotDict):
     def unrescue(self):
         """Take server out of rescue mode
 
-        .. versionadded:: 0.1
+        .. versionadded:: 0.3
         """
         assert 'id' in self
         data = json.dumps({'unrescue': None})
@@ -444,7 +443,7 @@ class NextGenServer(DotDict):
     def create_image(self, name=None, metadata={}):
         """Create a server image.
 
-        .. versionadded:: 0.1
+        .. versionadded:: 0.3
         """
         assert 'id' in self
         assert name is not None
@@ -469,7 +468,7 @@ class NextGenServer(DotDict):
         :returns: A list of CloudNextGenServers NextGenServers.
         :rtype: List of :class:`NextGenServer`
 
-        .. versionadded:: 0.1
+        .. versionadded:: 0.3
         """
         url = [get_url('cloudserversopenstack'), 'servers']
         if detail:
@@ -487,14 +486,14 @@ class NextGenServer(DotDict):
         :type id: int
         :return: A :class:`NextGenServer`
 
-        .. versionadded:: 0.1
+        .. versionadded:: 0.3
         """
         url = '/'.join([get_url('cloudserversopenstack'), 'servers', str(id)])
         return handle_request('get', url, wrapper=cls, container='server')
 
     @classmethod
     def create(cls, name, image, flavor, adminpass=None, diskConfig='AUTO',
-            metadata=None, personality=None, networksUUIDs=[], accessIPv4=None,
+            metadata={}, files={}, networksUUIDs=[], accessIPv4=None,
             accessIPv6=None):
         """Create a CloudNextGenServers NextGenServer
 
@@ -508,7 +507,7 @@ class NextGenServer(DotDict):
         :type type: str
         :param metadata: key/value pairs
         :type type: dict
-        :param personality: path,contents dict
+        :param files: path,contents dict
         :type type: dict
         :param networksUUIDs: list of network uuids
         :type type: list
@@ -516,16 +515,14 @@ class NextGenServer(DotDict):
         :type type: str
         :param accessIPv6: IPv6 access address
         :type type: str
-        .. versionadded:: 0.1
+        .. versionadded:: 0.3
         """
-        assert 'diskConfig' in ['AUTO', 'MANUAL'], ("diskConfig must be "
+        assert diskConfig in ['AUTO', 'MANUAL'], ("diskConfig must be "
         "'AUTO' or 'MANUAL'")
         if isinstance(image, NextGenImage):
             image = image.id
-        image = int(image)
         if isinstance(flavor, NextGenFlavor):
             flavor = flavor.id
-        flavor = int(flavor)
         data = {'server': {'name': name,
                            'imageRef': image,
                            'flavorRef': flavor,
@@ -534,7 +531,7 @@ class NextGenServer(DotDict):
                             }}
         if isinstance(files, dict):
             for path, contents in list(files.items()):
-                data['personality'].append({'path': path, 'contents': contents})
+                data['server']['personality'].append({'path': path, 'contents': contents})
         if adminpass:
             assert len(adminpass) >= 8, ("Admin password must be at least 8"
             "chars long")
