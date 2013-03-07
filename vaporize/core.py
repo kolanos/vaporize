@@ -83,7 +83,14 @@ def connect(user, apikey, region='DFW'):
                         url = endpoint['publicURL']
             _settings[name + '_url'] = url
         auth = Auth(_settings['token'])
-        _session = requests.session(auth=auth, headers=headers)
+        try:
+            _session = requests.session(auth=auth, headers=headers)
+        except TypeError:
+            _session = requests.Session()
+            _session.auth = auth
+            _session.headers.update(headers)
+        except:
+            raise
     else:
         raise ConnectionError("HTTP %d: %s" % (response.status_code,
                                                response.content))
