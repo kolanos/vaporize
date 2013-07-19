@@ -102,7 +102,7 @@ class Flavor(DotDict):
         return handle_request('get', url, wrapper=cls, container='flavors')
 
     @classmethod
-    def get(cls, id):
+    def find(cls, id):
         """Lists all flavor information about the specified flavor ID.
 
         This operation lists all information for the specified flavor ID with
@@ -158,7 +158,7 @@ class Instance(DotDict):
         .. versionadded:: 0.2
         """
         assert 'id' in self, "Missing Instance ID"
-        response = Instance.get(self['id'])
+        response = Instance.find(self['id'])
         self.update(response)
         return self
 
@@ -360,7 +360,7 @@ class Instance(DotDict):
         return handle_request('get', url, wrapper=cls, container='instances')
 
     @classmethod
-    def get(cls, id):
+    def find(cls, id):
         """Returns an Instance by ID.
 
         This operation lists the status and details of the specified database

@@ -36,7 +36,7 @@ class NextGenFlavor(DotDict):
         return handle_request('get', url, wrapper=cls, container='flavors')
 
     @classmethod
-    def get(cls, id):
+    def find(cls, id):
         """Returns a NextGenFlavor by ID.
 
         :param id: The ID of the NextGenFlavor to retrieve
@@ -73,7 +73,7 @@ class NextGenImage(DotDict):
         .. versionadded:: 0.3
         """
         assert 'id' in self, "Missing NextGenImage ID"
-        response = NextGenImage.get(self['id'])
+        response = NextGenImage.find(self['id'])
         self.update(response)
         return self
 
@@ -119,7 +119,7 @@ class NextGenImage(DotDict):
         return handle_request('get', url, wrapper=NextGenImage, container='images')
 
     @classmethod
-    def get(cls, id):
+    def find(cls, id):
         """Return an NextGenImage by ID.
 
         :param id: The ID of the NextGenImage to retrieve
@@ -183,7 +183,7 @@ class NextGenServer(DotDict):
         .. versionadded:: 0.3
         """
         assert 'id' in self
-        response = NextGenServer.get(self['id'])
+        response = NextGenServer.find(self['id'])
         self.update(response)
         return self
 
@@ -479,7 +479,7 @@ class NextGenServer(DotDict):
         return handle_request('get', url, wrapper=cls, container='servers')
 
     @classmethod
-    def get(cls, id):
+    def find(cls, id):
         """Return a NextGenServer using an ID
 
         :param id: The ``id`` of the NextGenServer to be retrieved
@@ -576,7 +576,7 @@ class Network(DotDict):
         return handle_request('get', url, wrapper=cls, container='networks')
 
     @classmethod
-    def get(cls, network_id):
+    def find(cls, network_id):
         """Returns a Network by id
 
         :param network_id: The ``network_id`` of the Network to be retrieved

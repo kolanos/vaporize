@@ -31,7 +31,7 @@ class Volume(DotDict):
         return handle_request('get', url, wrapper=cls, container='volumes')
 
     @classmethod
-    def get(cls, volume_id):
+    def find(cls, volume_id):
         """Returns a Volume by id
 
         :param volume_id: The ``volume_id`` of the Volume to be retrieved
@@ -125,7 +125,7 @@ class Snapshot(DotDict):
         return handle_request('get', url, wrapper=cls, container='snapshots')
 
     @classmethod
-    def get(cls, id):
+    def find(cls, id):
         """Returns a Snapshot by id
 
         :param id: The ``id`` of the snapshot to be retrieved
@@ -161,5 +161,3 @@ class Snapshot(DotDict):
         data = json.dumps(data)
         url = '/'.join([get_url('cloudblockstorage'), 'snapshots'])
         return handle_request('post', url, data, cls, 'snapshot')
-
-

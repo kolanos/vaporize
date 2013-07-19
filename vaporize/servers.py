@@ -82,7 +82,7 @@ class Flavor(DotDict):
         return handle_request('get', url, wrapper=cls, container='flavors')
 
     @classmethod
-    def get(cls, id):
+    def find(cls, id):
         """Returns a Flavor by ID.
 
         :param id: The ID of the Flavor to retrieve
@@ -119,7 +119,7 @@ class Image(DotDict):
         .. versionadded:: 0.1.9
         """
         assert 'id' in self, "Missing Image ID"
-        response = Image.get(self['id'])
+        response = Image.find(self['id'])
         self.update(response)
         return self
 
@@ -165,7 +165,7 @@ class Image(DotDict):
         return handle_request('get', url, wrapper=Image, container='images')
 
     @classmethod
-    def get(cls, id):
+    def find(cls, id):
         """Return an Image by ID.
 
         :param id: The ID of the Image to retrieve
@@ -232,7 +232,7 @@ class Server(DotDict):
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        response = Server.get(self['id'])
+        response = Server.find(self['id'])
         self.update(response)
         return self
 
@@ -457,7 +457,7 @@ class Server(DotDict):
         :param schedule: A BackupSchedule instance 
         :type schedule: :class:`BackupSchedule`
 
-            >>> server = vaporize.servers.Server.get(...)
+            >>> server = vaporize.servers.Server.find(...)
             >>> bs = vaporize.servers.BackupSchedule.create(weekly=...,
             ...                                             daily=...)
             >>> server.backup_schedule = bs
@@ -476,7 +476,7 @@ class Server(DotDict):
     def backup_schedule(self):
         """Disable a backup schedule for this Server
 
-            >>> server = vaporize.servers.Server.get(...)
+            >>> server = vaporize.servers.Server.find(...)
             >>> del server.backup_schedule
 
         .. versionadded:: 0.1
@@ -512,7 +512,7 @@ class Server(DotDict):
         return handle_request('get', url, wrapper=cls, container='servers')
 
     @classmethod
-    def get(cls, id):
+    def find(cls, id):
         """Return a Server using an ID
 
         :param id: The ``id`` of the Server to be retrieved
@@ -611,7 +611,7 @@ class SharedIPGroup(DotDict):
                               container='sharedIpGroups')
 
     @classmethod
-    def get(cls, id):
+    def find(cls, id):
         """Return a Shared IP Group by ID.
 
         :param id: The ID of the Shared IP Group to retrieve

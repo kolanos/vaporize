@@ -319,7 +319,7 @@ class LoadBalancer(DotDict):
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        response = LoadBalancer.get(self['id'])
+        response = LoadBalancer.find(self['id'])
         self.update(response)
         return self
 
@@ -634,12 +634,12 @@ class LoadBalancer(DotDict):
 
         To enable::
 
-            >>> lb = vaporie.loadbalancers.get(12345)
+            >>> lb = vaporie.loadbalancers.find(12345)
             >>> lb.connection_logging = True
 
         To disable::
 
-            >>> lb = vaporize.loadbalancers.get(12345)
+            >>> lb = vaporize.loadbalancers.find(12345)
             >>> lb.connection_logging = False
 
         :returns: This Load Balancer's Connection Logging setting.
@@ -689,12 +689,12 @@ class LoadBalancer(DotDict):
 
         To enable::
 
-            >>> lb = vaporize.loadbalancers.get(12345)
+            >>> lb = vaporize.loadbalancers.find(12345)
             >>> lb.content_caching = True
 
         To disable::
 
-            >>> lb = vaporize.loadbalancers.get(12345)
+            >>> lb = vaporize.loadbalancers.find(12345)
             >>> lb.content_caching = False
 
         .. versionadded:: 0.1
@@ -736,7 +736,7 @@ class LoadBalancer(DotDict):
         To enable::
 
             >>> ct = vaporize.loadbalancers.ConnectionThrottle.create(...)
-            >>> lb = vaporize.loadbalancers.get(12345)
+            >>> lb = vaporize.loadbalancers.find(12345)
             >>> lb.connection_throttle = ct
 
         .. versionadded:: 0.1
@@ -762,7 +762,7 @@ class LoadBalancer(DotDict):
 
         To disable::
 
-            >>> lb = vaporize.loadbalancers.get(12345)
+            >>> lb = vaporize.loadbalancers.find(12345)
             >>> del lb.connection_throttle
 
         .. versionadded:: 0.1
@@ -801,7 +801,7 @@ class LoadBalancer(DotDict):
         To enable::
 
             >>> hm = vaporize.loadbalancers.HealthMonitor.create(...)
-            >>> lb = vaporize.loadbalancers.get(12345)
+            >>> lb = vaporize.loadbalancers.find(12345)
             >>> lb.health_monitor = hm
 
         .. versionadded:: 0.1
@@ -827,7 +827,7 @@ class LoadBalancer(DotDict):
 
         To disable::
 
-            >>> lb = vaporize.loadbalancers.get(12345)
+            >>> lb = vaporize.loadbalancers.find(12345)
             >>> del lb.health_monitor
 
         .. versionadded:: 0.1
@@ -1025,7 +1025,7 @@ class LoadBalancer(DotDict):
                               container='loadBalancers')
 
     @classmethod
-    def get(cls, id):
+    def find(cls, id):
         """Return a Load Balancer by ID.
 
         :param id: A Load Balancer ID.

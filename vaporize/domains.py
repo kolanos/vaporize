@@ -41,7 +41,7 @@ class Domain(DotDict):
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        response = self.get(self['id'])
+        response = self.find(self['id'], records=True, subdomains=True)
         self.update(response)
         return self
 
@@ -235,7 +235,7 @@ class Domain(DotDict):
         return handle_request('get', url, wrapper=cls, container='domains')
 
     @classmethod
-    def get(cls, id, records=False, subdomains=False):
+    def find(cls, id, records=False, subdomains=False):
         """Retrieve a Domain using an ID.
 
         :param records: Include the Domain's Records in the result
