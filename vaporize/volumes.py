@@ -2,7 +2,7 @@
 
 import json
 
-from vaporize.core import get_url, handle_request
+from vaporize.core import convert_datetime, get_url, handle_request
 from vaporize.utils import DotDict
 
 
@@ -14,16 +14,26 @@ class Volume(DotDict):
             return '<Volume %s>' % self['display_name']
         return super(Volume, self).__repr__()
 
+    def __setitem__(self, key, value):
+        if key == 'display_name':
+            key = 'name'
+        elif key == 'display_description':
+            key = 'description'
+        elif key == 'createdAt':
+            key = 'created_at'
+            value = convert_datetime(value)
+        super(Volume, self).__setitem__(key, value)
+
     def delete(self):
-        """Delete this CloudBlockStorage volume."""
+        """Delete this CloudBlockStorage Volume."""
         assert 'id' in self
         url = '/'.join([get_url('cloudblockstorage'), 'volumes',
-            str(self['id'])])
+                        str(self['id'])])
         handle_request('delete', url)
 
     @classmethod
     def list(cls):
-        """Returns a list of volumes.
+        """Returns a list of Volumes.
 
         """
         url = [get_url('cloudblockstorage'), 'volumes']
@@ -31,71 +41,73 @@ class Volume(DotDict):
         return handle_request('get', url, wrapper=cls, container='volumes')
 
     @classmethod
-    def find(cls, volume_id):
-        """Returns a Volume by id
+    def find(cls, id):
+        """Returns a Volume by ID.
 
-        :param volume_id: The ``volume_id`` of the Volume to be retrieved
-        :type volume_id: str
+        :param id: The ``id`` of the Volume to be retrieved
+        :type id: str
         :returns: A :class:`Volume`
         """
-        url = '/'.join([get_url('cloudblockstorage'), 'volumes',
-            str(volume_id)])
+        url = '/'.join([get_url('cloudblockstorage'), 'volumes', str(id)])
         return handle_request('get', url, wrapper=cls, container='volume')
 
     @classmethod
-    def create(cls, size, display_description='', display_name='',
-            snapshot_id='', volume_type=''):
-        """Returns info about :param volume_type_id.
+    def create(cls, size, name=None, description=None, snapshot=None,
+               volume_type=None):
+        """Create a CloudBlockStorage Volume.
 
-        :param size: volume size in GB (min. 100GB max. 1TB).
-        :type : str
-        :param display_description: display description.
-        :type : str
-        :param display_name: display name.
-        :type : str
-        :param snapshot_id: snapshot_id of the volume to be restored.
-        :type : str
-        :param volume_type: volume type.
-        :type : str
+        :param size: Volume size in GB (min. 100GB max. 1TB).
+        :type size: int
+        :param name: Name of Volume.
+        :type name: str
+        :param description: Description of Volume.
+        :type description: str
+        :param snapshot: Snapshot_ID or :class:`Snapshot` of the volume restore.
+        :type snapshot: int or :class:`Snapshot`
+        :param volume_type: Volume Type, either ``SATA`` or ``SSD``.
+        :type volume_type: str or :class:`VolumeType`
         """
         assert 100  <= int(size) <= 1000
-        data = { 'volume': { 'size': int(size)}}
-        if display_description:
-            data['volume']['display_descrition'] = str(display_description)
-        if display_name:
+        data = {'volume': {'size': int(size)}}
+        if name:
             data['volume']['display_name'] = str(display_name)
-        if snapshot_id:
-            data['volume']['snapshot_id'] = str(snapshot_id)
+        if description:
+            data['volume']['display_descrition'] = str(description)
+        if snapshot:
+            if isinstance(snapshot, Snapshot):
+                snapshot = snapshot.id
+            data['volume']['snapshot_id'] = int(snapshot)
         if volume_type:
+            if isinstance(volume_type, VolumeType):
+                volume_type = volume_type.name
             data['volume']['volume_type'] = str(volume_type)
         data = json.dumps(data)
         url = '/'.join([get_url('cloudblockstorage'), 'volumes'])
         return handle_request('post', url, data, cls, 'volume')
 
 
-class Type(DotDict):
-    """A CloudBlockStorage Type."""
+class VolumeType(DotDict):
+    """A CloudBlockStorage Volume Type."""
 
     def __repr__(self):
         if 'name' in self:
-            return '<Type %s>' % self['name']
-        return super(Type, self).__repr__()
+            return '<VolumeType %s>' % self['name']
+        return super(VolumeType, self).__repr__()
 
     @classmethod
     def list(cls):
-        """Returns a list of volume types."""
+        """Returns a list of CloudBlockStorage Volume Types."""
         url = '/'.join((get_url('cloudblockstorage'), 'types'))
         return handle_request('get', url, wrapper=cls, container='volume_types')
 
     @classmethod
-    def describe(cls, volume_type_id):
-        """Returns info about :param volume_type_id.
+    def find(cls, id):
+        """Returns a CloudBlockStorage Volume Type.
 
-        :param volume_type_id: One of the ids returned by the types() call.
+        :param id: One of the IDs returned by the types() call.
         :type volume_type_id: int
         """
-        url = '/'.join([get_url('cloudblockstorage'), 'types',
-            str(volume_type_id)])
+        url = '/'.join([get_url('cloudblockstorage'), 'types', str(id)])
         return handle_request('get', url, wrapper=cls, container='volume_type')
 
 
@@ -104,21 +116,31 @@ class Snapshot(DotDict):
 
     def __repr__(self):
         if 'display_name' in self:
-            return '<Snapshot %s>' % self['display_name']
+            return '<Snapshot %s>' % self['name']
         return super(Snapshot, self).__repr__()
 
+    def __setitem__(self, key, value):
+        if key == 'display_name':
+            key = 'name'
+        elif key == 'display_description':
+            key = 'description'
+        elif key == 'createdAt':
+            key = 'created_at'
+            value = convert_datetime(value)
+        super(Snapshot, self).__setitem__(key, value)
+
     def delete(self):
-        """Delete this CloudBlockStorage snapshot."""
+        """Delete this CloudBlockStorage Snapshot."""
         assert 'id' in self
         url = '/'.join([get_url('cloudblockstorage'), 'snapshots',
-            str(self['id'])])
+                        str(self['id'])])
         handle_request('delete', url)
 
     @classmethod
-    def list(cls, detail=False):
-        """Returns a list of snapshots.
+    def list(cls):
+        """Returns a list of Snapshots.
 
-        :type: A list of :class:`Snapshot`
+        :returns: A list of :class:`Snapshot`
         """
         url = [get_url('cloudblockstorage'), 'snapshots']
         url = '/'.join(url)
@@ -126,38 +148,38 @@ class Snapshot(DotDict):
 
     @classmethod
     def find(cls, id):
-        """Returns a Snapshot by id
+        """Returns a Snapshot by ID
 
         :param id: The ``id`` of the snapshot to be retrieved
         :type volume_id: str
         :returns: A :class:`Snapshot`
         """
-        url = '/'.join([get_url('cloudblockstorage'), 'snapshots',
-            str(volume_id)])
+        url = '/'.join([get_url('cloudblockstorage'), 'snapshots', str(id)])
         return handle_request('get', url, wrapper=cls, container='snapshot')
 
     @classmethod
-    def create(cls, volume_id, force=False, display_description='',
-            display_name=''):
-        """Returns info about :param volume_type_id.
+    def create(cls, volume, force=False, name=None, description=None):
+        """Create a CloudBlockStorage Snapshot.
 
-        :param volume_id: volume_id to snapshot.
-        :type : str
-        :param force: force volume snapshot
-        :type : bool
-        :param display_description: display description.
-        :type : str
-        :param display_name: display name.
-        :type : str
+        :param volume: Volume_ID or :class:`Volume` to snapshot.
+        :type volume: int or :class:`Volume`
+        :param force: Force volume snapshot.
+        :type force: bool
+        :param name: Display name of volume.
+        :type name: str
+        :param description: Display description of volume.
+        :type description: str
         """
-        assert volume_id
-        data = { 'snapshot': { 'volume_id': str(volume_id)}}
-        if display_description:
-            data['snapshot']['display_descrition'] = str(display_description)
-        if display_name:
-            data['snapshot']['display_name'] = str(display_name)
+        assert volume
+        if isinstance(volume, Volume):
+            volume = volume.id
+        data = {'snapshot': {'volume_id': str(volume)}}
         if force:
-            data['snapshot']['force'] = 'True'
+            data['snapshot']['force'] = bool(force)
+        if name:
+            data['snapshot']['display_name'] = str(name)
+        if description:
+            data['snapshot']['display_descrition'] = str(description)
         data = json.dumps(data)
         url = '/'.join([get_url('cloudblockstorage'), 'snapshots'])
         return handle_request('post', url, data, cls, 'snapshot')
