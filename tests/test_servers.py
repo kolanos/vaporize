@@ -52,11 +52,11 @@ def test_flavor_list_offset():
     assert flavors[0].id == 6
 
 
-def test_flavor_get():
+def test_flavor_find():
     expected  = '{"flavor":{"id":1,"ram":256,"disk":10,"name":"256 server"}}'
     handle_mock = partial(handle_request_mock, 200, expected)
     vaporize.servers.handle_request = handle_mock
-    flavor = vaporize.servers.Flavor.get(1)
+    flavor = vaporize.servers.Flavor.find(1)
     assert isinstance(flavor, vaporize.servers.Flavor)
     assert hasattr(flavor, 'id')
     assert flavor.id == 1
@@ -114,11 +114,11 @@ def test_image_list_offset():
     assert images[0].id == 108
 
 
-def test_image_get():
+def test_image_find():
     expected  = '{"image":{"id":112,"status":"ACTIVE","created":"2011-04-21T10:24:01-05:00","updated":"2011-04-21T10:24:01-05:00","name":"Ubuntu 10.04 LTS"}}'
     handle_mock = partial(handle_request_mock, 200, expected)
     vaporize.servers.handle_request = handle_mock
-    image = vaporize.servers.Image.get(112)
+    image = vaporize.servers.Image.find(112)
     assert isinstance(image, vaporize.servers.Image)
     assert hasattr(image, 'id')
     assert image.id == 112
@@ -165,7 +165,7 @@ def test_image_reload():
     expected = '{"image":{"progress":100,"id":12345,"status":"ACTIVE","created":"2012-07-13T17:26:23-05:00","updated":"2012-07-13T17:29:10-05:00","name":"testing"}}'
     handle_mock = partial(handle_request_mock, 200, expected)
     vaporize.servers.handle_request = handle_mock
-    image = vaporize.servers.Image.get(12345)
+    image = vaporize.servers.Image.find(12345)
     image.reload()
     assert isinstance(image, vaporize.servers.Image)
     assert hasattr(image, 'id')
@@ -229,11 +229,11 @@ def test_server_list_offset():
     assert servers[0].id == 12346
 
 
-def test_server_get():
+def test_server_find():
     expected = '{"server":{"progress":0,"id":12345,"imageId":112,"flavorId":4,"status":"ACTIVE","name":"foo","hostId":"asdfasdfasdfasdfasdf","addresses":{"public":["198.0.0.1"],"private":["10.0.0.1"]},"metadata":{}}}'
     handle_mock = partial(handle_request_mock, 200, expected)
     vaporize.servers.handle_request = handle_mock
-    server = vaporize.servers.Server.get(12345)
+    server = vaporize.servers.Server.find(12345)
     assert isinstance(server, vaporize.servers.Server)
     assert hasattr(server, 'id')
     assert server.id == 12345
