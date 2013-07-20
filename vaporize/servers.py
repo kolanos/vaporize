@@ -2,8 +2,10 @@
 
 import json
 
-from vaporize.core import convert_datetime, get_url, handle_request, query
-from vaporize.utils import DotDict
+from .core import convert_datetime, get_url, handle_request, query
+from .resources import (Resource, CreateableResource, FindableResource,
+                        ListableResource, DeleteableResource,
+                        ReloadableResource)
 
 BACKUP_WEEKLY_DISABLED  = 'DISABLED'
 BACKUP_WEEKLY_SUNDAY    = 'SUNDAY'
@@ -29,14 +31,10 @@ BACKUP_DAILY_H_2000_2200 = 'H_2000_2200'
 BACKUP_DAILY_H_2200_0000 = 'H_2200_0000'
 
 
-class BackupSchedule(DotDict):
+class BackupSchedule(Resource):
     """A CloudServers Backup Schedule."""
-    def __repr__(self):
-        if 'daily' in self:
-            return '<BackupSchedule %s>' % self['daily']
-        if 'weekly' in self:
-            return '<BackupSchedule %s>' % self['weekly']
-        return super(BackupSchedule, self).__repr__()
+
+    IDENTIFIER = ['daily', 'weekly']
 
     @classmethod
     def create(cls, weekly=None, daily=None):
@@ -51,77 +49,26 @@ class BackupSchedule(DotDict):
         return ret
 
 
-class Flavor(DotDict):
+class Flavor(Resource, FindableResource, ListableResource):
     """A CloudServers Flavor."""
-    def __repr__(self):
-        if 'name' in self:
-            return '<Flavor %s>' % self['name']
-        return super(Flavor, self).__repr__()
 
-    @classmethod
-    def list(cls, limit=None, offset=None, detail=False):
-        """Returns a list of Flavors.
-
-        :param limit: Limit the result set by a number
-        :type limit: int
-        :param offset: Offset the result set by a number
-        :type offset: int
-        :param detail: Return additional details about each Flavor
-        :type: bool
-        :returns: A list of CloudServers Flavors.
-        :rtype: :class:`Flavor`
-
-        .. versionadded:: 0.1
-        """
-        url = [get_url('cloudservers'), 'flavors']
-        if detail:
-            url.append('detail')
-        url = '/'.join(url)
-        if limit is not None or offset is not None:
-            url = query(url, limit=limit, offset=offset)
-        return handle_request('get', url, wrapper=cls, container='flavors')
-
-    @classmethod
-    def find(cls, id):
-        """Returns a Flavor by ID.
-
-        :param id: The ID of the Flavor to retrieve
-        :type id: int
-        :returns: A CloudServers Flavor matching the ID.
-        :rtype: :class:`Flavor`
-
-        .. versionadded:: 0.1
-        """
-        url = '/'.join([get_url('cloudservers'), 'flavors', str(id)])
-        return handle_request('get', url, wrapper=cls, container='flavor')
+    BASE_URL = get_url('cloudservers') + '/flavors'
+    IDENTIFIER = 'name'
 
 
-class Image(DotDict):
+class Image(Resource, CreateableResource, FindableResource, ListableResource,
+            DeleteableResource, ReloadableResource):
     """A CloudServers Image."""
-    def __repr__(self):
-        if 'name' in self:
-            return '<Image %s>' % self['name']
-        return super(Image, self).__repr__()
+
+    BASE_URL = get_url('cloudservers') + '/images'
+    IDENTIFIER = 'name'
 
     def __setitem__(self, key, value):
         if key == 'serverId':
             key = 'server_id'
-        elif key in ['created', 'updated']:
+        if key in ['created', 'updated']:
             value = convert_datetime(value)
         super(Image, self).__setitem__(key, value)
-
-    def reload(self):
-        """Reload this Image (an implicit :func:`get`).
-
-        :returns: An updated CloudServers Image.
-        :rtype: :class:`Image`
-
-        .. versionadded:: 0.1.9
-        """
-        assert 'id' in self, "Missing Image ID"
-        response = Image.find(self['id'])
-        self.update(response)
-        return self
 
     def delete(self):
         """Delete this Image.
@@ -142,43 +89,6 @@ class Image(DotDict):
         handle_request('delete', url)
 
     @classmethod
-    def list(cls, limit=None, offset=None, detail=False):
-        """Returns a list of CloudServers Images.
-
-        :param limit: Limit the result set by a cetain number
-        :type limit: int
-        :param offset: Offset the result set by a certain number
-        :type offset: int
-        :param detail: Return additional details about each Image
-        :type detail: bool
-        :returns: A list of CloudServers Images.
-        :rtype: A list of :class:`Image`
-
-        .. versionadded:: 0.1
-        """
-        url = [get_url('cloudservers'), 'images']
-        if detail:
-            url.append('detail')
-        url = '/'.join(url)
-        if limit is not None or offset is not None:
-            url = query(url, limit=limit, offset=offset)
-        return handle_request('get', url, wrapper=Image, container='images')
-
-    @classmethod
-    def find(cls, id):
-        """Return an Image by ID.
-
-        :param id: The ID of the Image to retrieve
-        :type id: int
-        :returns: A CloudServer Image matching the ID.
-        :rtype: :class:`Image`
-
-        .. versionadded:: 0.1
-        """
-        url = '/'.join([get_url('cloudservers'), 'images', str(id)])
-        return handle_request('get', url, wrapper=cls, container='image')
-
-    @classmethod
     def create(cls, name, server):
         """Create an Image.
 
@@ -196,45 +106,26 @@ class Image(DotDict):
         server = int(server)
         data = {'image': {'serverId': server,
                           'name': name}}
-        data = json.dumps(data)
-        url = '/'.join([get_url('cloudservers'), 'images'])
-        return handle_request('post', url, data, cls, 'image')
+        return super(Image, cls).create(data)
 
 
-class IP(DotDict):
+class IP(Resource):
     """A CloudServers IP Address."""
-    def __repr__(self):
-        if 'public' in self:
-            return '<IP %s>' % self['public'][0]
-        if 'private' in self:
-            return '<IP %s>' % self['private'][0]
-        return super(IP, self).__repr__()
+
+    IDENTIFIER = ['public', 'private']
 
 
-class Server(DotDict):
+class Server(Resource, CreateableResource, FindableResource, ListableResource,
+             DeleteableResource, ReloadableResource):
     """A CloudServers Server."""
-    def __repr__(self):
-        if 'name' in self:
-            return "<Server %s>" % self['name']
-        return super(Server, self).__repr__()
+
+    BASE_URL = get_url('cloudservers') + '/servers'
+    IDENTIFIER = 'name'
 
     def __setitem__(self, key, value):
         if key == 'addresses':
             value = IP(value)
         super(Server, self).__setitem__(key, value)
-
-    def reload(self):
-        """Reload this Server (an implicit :func:`get`).
-
-        :returns: An updated CloudServers Server.
-        :rtype: :class:`Server`
-
-        .. versionadded:: 0.1
-        """
-        assert 'id' in self
-        response = Server.find(self['id'])
-        self.update(response)
-        return self
 
     def modify(self, name=None, password=None):
         """Modify this Server's name or root password.
@@ -262,21 +153,6 @@ class Server(DotDict):
                 self['name'] = name
         return self
 
-    def delete(self):
-        """Delete this Server.
-
-        .. warning::
-
-            There is no confirmation step for this operation. When you delete a
-            server it is permanent. If in doubt, create a backup image
-            (:func:`vaporize.images.create`) first before deleting.
-
-        .. versionadded:: 0.1
-        """
-        assert 'id' in self
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id'])])
-        handle_request('delete', url)
-
     @property
     def ips(self):
         """
@@ -288,13 +164,12 @@ class Server(DotDict):
         .. versionadded:: 0.1
         """
         if 'addresses' not in self:
-            assert 'id' in self
-            url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
-                            'ips'])
+            assert 'id' in self, 'Missing id attribute.'
+            url = '/'.join([self.BASE_URL, str(self.id), 'ips'])
             response = handle_request('get', url, wrapper=IP,
                                       container='addresses')
-            self['addresses'] = response
-        return self['addresses']
+            self.addresses = response
+        return self.addresses
 
     @property
     def public_ips(self):
@@ -333,17 +208,17 @@ class Server(DotDict):
 
         :param address: IP to share in the Shared IP Group
         :type address: str
-        :param ipgroup: A :class:`SharedIPGroup` or ``id``
-        :type ipgroup: int or :class:`SharedIPGroup`
+        :param ipgroup: A :class:`SharedIpGroup` or ``id``
+        :type ipgroup: int or :class:`SharedIpGroup`
         :param configure: Configure the shared IP on the Server
         :type configure: bool
         :returns: The Shared IP Group associated with this Server.
-        :rtype: :class:`SharedIPGroup`
+        :rtype: :class:`SharedIpGroup`
 
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        if isinstance(ipgroup, SharedIPGroup):
+        if isinstance(ipgroup, SharedIpGroup):
             ipgroup = ipgroup.id
         ipgroup = int(ipgroup)
         data = json.dumps({'shareIp': {'sharedIpGroup': ipgroup,
@@ -488,43 +363,6 @@ class Server(DotDict):
         del self['backup_schedule']
 
     @classmethod
-    def list(cls, limit=None, offset=None, detail=False):
-        """
-        List of CloudServer Servers
-
-        :param limit: Limit the result set to a certain number
-        :type limit: int
-        :param offset: Offset the result set by a certain number
-        :type offset: int
-        :param detail: Return detailed information about each Server
-        :type detail: bool
-        :returns: A list of CloudServers Servers.
-        :rtype: List of :class:`Server`
-
-        .. versionadded:: 0.1
-        """
-        url = [get_url('cloudservers'), 'servers']
-        if detail:
-            url.append('detail')
-        url = '/'.join(url)
-        if limit is not None or offset is not None:
-            url = query(url, limit=limit, offset=offset)
-        return handle_request('get', url, wrapper=cls, container='servers')
-
-    @classmethod
-    def find(cls, id):
-        """Return a Server using an ID
-
-        :param id: The ``id`` of the Server to be retrieved
-        :type id: int
-        :return: A :class:`Server`
-
-        .. versionadded:: 0.1
-        """
-        url = '/'.join([get_url('cloudservers'), 'servers', str(id)])
-        return handle_request('get', url, wrapper=cls, container='server')
-
-    @classmethod
     def create(cls, name, image, flavor, metadata=None, files=None):
         """Create a CloudServers Server
 
@@ -557,72 +395,21 @@ class Server(DotDict):
         if isinstance(files, dict):
             for path, contents in list(files.items()):
                 data['personality'].append({'path': path, 'contents': contents})
-        data = json.dumps(data)
-        url = '/'.join([get_url('cloudservers'), 'servers'])
-        return handle_request('post', url, data, cls, 'server')
+        return super(Server, cls).create(data)
 
 
-class SharedIPGroup(DotDict):
+class SharedIpGroup(Resource, FindableResource, ListableResource,
+                    DeleteableResource):
     """A Cloudservers Shared IP Group."""
-    def __repr__(self):
-        if 'name' in self:
-            return '<SharedIPGroup %s>' % self['name']
-        return super(SharedIPGroup, self).__repr__()
+
+    IDENTIFIER = 'name'
 
     def __setitem__(self, key, value):
         if key == 'sharedIpGroupId':
             key = 'id'
-        elif key == 'configuredServer':
+        if key == 'configuredServer':
             key = 'configured'
-        super(SharedIPGroup, self).__setitem__(key, value)
-
-    def delete(self):
-        """Delete this Shared IP Group.
-
-        .. versionadded:: 0.1
-        """
-        assert 'id' in self
-        url = '/'.join([get_url('cloudservers'), 'shared_ip_groups',
-                        str(self['id'])])
-        handle_request('delete', url)
-
-    @classmethod
-    def list(cls, limit=None, offset=None, detail=False):
-        """Returns a list of Shared IP Groups.
-
-        :param limit: Limit the result set by a certain number
-        :type limit: int
-        :param offset: Offset the result set by a certain number
-        :type offset: int
-        :param detail: Return additional details about each Shared IP Group
-        :type detail: bool
-        :returns: A list of Shared IP Groups.
-        :rtype: A list of :class:`SharedIPGroup`
-
-        .. versionadded:: 0.1
-        """
-        url = [get_url('cloudservers'), 'shared_ip_groups']
-        if detail:
-            url.append('detail')
-        url = '/'.join(url)
-        if limit is not None or offset is not None:
-            url = query(url, limit=limit, offset=offset)
-        return handle_request('get', url, wrapper=cls,
-                              container='sharedIpGroups')
-
-    @classmethod
-    def find(cls, id):
-        """Return a Shared IP Group by ID.
-
-        :param id: The ID of the Shared IP Group to retrieve
-        :type id: int
-        :returns: A :class:`SharedIPGroup`
-
-        .. versionadded:: 0.1
-        """
-        url = '/'.join([get_url('cloudservers'), 'shared_ip_groups', str(id)])
-        return handle_request('get', url, wrapper=cls,
-                              container='sharedIpGroup')
+        super(SharedIpGroup, self).__setitem__(key, value)
 
     @classmethod
     def create(cls, name, server):
@@ -633,7 +420,7 @@ class SharedIPGroup(DotDict):
         :param server: The Server or ``id`` to add to group
         :type server: int or :class:`Server`
         :returns: A shiny new CloudServers Shared IP Group.
-        :rtype: :class:`SharedIPGroup`
+        :rtype: :class:`SharedIpGroup`
 
         .. versionadded:: 0.1
         """
@@ -642,6 +429,4 @@ class SharedIPGroup(DotDict):
         server = int(server)
         data = {'sharedIpGroup': {'name': name,
                                   'server': server}}
-        data = json.dumps(data)
-        url = '/'.join([get_url('cloudservers'), 'server_ip_groups'])
-        return handle_request('post', url, data, cls, 'sharedIpGroup')
+        return super(SharedIpGroup, cls).create(data)
