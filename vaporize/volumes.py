@@ -2,11 +2,11 @@
 
 import json
 
-from vaporize.core import convert_datetime, get_url, handle_request
-from vaporize.utils import DotDict
+from .core import convert_datetime, get_url, handle_request
+from .resources import Resource
 
 
-class Volume(DotDict):
+class Volume(Resource):
     """A CloudBlockStorage Volume."""
 
     def __repr__(self):
@@ -86,7 +86,7 @@ class Volume(DotDict):
         return handle_request('post', url, data, cls, 'volume')
 
 
-class VolumeType(DotDict):
+class VolumeType(Resource):
     """A CloudBlockStorage Volume Type."""
 
     def __repr__(self):
@@ -111,7 +111,7 @@ class VolumeType(DotDict):
         return handle_request('get', url, wrapper=cls, container='volume_type')
 
 
-class Snapshot(DotDict):
+class Snapshot(Resource):
     """A CloudBlockStorage Snapshot."""
 
     def __repr__(self):

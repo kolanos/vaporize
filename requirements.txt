@@ -1,4 +1,5 @@
 python-dateutil
 requests
+inflection
 sphinx
 sphinxtogithub

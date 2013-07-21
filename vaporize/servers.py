@@ -2,10 +2,9 @@
 
 import json
 
-from .core import convert_datetime, get_url, handle_request, query
-from .resources import (Resource, CreateableResource, FindableResource,
-                        ListableResource, DeleteableResource,
-                        ReloadableResource)
+from .core import convert_datetime, handle_request
+from .resources import (Resource, CloudServer, Createable, Findable, Listable,
+                        Deleteable, Reloadable)
 
 BACKUP_WEEKLY_DISABLED  = 'DISABLED'
 BACKUP_WEEKLY_SUNDAY    = 'SUNDAY'
@@ -49,19 +48,15 @@ class BackupSchedule(Resource):
         return ret
 
 
-class Flavor(Resource, FindableResource, ListableResource):
+class Flavor(CloudServer, Findable, Listable):
     """A CloudServers Flavor."""
 
-    BASE_URL = get_url('cloudservers') + '/flavors'
-    IDENTIFIER = 'name'
+    pass
 
 
-class Image(Resource, CreateableResource, FindableResource, ListableResource,
-            DeleteableResource, ReloadableResource):
+class Image(CloudServer, Createable, Modifyable, Findable, Listable,
+            Deleteable, Reloadable):
     """A CloudServers Image."""
-
-    BASE_URL = get_url('cloudservers') + '/images'
-    IDENTIFIER = 'name'
 
     def __setitem__(self, key, value):
         if key == 'serverId':
@@ -69,24 +64,6 @@ class Image(Resource, CreateableResource, FindableResource, ListableResource,
         if key in ['created', 'updated']:
             value = convert_datetime(value)
         super(Image, self).__setitem__(key, value)
-
-    def delete(self):
-        """Delete this Image.
-
-        .. note::
-
-            You can only delete Images you create.
-
-        .. warning::
-
-            There is not confirmation step for this operation. Deleting an
-            image is permanent.
-
-        .. versionadded:: 0.1
-        """
-        assert 'id' in self
-        url = '/'.join([get_url('cloudservers'), 'images', str(self['id'])])
-        handle_request('delete', url)
 
     @classmethod
     def create(cls, name, server):
@@ -115,12 +92,9 @@ class IP(Resource):
     IDENTIFIER = ['public', 'private']
 
 
-class Server(Resource, CreateableResource, FindableResource, ListableResource,
-             DeleteableResource, ReloadableResource):
+class Server(CloudServer, Createable, Findable, Listable, Deleteable,
+             Reloadable):
     """A CloudServers Server."""
-
-    BASE_URL = get_url('cloudservers') + '/servers'
-    IDENTIFIER = 'name'
 
     def __setitem__(self, key, value):
         if key == 'addresses':
@@ -145,13 +119,7 @@ class Server(Resource, CreateableResource, FindableResource, ListableResource,
             data['server']['name'] = name
         if password is not None:
             data['server']['adminPass'] = password
-        data = json.dumps(data)
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id'])])
-        response = handle_request('put', url, data=data)
-        if response:
-            if name is not None:
-                self['name'] = name
-        return self
+        super(Server, self).modify(data)
 
     @property
     def ips(self):
@@ -181,7 +149,7 @@ class Server(Resource, CreateableResource, FindableResource, ListableResource,
             self['addresses'] = IP()
         if 'public' not in self['addresses']:
             assert 'id' in self
-            url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
+            url = '/'.join([self.BASE_URL, str(self['id']),
                             'ips', 'public'])
             response = handle_request('get', url, wrapper=IP)
             self['addresses'].update(response)
@@ -197,7 +165,7 @@ class Server(Resource, CreateableResource, FindableResource, ListableResource,
             self['addresses'] = IP()
         if 'private' not in self['addresses']:
             assert 'id' in self
-            url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
+            url = '/'.join([self.BASE_URL, str(self['id']),
                             'ips', 'private'])
             response = handle_request('get', url, wrapper=IP)
             self['addresses'].update(response)
@@ -223,7 +191,7 @@ class Server(Resource, CreateableResource, FindableResource, ListableResource,
         ipgroup = int(ipgroup)
         data = json.dumps({'shareIp': {'sharedIpGroup': ipgroup,
                                        'configureServer': configure}})
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
+        url = '/'.join([self.BASE_URL, str(self['id']),
                         'ips', 'public', address])
         handle_request('put', url, data=data)
 
@@ -233,7 +201,7 @@ class Server(Resource, CreateableResource, FindableResource, ListableResource,
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
+        url = '/'.join([self.BASE_URL, str(self['id']),
                         'ips', 'public', address])
         handle_request('delete', url)
 
@@ -248,7 +216,7 @@ class Server(Resource, CreateableResource, FindableResource, ListableResource,
         assert 'id' in self, "Missing Server ID"
         assert type in ['SOFT', 'HARD'], "Reboot type must be 'SOFT' or 'HARD'"
         data = json.dumps({'reboot': {'type': type}})
-        url = '/'.join([get_url('cloudservers'), 'servers',
+        url = '/'.join([self.BASE_URL,
                         str(self['id']), 'action'])
         handle_request('post', url, data)
 
@@ -265,7 +233,7 @@ class Server(Resource, CreateableResource, FindableResource, ListableResource,
             image = image.id
         image = int(image)
         data = json.dumps({'rebuild': {'imageId': int(image)}})
-        url = '/'.join([get_url('cloudservers'), 'servers',
+        url = '/'.join([self.BASE_URL,
                         str(self['id']), 'action'])
         handle_request('post', url, data)
 
@@ -282,8 +250,7 @@ class Server(Resource, CreateableResource, FindableResource, ListableResource,
             flavor = flavor.id
         flavor = int(flavor)
         data = json.dumps({'resize': {'flavorId': flavor}})
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
-                        'action'])
+        url = '/'.join([self.BASE_URL, str(self['id']), 'action'])
         handle_request('post', url, data)
 
     def confirm_resize(self):
@@ -293,8 +260,7 @@ class Server(Resource, CreateableResource, FindableResource, ListableResource,
         """
         assert 'id' in self
         data = json.dumps({'confirmResize': None})
-        url = '/'.join([get_url('cloudservers'), 'servers',
-                        str(self['id']), 'action'])
+        url = '/'.join([self.BASE_URL, str(self.id), 'action'])
         handle_request('post', url, data)
 
     def revert_resize(self):
@@ -304,8 +270,7 @@ class Server(Resource, CreateableResource, FindableResource, ListableResource,
         """
         assert 'id' in self
         data = json.dumps({'revertResize': None})
-        url = '/'.join([get_url('cloudservers'), 'servers',
-                        str(self['id']), 'action'])
+        url = '/'.join([self.BASE_URL, str(self.id), 'action'])
         handle_request('post', url, data)
 
     @property
@@ -318,7 +283,7 @@ class Server(Resource, CreateableResource, FindableResource, ListableResource,
         """
         if 'backup_schedule' not in self:
             assert 'id' in self
-            url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
+            url = '/'.join([self.BASE_URL, str(self['id']),
                             'backup_schedule'])
             response = handle_request('get', url, wrapper=BackupSchedule,
                                       container='backupSchedule')
@@ -342,8 +307,7 @@ class Server(Resource, CreateableResource, FindableResource, ListableResource,
         """
         assert 'id' in self
         assert isinstance(schedule, BackupSchedule)
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
-                        'backup_schedule'])
+        url = '/'.join([self.BASE_URL, str(self['id']), 'backup_schedule'])
         handle_request('post', url, schedule.to_dict())
         self['backup_schedule'] = schedule
 
@@ -357,8 +321,7 @@ class Server(Resource, CreateableResource, FindableResource, ListableResource,
         .. versionadded:: 0.1
         """
         assert 'id' in self
-        url = '/'.join([get_url('cloudservers'), 'servers', str(self['id']),
-                        'backup_schedule'])
+        url = '/'.join([self.BASE_URL, str(self['id']), 'backup_schedule'])
         handle_request('delete', url)
         del self['backup_schedule']
 
@@ -398,11 +361,8 @@ class Server(Resource, CreateableResource, FindableResource, ListableResource,
         return super(Server, cls).create(data)
 
 
-class SharedIpGroup(Resource, FindableResource, ListableResource,
-                    DeleteableResource):
+class SharedIpGroup(CloudServer, Findable, Listable, Deleteable):
     """A Cloudservers Shared IP Group."""
-
-    IDENTIFIER = 'name'
 
     def __setitem__(self, key, value):
         if key == 'sharedIpGroupId':

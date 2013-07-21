@@ -2,10 +2,10 @@
 
 import json
 
-from vaporize.core import convert_datetime, get_url, handle_request, query
-from vaporize.utils import DotDict
+from .core import convert_datetime, get_url, handle_request, query
+from .resources import Resource
 
-class NextGenFlavor(DotDict):
+class NextGenFlavor(Resource):
     """A CloudNextGenServers NextGenFlavor."""
     def __repr__(self):
         if 'name' in self:
@@ -50,7 +50,7 @@ class NextGenFlavor(DotDict):
         return handle_request('get', url, wrapper=cls, container='flavor')
 
 
-class NextGenImage(DotDict):
+class NextGenImage(Resource):
     """A CloudNextGenServers NextGenImage."""
     def __repr__(self):
         if 'name' in self:
@@ -155,7 +155,7 @@ class NextGenImage(DotDict):
         return handle_request('post', url, data, cls, 'image')
 
 
-class VolumeAttachment(DotDict):
+class VolumeAttachment(Resource):
     def __repr__(self):
         if 'volume_id' in self:
             return '<Volume %s>' % self['volume_id']
@@ -167,7 +167,7 @@ class VolumeAttachment(DotDict):
         super(VolumeAttachment, self).__setitem__(key, value)
 
 
-class NextGenServer(DotDict):
+class NextGenServer(Resource):
     """A CloudNextGenServers NextGenServer."""
     def __repr__(self):
         if 'name' in self:
@@ -549,7 +549,7 @@ class NextGenServer(DotDict):
         return handle_request('post', url, data, cls, 'server')
 
 
-class Network(DotDict):
+class Network(Resource):
     """A Cloudservers v2 network."""
 
     def __repr__(self):

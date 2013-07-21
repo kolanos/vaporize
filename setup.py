@@ -21,7 +21,7 @@ setup(
     url='https://github.com/kolanos/vaporize',
     version=VERSION,
     license='MIT',
-    install_requires=['python-dateutil', 'requests'],
+    install_requires=['python-dateutil', 'requests', 'inflection'],
     tests_require=['nose'],
     test_suite='nose.collector',
     packages=['vaporize'],

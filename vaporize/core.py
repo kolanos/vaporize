@@ -14,9 +14,9 @@ except ImportError:
 import dateutil.parser
 import requests
 
-from vaporize import __version__
-from vaporize.exceptions import ConnectionError, handle_exception
-from vaporize.utils import DotDict
+from . import __version__
+from .exceptions import ConnectionError, handle_exception
+from .utils import dotdict
 
 US_AUTH_URL = "https://identity.api.rackspacecloud.com/v2.0/tokens"
 UK_AUTH_URL = "https://lon.identity.api.rackspacecloud.com/v2.0/tokens"
@@ -116,7 +116,7 @@ def handle_request(verb, url, data=None, wrapper=None, container=None, **kwargs)
         return True
     content = json.loads(content)
     if wrapper is None:
-        wrapper = DotDict
+        wrapper = dotdict
     if container and isinstance(content[container], list):
         return [wrapper(i, **kwargs) for i in content[container]]
     elif container is None:

@@ -2,24 +2,22 @@
 
 import json
 
+
 from .core import handle_request, query
-from .utils import camelcase_to_underscore
+from .utils import dotdict
 
 
-class Resource(dict):
-    """
-    Base class for a resource.
-
-    Give dict support for dot notation and force value changes through
-    __setitem__ so that it can be overloaded/overidden.
-    """
+class Resource(dotdict):
+    """Base class for a resource."""
 
     BASE_URL = None
-    CONTAINER = None
-    IDENTIFIER = ['id', 'name']
+    SERVICE = None
+    IDENTIFIER = 'name'
 
     def __init__(self, *args, **kwargs):
-        self.update(*args, **kwargs)
+        if self.SERVICE is not None:
+            self.BASE_URL = '/'.join([get_url(self.SERVICE), self.plural])
+        super(Resource, self).__init__(*args, **kwargs)
 
     def __repr__(self):
         if self.IDENTIFIER:
@@ -28,44 +26,67 @@ class Resource(dict):
                     if self.get(i):
                         self.IDENTIFIER = i
                         break
-            if self.IDENTIFIER in self:
+                else:
+                    self.IDENTIFIER = None
+            if self.IDENTIFIER and self.IDENTIFIER in self:
                 return '<%s %s>' % (self.__class__,
                                     self.get(self.IDENTIFIER))
         return super(Resource, self).__repr__()
 
+    @property
+    def singular(self):
+        return underscore(self.__class__)
 
-    def update(self, *args, **kwargs):
-        if len(args) > 1:
-            raise TypeError("update expected at most 1 arguments, got %d" % len(args))
-        other = dict(*args, **kwargs)
-        for key in other:
-            self[key] = other[key]
-
-    def setdefault(self, key, value=None):
-        if key not in self:
-            self[key] = value
-        return self[key]
-
-    def __setitem__(self, key,value):
-        key = camelcase_to_underscore(key)
-        super(Resource, self).__setitem__(key, value)
-
-    __setattr__ = __setitem__
-    __getattr__ = dict.__getitem__
-    __delattr__ = dict.__delitem__
+    @property
+    def plural(self):
+        return pluralize(underscore(self.__class__))
 
 
-class CreateableResource(object):
+class CloudBlockStorage(Resource):
+    SERVICE = 'cloudblockstorage'
+
+
+class CloudDatabase(Resource):
+    SERVER = 'clouddatabases'
+
+
+class CloudDNS(Resource):
+    SERVER = 'clouddns'
+
+
+class CloudLoadBalancer(Resource):
+    SERVICE = 'cloudloadbalancers'
+
+
+class CloudServer(Resource):
+    SERVICE = 'cloudservers'
+
+
+class CloudServerOpenStack(Resource):cloudserversopenstack
+    SERVICE = 'cloudserversopenstack'
+
+
+class Createable(object):
     """Add a create() method to a resource."""
 
     @classmethod
     def create(cls, data):
         """Create an object."""
         data = json.dumps(data)
-        return handle_request('post', cls.BASE_URL, data, cls, 'image')
+        return handle_request('post', cls.BASE_URL, data, cls, cls.singular)
 
 
-class FindableResource(object):
+class Modifyable(object):
+    """Add modify() method to resources."""
+
+    def modify(self, data):
+        assert 'id' in self, 'Missing id attribute.'
+        data = json.dumps(data)
+        url = '/'.join([self.BASE_URL, str(self.id)])
+        handle_request('put', url, data=data)
+
+
+class Findable(object):
     """Adds a find method to a reosource."""
 
     @classmethod
@@ -81,10 +102,10 @@ class FindableResource(object):
         """
         url = '/'.join([cls.BASE_URL, str(id)])
         return handle_request('get', url, wrapper=cls,
-                              container=cls.CONTAINER)
+                              container=cls.singular)
 
 
-class DeleteableResource(object):
+class Deleteable(object):
     """Adds a delete method to a resource."""
 
     def delete(self):
@@ -97,7 +118,7 @@ class DeleteableResource(object):
         handle_request('delete', url)
 
 
-class ListableResource(object):
+class Listable(object):
     """Adds a list() method to a resource."""
 
     @classmethod
@@ -122,10 +143,10 @@ class ListableResource(object):
         if limit is not None or offset is not None:
             url = query(url, limit=limit, offset=offset)
         return handle_request('get', url, wrapper=cls,
-                              container=cls.CONTAINER)
+                              container=cls.plural)
 
 
-class ReloadableResource(object):
+class Reloadable(object):
     """adds a reload() method to a resource."""
 
     def reload(self):

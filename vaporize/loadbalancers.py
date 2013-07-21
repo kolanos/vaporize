@@ -3,11 +3,11 @@
 import datetime
 import json
 
-from vaporize.core import convert_datetime, get_url, handle_request, query
-from vaporize.utils import DotDict
+from .core import convert_datetime, get_url, handle_request, query
+from .resources import Resource
 
 
-class AccessRule(DotDict):
+class AccessRule(Resource):
     """A CloudLoadBalancer Access List Rule.
 
     The access list management feature allows fine-grained network access
@@ -55,7 +55,7 @@ class AccessRule(DotDict):
         handle_request('delete', url)
 
 
-class Algorithm(DotDict):
+class Algorithm(Resource):
     """A CloudLoadBalancer Algorithm.
 
     All load balancers utilize an algorithm that defines how traffic should be
@@ -96,7 +96,7 @@ class Algorithm(DotDict):
                               container='algorithms')
 
 
-class AllowedDomain(DotDict):
+class AllowedDomain(Resource):
     """A CloudLoadBalancer Allowed Domains.
 
     The allowed domains are restrictions set for the allowed domain names used
@@ -138,7 +138,7 @@ class AllowedDomain(DotDict):
                               container='allowedDomains')
 
 
-class ContentCaching(DotDict):
+class ContentCaching(Resource):
     """A CloudLoadBalancer Content Caching.
 
     `Content Caching Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/ContentCaching-d1e3358.html>`_
@@ -146,7 +146,7 @@ class ContentCaching(DotDict):
     pass
 
 
-class ConnectionLogging(DotDict):
+class ConnectionLogging(Resource):
     """A CloudLoadBalancer Connection Logging.
 
     `Connection Logging Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/Log_Connections-d1e3924.html>`_
@@ -154,7 +154,7 @@ class ConnectionLogging(DotDict):
     pass
 
 
-class ConnectionThrottle(DotDict):
+class ConnectionThrottle(Resource):
     """A CloudLoadBalancer Connection Throttle.
 
     The connection throttling feature imposes limits on the number of
@@ -202,12 +202,12 @@ class ConnectionThrottle(DotDict):
                    rate_interval=int(rate_interval))
 
 
-class ErrorPage(DotDict):
+class ErrorPage(Resource):
     """A CloudLoadBalancer Custom Error Page."""
     pass
 
 
-class HealthMonitor(DotDict):
+class HealthMonitor(Resource):
     """A CloudLoadBalancer Health Monitor.
 
     The load balancing service includes a health monitoring operation which
@@ -273,7 +273,7 @@ class HealthMonitor(DotDict):
                    body_regex=body_regex, path=path, status_regex=status_regex)
 
 
-class LoadBalancer(DotDict):
+class LoadBalancer(Resource):
     """A CloudLoadBalancer Load Balancer."""
     def __repr__(self):
         if 'name' in self:
@@ -1170,7 +1170,7 @@ class LoadBalancer(DotDict):
                               container='loadBalancer')
 
 
-class Node(DotDict):
+class Node(Resource):
     """A CloudLoadBalancer Node.
 
     The nodes defined by the load balancer are responsible for servicing the
@@ -1334,7 +1334,7 @@ class Node(DotDict):
                                             'type', 'weight'] if k in self])
 
 
-class Protocol(DotDict):
+class Protocol(Resource):
     """A CloudLoadBalancer Protocol.
 
     All load balancers must define the protocol of the service which is being
@@ -1371,7 +1371,7 @@ class Protocol(DotDict):
         return handle_request('get', url, wrapper=cls, container='protocols')
 
 
-class SessionPersistence(DotDict):
+class SessionPersistence(Resource):
     """A CloudLoadBalancer Session Persistence.
 
     Session persistence is a feature of the load balancing service that forces
@@ -1401,12 +1401,12 @@ class SessionPersistence(DotDict):
         super(SessionPersistence, self).__setitem__(key, value)
 
 
-class UsageReport(DotDict):
+class UsageReport(Resource):
     """A CloudLoadBalancer Usage Report."""
     pass
 
 
-class Stat(DotDict):
+class Stat(Resource):
     """CloudLoadBalancers Load Balancer Stats.
 
     `Load Balancer Status Reference <http://docs.rackspace.com/loadbalancers/api/v1.0/clb-devguide/content/List_Load_Balancer_Stats-d1e1524.html>`_
@@ -1414,7 +1414,7 @@ class Stat(DotDict):
     pass
 
 
-class VirtualIP(DotDict):
+class VirtualIP(Resource):
     """A CloudLoadBalancer Virtual IP.
  
     A virtual IP (VIP) makes a load balancer accessible by clients. The load

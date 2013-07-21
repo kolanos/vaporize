@@ -2,16 +2,16 @@
 
 import json
 
-from vaporize.core import convert_datetime, get_url, handle_request, query
-from vaporize.utils import DotDict
+from .core import convert_datetime, get_url, handle_request, query
+from .resources import Resource
 
 
-class Change(DotDict):
+class Change(Resource):
     """A CloudDNS Change History."""
     pass
 
 
-class Domain(DotDict):
+class Domain(Resource):
     """A CloudDNS Domain."""
     def __repr__(self):
         if 'name' in self:
@@ -342,12 +342,12 @@ class Domain(DotDict):
         return handle_request('post', url, data, cls, 'domains')
 
 
-class Export(DotDict):
+class Export(Resource):
     """A CloudDNS BIND Zone Export."""
     pass
 
 
-class Nameserver(DotDict):
+class Nameserver(Resource):
     """A CloudDNS Nameserver."""
     def __repr__(self):
         if 'name' in self:
@@ -355,7 +355,7 @@ class Nameserver(DotDict):
         return super(Nameserver, self).__repr__()
 
 
-class Record(DotDict):
+class Record(Resource):
     """A CloudDNS Record."""
     def __repr__(self):
         if 'name' in self:
@@ -469,7 +469,7 @@ class Record(DotDict):
         handle_request('delete', url)
 
 
-class Subdomain(DotDict):
+class Subdomain(Resource):
     """A CloudDNS Subdomain."""
     def __repr__(self):
         if 'name' in self:

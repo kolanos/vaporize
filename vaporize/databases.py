@@ -2,8 +2,8 @@
 
 import json
 
-from vaporize.core import convert_datetime, get_url, handle_request, query
-from vaporize.utils import DotDict
+from .core import convert_datetime, get_url, handle_request, query
+from .resources import Resource
 
 
 STATUSES = {
@@ -20,7 +20,7 @@ STATUSES = {
 }
 
 
-class Database(DotDict):
+class Database(Resource):
     """A CloudDatabase Database."""
     def __repr__(self):
         if 'name' in self:
@@ -74,7 +74,7 @@ class Database(DotDict):
         return dict([(k, self[k]) for k in ['name', 'character_set',
                                             'collate']])
 
-class Flavor(DotDict):
+class Flavor(Resource):
     """A CloudDatabase Flavor"""
     def __repr__(self):
         if 'name' in self:
@@ -123,7 +123,7 @@ class Flavor(DotDict):
         """Returns the self link reference."""
         return [l['href'] for l in self['links'] if l['rel'] == 'self'][0]
 
-class Instance(DotDict):
+class Instance(Resource):
     """A CloudDatabase Instance."""
     def __repr__(self):
         if 'name' in self:
@@ -422,7 +422,7 @@ class Instance(DotDict):
         return handle_request('post', url, data, cls, 'instance')
 
 
-class User(DotDict):
+class User(Resource):
     """A CloudDatabases User."""
     def __repr__(self):
         if 'name' in self:
@@ -479,7 +479,7 @@ class User(DotDict):
         return ret
 
 
-class Volume(DotDict):
+class Volume(Resource):
     """A CloudDatabase Volume."""
     def __repr__(self):
         if 'used' in self and 'size' in self:
