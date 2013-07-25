@@ -2,8 +2,8 @@
 
 import json
 
-from .core import convert_datetime, get_url, handle_request, query
-from .resources import Resource
+from vaporize.core import convert_datetime, get_url, handle_request, query
+from vaporize.resources import Resource
 
 
 class Change(Resource):
@@ -11,54 +11,37 @@ class Change(Resource):
     pass
 
 
-class Domain(Resource):
+class Domain(Resource, Createable, Modifyable, Deleteable, Findable, Listable,
+             Reloadable):
     """A CloudDNS Domain."""
-    def __repr__(self):
-        if 'name' in self:
-            return '<Domain %s>' % self.name
-        return super(Domain, self).__repr__()
 
     def __setitem__(self, key, value):
         if key == 'recordsList':
             key = 'records'
             if 'id' in self:
-                value = [Record(v, domain_id=self['id']) for v in value['records']]
+                value = [Record(v, domain_id=self.id) for v in value['records']]
             else:
                 value = [Record(v) for v in value['records']]
         elif key == 'subdomains':
-            value = [Subdomain(v) for v in value['domains']]
+            value = [Subdomain(**v) for v in value['domains']]
         elif key in ['created', 'updated']:
             value = convert_datetime(value)
         super(Domain, self).__setitem__(key, value)
 
-    def reload(self):
-        """
-        Reload this Domain (an implicit :func:`get`).
+    def modify(self, ttl=None, email_address=None, comment=None):
+        """Modify this Domain's properties.
 
-        :returns: An updated Domain.
+        :param ttl: Time-To-Live (TTL0 in seconds.
+        :type ttl: int
+        :param email_address: E-mail address associated with Domain.
+        :type email_address: str
+        :param comment: A comment or note about this Domain.
+        :type comment: str
+        :returns: A :class:`Domain`
         :rtype: :class:`Domain`
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
-        response = self.find(self['id'], records=True, subdomains=True)
-        self.update(response)
-        return self
-
-    def modify(self, ttl=None, email_address=None, comment=None):
-        """Modify this Domain's properties.
-
-        :param ttl: Time-To-Live (TTL0 in seconds
-        :type ttl: int
-        :param email_address: E-mail address associated with Domain
-        :type email_address: str
-        :param comment: A comment or note about this Domain
-        :type comment: str
-        :returns: A :class:`Domain`
-
-        .. versionadded:: 0.1
-        """
-        assert 'id' in self
         data = {}
         if ttl is not None:
             data['ttl'] = int(ttl)
@@ -66,35 +49,7 @@ class Domain(Resource):
             data['emailAddress'] = email_address
         if comment is not None:
             data['comment'] = comment
-        data = json.dumps(data)
-        url = '/'.join([get_url('clouddns'), 'domains', str(self['id'])])
-        handle_request('put', url, data)
-        if ttl is not None:
-            self['ttl'] = int(ttl)
-        if email_address is not None:
-            self['email_address'] = email_address
-        if comment is not None:
-            self['comment'] = comment
-        return self
-
-    def delete(self, subdomains=False):
-        """Delete this Domain.
-
-        .. warning::
-
-            There is no confirmation step to this operation. Deleting this
-            domain is permanent. If in doubt you can export a copy of the DNS
-            zone (:func:`vaporize.domains.Domain.export_zone`) before deleting.
-
-        :param subdomains: Delete this Domain's Subdomains (optional)
-        :type subdomains: bool
-
-        .. versionadded:: 0.1
-        """
-        assert 'id' in self
-        url = '/'.join([get_url('clouddns'), 'domains', str(self['id'])])
-        url = query(url, deleteSubdomains=subdomains)
-        handle_request('delete', url)
+        super(Domain, self).modify(data)
 
     @property
     def records(self):
@@ -106,15 +61,15 @@ class Domain(Resource):
         .. versionadded:: 0.1
         """
         if 'records' not in self:
-            assert 'id' in self
+            assert 'id' in self, 'Missing id attribute'
             url = '/'.join([get_url('clouddns'), 'domains', str(self['id']),
                             'records'])
             response = handle_request('get', url,
                                       wrapper=Record,
                                       container='records',
-                                      domain_id=self['id'])
-            self['records'] = response
-        return self['records']
+                                      domain_id=self.id)
+            self.records = response
+        return self.records
 
     def add_records(self, *records):
         """Add Records to a Domain.
@@ -131,7 +86,7 @@ class Domain(Resource):
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
+        assert 'id' in self, 'Missing id attribute'
         data = {'records': []}
         for record in records:
             if isinstance(record, Record):
@@ -144,11 +99,11 @@ class Domain(Resource):
                     'comment': record.comment
                     })
         data = json.dumps(data)
-        url = '/'.join([get_url('clouddns'), 'domains', str(self['id']),
+        url = '/'.join([get_url('clouddns'), 'domains', str(self.id),
                         'records'])
-        self['records'] = handle_request('post', url, data, Record, 'records',
-                                          domain_id=self['id'])
-        return self['records']
+        self.records = handle_request('post', url, data, Record, 'records',
+                                      domain_id=self.id)
+        return self.records
 
     def remove_record(self, record):
         """Remove a Record from this Domain.
@@ -158,10 +113,10 @@ class Domain(Resource):
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
-        record = record.id if isinstance(record, Record) else record
+        assert 'id' in self, 'Missing id attribute'
+        id = record.id if isinstance(record, Record) else record
         url = '/'.join([get_url('clouddns'), 'domains', str(self['id']),
-                        'records', str(record)])
+                        'records', str(id)])
         handle_request('delete', url)
 
     @property
@@ -174,14 +129,14 @@ class Domain(Resource):
         .. versionadded:: 0.1
         """
         if 'subdomins' not in self:
-            assert 'id' in self
-            url = '/'.join([get_url('clouddns'), 'domains', str(self['id']),
+            assert 'id' in self, 'Missing id attribute'
+            url = '/'.join([get_url('clouddns'), 'domains', str(self.id),
                             'subdomains'])
             response = handle_request('get', url, wrapper=Subdomain,
                                       container='domains',
-                                      domain_id=self['id'])
-            self['subdomains'] = response
-        return self['subdomains']
+                                      domain_id=self.id)
+            self.subdomains = response
+        return self.subdomains
 
     def changes(self, since):
         """Returns a list of CloudDNS changes for this domain.
@@ -193,8 +148,8 @@ class Domain(Resource):
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
-        url = '/'.join([get_url('clouddns'), 'domains', str(self['id']),
+        assert 'id' in self, 'Missing id attribute'
+        url = '/'.join([get_url('clouddns'), 'domains', str(self.id),
                         'changes'])
         url = query(url, since=str(since))
         return handle_request('get', url, wrapper=Change, container='changes')
@@ -207,34 +162,10 @@ class Domain(Resource):
 
         .. versionadded:: 0.1
         """
-        url = '/'.join([get_url('clouddns'), 'domains', str(self['id']),
+        url = '/'.join([get_url('clouddns'), 'domains', str(self.id),
                         'export'])
         return handle_request('get', url, wrapper=Export)
 
-    @classmethod
-    def list(cls, limit=None, offset=None, filter=None):
-        """List of Domains.
-
-        :param limit: Limit the number of results returned
-        :type limit: int
-        :param offset: Offset the result set by a certain amount
-        :type offset: int
-        :param filter: Filter results by a domain name
-        :type filter: str
-        :returns: A list of Domains
-        :rtype: A list of :class:`Domain`
-
-        .. versionadded:: 0.1
-        """
-        url = [get_url('clouddns'), 'domains']
-        url = '/'.join(url)
-        if limit is not None or offset is not None:
-            url = query(url, limit=limit, offset=offset)
-        if filter is not None:
-            url = query(url, name=filter)
-        return handle_request('get', url, wrapper=cls, container='domains')
-
-    @classmethod
     def find(cls, id, records=False, subdomains=False):
         """Retrieve a Domain using an ID.
 
@@ -288,7 +219,7 @@ class Domain(Resource):
                         create_ns_records = False
                     data['domains'][0]['recordsList']['records'].append({
                             'name': record.name,
-                            'type': record.type,
+                            'type': record.type.upper(),
                             'data': record.data,
                             'ttl': record.ttl,
                             'priority': record.priority,
@@ -319,9 +250,7 @@ class Domain(Resource):
             data['domains'][0]['comment'] = comment
         if email_address is not None:
             data['domains'][0]['email_address'] = email_address
-        data = json.dumps(data)
-        url = '/'.join([get_url('clouddns'), 'domains'])
-        return handle_request('post', url, data, cls, 'domains')
+        return super(Domain, cls).create(data)
 
     @classmethod
     def import_zone(cls, contents, type='BIND_9'):
@@ -344,23 +273,18 @@ class Domain(Resource):
 
 class Export(Resource):
     """A CloudDNS BIND Zone Export."""
+
     pass
 
 
 class Nameserver(Resource):
     """A CloudDNS Nameserver."""
-    def __repr__(self):
-        if 'name' in self:
-            return '<Nameserver %s>' % self['name']
-        return super(Nameserver, self).__repr__()
+
+    pass
 
 
 class Record(Resource):
     """A CloudDNS Record."""
-    def __repr__(self):
-        if 'name' in self:
-            return '<Record %s>' % self['name']
-        return super(Record, self).__repr__()
 
     def __setitem__(self, key, value):
         if key in ['created', 'updated']:
@@ -399,22 +323,6 @@ class Record(Resource):
             priority = int(priority)
         return cls(name=name, type=type, data=data, ttl=ttl, priority=priority,
                    comment=comment)
-
-    def reload(self):
-        """Reload a Record.
-
-        :returns: A Record
-        :rtype: :class:`Record`
-
-        .. versionadded:: 0.1
-        """
-        assert 'id' in self
-        assert 'domain_id' in self
-        url = '/'.join([get_url('clouddns'), 'domains', str(self['domain_id']),
-                                'records', str(self['id'])])
-        response = handle_request('get', url, wrapper=Record)
-        self.update(response)
-        return self
 
     def modify(self, name=None, data=None, ttl=None):
         """Modify this Record's properties.

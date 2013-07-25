@@ -29,3 +29,5 @@ pip-log.txt
 env
 docs/_build/*
 demo.py
+
+MANIFEST

@@ -3,8 +3,8 @@
 import json
 
 
-from .core import handle_request, query
-from .utils import dotdict
+from vaporize.core import get_url, handle_request, query
+from vaporize.utils import dotdict
 
 
 class Resource(dotdict):
@@ -62,32 +62,51 @@ class CloudServer(Resource):
     SERVICE = 'cloudservers'
 
 
-class CloudServerOpenStack(Resource):cloudserversopenstack
+class CloudServerOpenStack(Resource):
     SERVICE = 'cloudserversopenstack'
 
 
-class Createable(object):
+class Createable(dotdict):
     """Add a create() method to a resource."""
 
     @classmethod
     def create(cls, data):
-        """Create an object."""
+        """Create an object.
+
+        This method will be overloaded.
+
+        :param data: Dictionary of key/values to create.
+        :type data: dict
+        :returns: A newly created object.
+        :rtype: :class:`Resource`
+
+        .. versionadded:: 0.4
+        """
         data = json.dumps(data)
         return handle_request('post', cls.BASE_URL, data, cls, cls.singular)
 
 
-class Modifyable(object):
+class Modifyable(dotdict):
     """Add modify() method to resources."""
 
     def modify(self, data):
+        """Modify an object.
+
+        This method will be overloaded.
+
+        :param data: Dictionary of key/values to modify.
+        :type data: dict
+
+        .. versionadded:: 0.4
+        """
         assert 'id' in self, 'Missing id attribute.'
         data = json.dumps(data)
         url = '/'.join([self.BASE_URL, str(self.id)])
         handle_request('put', url, data=data)
 
 
-class Findable(object):
-    """Adds a find method to a reosource."""
+class Findable(dotdict):
+    """Adds a find() method to a reosource."""
 
     @classmethod
     def find(cls, id):
@@ -105,8 +124,8 @@ class Findable(object):
                               container=cls.singular)
 
 
-class Deleteable(object):
-    """Adds a delete method to a resource."""
+class Deleteable(dotdict):
+    """Adds a delete() method to a resource."""
 
     def delete(self):
         """Delete this object.
@@ -118,36 +137,32 @@ class Deleteable(object):
         handle_request('delete', url)
 
 
-class Listable(object):
+class Listable(dotdict):
     """Adds a list() method to a resource."""
 
     @classmethod
-    def list(cls, limit=None, offset=None, detail=False):
+    def list(cls, **params):
         """Returns a list of objects.
 
-        :param limit: Limit the result set by a cetain number.
-        :type limit: int
-        :param offset: Offset the result set by a certain number.
-        :type offset: int
-        :param detail: Return additional details about each object.
-        :type detail: bool
+        :param params: Query parameters, such as ``limit`` or ``offset``.
+        :type params: dict
         :returns: A list of objects.
-        :rtype: A list of :class:`Resource`
+        :rtype: A list of :class:`Resource`.
 
         .. versionadded:: 0.4
         """
         url = [cls.BASE_URL]
-        if detail:
+        if 'detail' in params:
+            params.pop('detail')
             url.append('detail')
         url = '/'.join(url)
-        if limit is not None or offset is not None:
-            url = query(url, limit=limit, offset=offset)
+        url = query(url, **params)
         return handle_request('get', url, wrapper=cls,
                               container=cls.plural)
 
 
-class Reloadable(object):
-    """adds a reload() method to a resource."""
+class Reloadable(Findable):
+    """Adds a reload() method to a resource."""
 
     def reload(self):
         """Reload this object.
@@ -159,5 +174,5 @@ class Reloadable(object):
         """
         assert 'id' in self, 'Missing id attribute.'
         response = self.find(self.id)
-        self.update(response)
+        self.update(**response)
         return self

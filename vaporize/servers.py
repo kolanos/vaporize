@@ -69,9 +69,9 @@ class Image(CloudServer, Createable, Modifyable, Findable, Listable,
     def create(cls, name, server):
         """Create an Image.
 
-        :param name: Name of the Image
+        :param name: Name of the Image.
         :type name: str
-        :param server: Server or ``id`` to base the Image upon
+        :param server: Server or ``id`` to base the Image upon.
         :type server: int or :class:`Server`
         :returns: A shiny new CloudServers Image.
         :rtype: :class:`Image`
@@ -80,7 +80,6 @@ class Image(CloudServer, Createable, Modifyable, Findable, Listable,
         """
         if isinstance(server, Server):
             server = server.id
-        server = int(server)
         data = {'image': {'serverId': server,
                           'name': name}}
         return super(Image, cls).create(data)
@@ -92,8 +91,8 @@ class IP(Resource):
     IDENTIFIER = ['public', 'private']
 
 
-class Server(CloudServer, Createable, Findable, Listable, Deleteable,
-             Reloadable):
+class Server(CloudServer, Createable, Modifyable, Findable, Listable,
+             Deleteable, Reloadable):
     """A CloudServers Server."""
 
     def __setitem__(self, key, value):
@@ -104,16 +103,15 @@ class Server(CloudServer, Createable, Findable, Listable, Deleteable,
     def modify(self, name=None, password=None):
         """Modify this Server's name or root password.
 
-        :param name: Change the Server's name
+        :param name: Change the server's name.
         :type name: str
-        :param password: Change the Server's root password
+        :param password: Change the server's root password.
         :type password: str
         :returns: A modified CloudServers Server.
         :rtype: :class:`Server`
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
         data = {'server': {}}
         if name is not None:
             data['server']['name'] = name
@@ -123,11 +121,10 @@ class Server(CloudServer, Createable, Findable, Listable, Deleteable,
 
     @property
     def ips(self):
-        """
-        Returns a list of public and private IPs for this Server.
+        """Returns a list of public and private IPs for this Server.
 
-        :returns: A list of public and private IPs for this Server.
-        :rtype: A list of :class:`IP`
+        :returns: A list of public and private IPs for this server.
+        :rtype: A list of :class:`IP`.
 
         .. versionadded:: 0.1
         """
@@ -146,14 +143,13 @@ class Server(CloudServer, Createable, Findable, Listable, Deleteable,
         .. versionadded:: 0.1
         """
         if 'addresses' not in self:
-            self['addresses'] = IP()
-        if 'public' not in self['addresses']:
-            assert 'id' in self
-            url = '/'.join([self.BASE_URL, str(self['id']),
-                            'ips', 'public'])
+            self.addresses = IP()
+        if 'public' not in self.addresses:
+            assert 'id' in self, 'Missing id attribute.'
+            url = '/'.join([self.BASE_URL, str(self.id), 'ips', 'public'])
             response = handle_request('get', url, wrapper=IP)
-            self['addresses'].update(response)
-        return self['addresses']['public']
+            self.addresses.update(**response)
+        return self.addresses.public
 
     @property
     def private_ips(self):
@@ -162,14 +158,13 @@ class Server(CloudServer, Createable, Findable, Listable, Deleteable,
         .. versionadded:: 0.1
         """
         if 'addresses' not in self:
-            self['addresses'] = IP()
-        if 'private' not in self['addresses']:
-            assert 'id' in self
-            url = '/'.join([self.BASE_URL, str(self['id']),
-                            'ips', 'private'])
+            self.addresses = IP()
+        if 'private' not in self.addresses:
+            assert 'id' in self, 'Missing id attribute'
+            url = '/'.join([self.BASE_URL, str(self.id), 'ips', 'private'])
             response = handle_request('get', url, wrapper=IP)
-            self['addresses'].update(response)
-        return self['addresses']['private']
+            self.addresses.update(**response)
+        return self.addresses.private
 
     def share_ip(self, address, ipgroup, configure=True):
         """Share this Server's IP in a Shared IP Group.
@@ -185,14 +180,13 @@ class Server(CloudServer, Createable, Findable, Listable, Deleteable,
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
+        assert 'id' in self, 'Missing id attribute'
         if isinstance(ipgroup, SharedIpGroup):
             ipgroup = ipgroup.id
-        ipgroup = int(ipgroup)
         data = json.dumps({'shareIp': {'sharedIpGroup': ipgroup,
                                        'configureServer': configure}})
-        url = '/'.join([self.BASE_URL, str(self['id']),
-                        'ips', 'public', address])
+        url = '/'.join([self.BASE_URL, str(self.id), 'ips', 'public',
+                        address])
         handle_request('put', url, data=data)
 
     def unshare_ip(self, address):
@@ -200,9 +194,9 @@ class Server(CloudServer, Createable, Findable, Listable, Deleteable,
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
-        url = '/'.join([self.BASE_URL, str(self['id']),
-                        'ips', 'public', address])
+        assert 'id' in self, 'Missing id attribute'
+        url = '/'.join([self.BASE_URL, str(self.id), 'ips', 'public',
+                        address])
         handle_request('delete', url)
 
     def reboot(self, type='SOFT'):
@@ -213,44 +207,40 @@ class Server(CloudServer, Createable, Findable, Listable, Deleteable,
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self, "Missing Server ID"
-        assert type in ['SOFT', 'HARD'], "Reboot type must be 'SOFT' or 'HARD'"
+        assert 'id' in self, 'Missing id attribute'
+        assert type in ['SOFT', 'HARD'], 'Reboot type must be "SOFT" or "HARD"'
         data = json.dumps({'reboot': {'type': type}})
-        url = '/'.join([self.BASE_URL,
-                        str(self['id']), 'action'])
+        url = '/'.join([self.BASE_URL, str(self.id), 'action'])
         handle_request('post', url, data)
 
     def rebuild(self, image):
-        """Rebuild this Server using a specified Image
+        """Rebuild this Server using a specified Image.
 
         :param image: The Image or ``id``
         :type image: int or :class:`Image`
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
+        assert 'id' in self, 'Missing id attribute'
         if isinstance(image, Image):
             image = image.id
-        image = int(image)
         data = json.dumps({'rebuild': {'imageId': int(image)}})
-        url = '/'.join([self.BASE_URL,
-                        str(self['id']), 'action'])
+        url = '/'.join([self.BASE_URL, str(self.id), 'action'])
         handle_request('post', url, data)
 
     def resize(self, flavor):
-        """Resize this Server to a specific Flavor size
+        """Resize this Server to a specific Flavor size.
 
         :param flavor: The Flavor or ``id``
         :type flavor: int or :class:`Flavor`
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
+        assert 'id' in self, 'Missing id attribute'
         if isinstance(flavor, Flavor):
             flavor = flavor.id
-        flavor = int(flavor)
         data = json.dumps({'resize': {'flavorId': flavor}})
-        url = '/'.join([self.BASE_URL, str(self['id']), 'action'])
+        url = '/'.join([self.BASE_URL, str(self.id), 'action'])
         handle_request('post', url, data)
 
     def confirm_resize(self):
@@ -258,7 +248,7 @@ class Server(CloudServer, Createable, Findable, Listable, Deleteable,
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
+        assert 'id' in self, 'Missing id attribute'
         data = json.dumps({'confirmResize': None})
         url = '/'.join([self.BASE_URL, str(self.id), 'action'])
         handle_request('post', url, data)
@@ -268,7 +258,7 @@ class Server(CloudServer, Createable, Findable, Listable, Deleteable,
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
+        assert 'id' in self, 'Missing id attribute'
         data = json.dumps({'revertResize': None})
         url = '/'.join([self.BASE_URL, str(self.id), 'action'])
         handle_request('post', url, data)
@@ -282,13 +272,13 @@ class Server(CloudServer, Createable, Findable, Listable, Deleteable,
         .. versionadded:: 0.1
         """
         if 'backup_schedule' not in self:
-            assert 'id' in self
-            url = '/'.join([self.BASE_URL, str(self['id']),
+            assert 'id' in self, 'Missing id attribute'
+            url = '/'.join([self.BASE_URL, str(self.id),
                             'backup_schedule'])
             response = handle_request('get', url, wrapper=BackupSchedule,
                                       container='backupSchedule')
-            self['backup_schedule'] = response
-        return self['backup_schedule']
+            self.backup_schedule = response
+        return self.backup_schedule
 
     @backup_schedule.setter
     def backup_schedule(self, schedule):
@@ -305,11 +295,11 @@ class Server(CloudServer, Createable, Findable, Listable, Deleteable,
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
+        assert 'id' in self, 'Missing id attribute'
         assert isinstance(schedule, BackupSchedule)
-        url = '/'.join([self.BASE_URL, str(self['id']), 'backup_schedule'])
+        url = '/'.join([self.BASE_URL, str(self.id), 'backup_schedule'])
         handle_request('post', url, schedule.to_dict())
-        self['backup_schedule'] = schedule
+        self.backup_schedule = schedule
 
     @backup_schedule.deleter
     def backup_schedule(self):
@@ -320,10 +310,10 @@ class Server(CloudServer, Createable, Findable, Listable, Deleteable,
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
-        url = '/'.join([self.BASE_URL, str(self['id']), 'backup_schedule'])
+        assert 'id' in self, 'Missing id attribute'
+        url = '/'.join([self.BASE_URL, str(self.id), 'backup_schedule'])
         handle_request('delete', url)
-        del self['backup_schedule']
+        del self.backup_schedule
 
     @classmethod
     def create(cls, name, image, flavor, metadata=None, files=None):
@@ -346,10 +336,8 @@ class Server(CloudServer, Createable, Findable, Listable, Deleteable,
         """
         if isinstance(image, Image):
             image = image.id
-        image = int(image)
         if isinstance(flavor, Flavor):
             flavor = flavor.id
-        flavor = int(flavor)
         data = {'server': {'name': name,
                            'imageId': image,
                            'flavorId': flavor,
@@ -357,7 +345,8 @@ class Server(CloudServer, Createable, Findable, Listable, Deleteable,
                            'personality': []}}
         if isinstance(files, dict):
             for path, contents in list(files.items()):
-                data['personality'].append({'path': path, 'contents': contents})
+                data['personality'].append({'path': path,
+                                            'contents': contents})
         return super(Server, cls).create(data)
 
 
@@ -386,7 +375,6 @@ class SharedIpGroup(CloudServer, Findable, Listable, Deleteable):
         """
         if isinstance(server, Server):
             server = server.id
-        server = int(server)
         data = {'sharedIpGroup': {'name': name,
                                   'server': server}}
         return super(SharedIpGroup, cls).create(data)
