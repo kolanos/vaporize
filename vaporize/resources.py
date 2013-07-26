@@ -161,7 +161,7 @@ class Listable(dotdict):
                               container=cls.plural)
 
 
-class Reloadable(Findable):
+class Reloadable(dotdict):
     """Adds a reload() method to a resource."""
 
     def reload(self):

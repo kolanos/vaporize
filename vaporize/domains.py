@@ -3,16 +3,17 @@
 import json
 
 from vaporize.core import convert_datetime, get_url, handle_request, query
-from vaporize.resources import Resource
+from vaporize.resources import (Resource, Createable, Modifyable, Deleteable,
+                                Findable, Listable, Reloadable)
 
 
 class Change(Resource):
     """A CloudDNS Change History."""
+
     pass
 
 
-class Domain(Resource, Createable, Modifyable, Deleteable, Findable, Listable,
-             Reloadable):
+class Domain(Resource, Createable, Modifyable, Deleteable, Findable, Listable, Reloadable):
     """A CloudDNS Domain."""
 
     def __setitem__(self, key, value):
@@ -256,11 +257,12 @@ class Domain(Resource, Createable, Modifyable, Deleteable, Findable, Listable,
     def import_zone(cls, contents, type='BIND_9'):
         """Import a raw BIND zone into CloudDNS.
 
-        :param contents: Contents of the BIND zone
+        :param contents: Contents of the BIND zone.
         :type contents: str
-        :param type: The BIND format type being used, such as ``BIND_9``
+        :param type: The BIND format type being used, such as ``BIND_9``.
         :type type: str
-        :returns: A list of :class:`Domain`
+        :returns: A list of :class:`Domain`.
+        :rtype: :class:`Domain`
 
         .. versionadded:: 0.1
         """
@@ -283,7 +285,7 @@ class Nameserver(Resource):
     pass
 
 
-class Record(Resource):
+class Record(Resource, Modifyable):
     """A CloudDNS Record."""
 
     def __setitem__(self, key, value):
@@ -338,8 +340,7 @@ class Record(Resource):
 
         .. versionadded:: 0.1
         """
-        assert 'id' in self
-        assert 'domain_id' in self
+        assert 'domain_id' in self, 'Missing domain_id attribute'
         _data = {}
         if name is not None:
             _data['name'] = name
@@ -379,10 +380,6 @@ class Record(Resource):
 
 class Subdomain(Resource):
     """A CloudDNS Subdomain."""
-    def __repr__(self):
-        if 'name' in self:
-            return '<Subdomain %s>' % self['name']
-        return super(Nameserver, self).__repr__()
 
     @classmethod
     def create(cls, name, comment=None, email_address=None):

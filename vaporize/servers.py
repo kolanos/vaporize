@@ -2,9 +2,9 @@
 
 import json
 
-from .core import convert_datetime, handle_request
-from .resources import (Resource, CloudServer, Createable, Findable, Listable,
-                        Deleteable, Reloadable)
+from vaporize.core import convert_datetime, handle_request
+from vaporize.resources import (Resource, CloudServer, Createable, Modifyable,
+                                Deleteable, Findable, Listable, Reloadable)
 
 BACKUP_WEEKLY_DISABLED  = 'DISABLED'
 BACKUP_WEEKLY_SUNDAY    = 'SUNDAY'
